@@ -6,12 +6,15 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/09/24 11:50:10 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/09/24 14:35:45 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// utils
-char	**ft_split(char *s, char c);
+#ifndef MINISHELL_H
+# define MINISHELL_H
+// libs
+# include <stdlib.h>
+# include <stdio.h>
 
 // parsing funcs
 
@@ -22,14 +25,14 @@ typedef enum e_type
 	R_OUT,
 	APP,
 	HER,
-	PIP
-}	e_type;
+	PIPE
+}	t_e_type;
 
 // Token structure
 typedef struct s_token
 {
-	char			str;
-	e_type			token;
+	char			*str;
+	t_e_type		tokenType;
 	struct s_token	*next;
 }	t_token;
 
@@ -37,8 +40,8 @@ typedef struct s_token
 typedef struct s_redir
 {
 	char			filename;
-	e_type			type; // Changed e_num to e_type
-	struct s_redir	*next; // Fix the next pointer to s_redir
+	t_e_type		type;
+	struct s_redir	*next;
 }	t_redir;
 
 // Command structure
@@ -46,10 +49,16 @@ typedef struct s_command
 {
 	char				*args;
 	int					is_builtin;
-	struct s_redir		*rederects; // Fix the pointer to s_redir
-	struct s_command	*next; // Fix the next pointer to s_command
+	struct s_redir		*rederects;
+	struct s_command	*next;
 }	t_command;
 
 
 void	parser(char *userInp);
 // end of parsing funcs
+
+// utils
+char	**ft_split(char *s, char c);
+int		ft_strcmp(char *s1, char *s2);
+
+#endif

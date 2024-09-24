@@ -1,20 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/09/24 14:43:44 by ayhamdou         ###   ########.fr       */
+/*   Created: 2024/09/24 12:28:49 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/09/24 13:19:46 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+#include <string.h>
 
-int main(int argc, char *argv[])
+int	ft_strcmp(char *s1, char *s2)
 {
-	(void)argc;
-	parser(argv[1]);
-	return 0;
+	int	i;
+
+	i = 0;
+	while (s1[i] && s2[i] && (s1[i] == s2[i]))
+		i++;
+	return (s1[i] - s2[i]);
 }

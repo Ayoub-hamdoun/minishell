@@ -1,20 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/09/24 14:43:44 by ayhamdou         ###   ########.fr       */
+/*   Created: 2023/10/30 13:53:52 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/09/24 12:32:32 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int main(int argc, char *argv[])
+size_t	ft_strlen(const char	*str)
 {
-	(void)argc;
-	parser(argv[1]);
-	return 0;
+	size_t	i;
+
+	i = 0;
+	if (!str)
+		return (0);
+	while (str[i])
+		i++;
+	return (i);
 }

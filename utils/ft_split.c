@@ -6,11 +6,11 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/12 17:24:47 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/09/24 11:49:53 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/09/24 12:31:45 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../minishell.h"
 
 static int	count_words(const char *str, char delimiter)
 {
