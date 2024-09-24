@@ -2,3 +2,5 @@ a.out
 .DS_Store
 *.o
 *.tldr
+libft/*
+parsing/testingArea.c
