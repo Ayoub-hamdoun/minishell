@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/09/24 14:43:44 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/09/25 09:45:27 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,5 +16,5 @@ int main(int argc, char *argv[])
 {
 	(void)argc;
 	parser(argv[1]);
-	return 0;
+	return (0);
 }

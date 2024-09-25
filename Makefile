@@ -6,14 +6,14 @@
 #    By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 15:45:29 by ayhamdou          #+#    #+#              #
-#    Updated: 2024/09/24 14:43:00 by ayhamdou         ###   ########.fr        #
+#    Updated: 2024/09/25 11:48:13 by ayhamdou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 HEADER = minishell.h
 
-SRCS = utils/ft_split.c utils/ft_strcmp.c\
+SRCS = utils/ft_split.c utils/ft_strcmp.c utils/ft_strdup.c utils/ft_strlen.c\
 		parsing/parser.c
 
 OBJS = $(SRCS:%.c=%.o)
