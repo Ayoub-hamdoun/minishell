@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/09/25 15:09:12 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/09/26 16:12:14 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ void printredirections(t_redir *lst)
 		printf("\n~~~~~~~~~~~~~~~~\n");
 		lst = lst->next;
 	}
-	
 }
 
 void printcommnads(t_command *lst)
@@ -56,7 +55,35 @@ void printcommnads(t_command *lst)
 		lst = lst->next;
 	}
 }
+
+void exit_funcs()
+{
+	printf("\nSYNTAX ERROR\n");
+}
 //NOTE - END TMPFUNCTIONS
+
+
+
+void	validat_syntax(t_token *tokens)
+{
+	int i;
+
+	i = 0;
+	while (tokens)
+	{
+		if (tokens->tokenType == R_IN || tokens->tokenType == R_OUT)
+		{
+			if (!tokens->next || tokens->next->tokenType != WORD)
+				exit_funcs();
+		}
+		else if (tokens->tokenType == PIPE)
+		{
+			if (tokens->next->tokenType == PIPE)
+				exit_funcs();
+		}
+		tokens = tokens->next;
+	}
+}
 
 void	tokenizer(char *userInp, t_token **tokenList)
 {
@@ -96,13 +123,11 @@ void	tokenizer(char *userInp, t_token **tokenList)
 void extract_cmds(t_token *token_list, t_command **commands)
 {
 	t_command *command;
-	// t_command *tmp;
 	t_redir *redir;
 	t_redir *tmp;
 	char **updated_args;
 	int argcount = 0;
 	int i = 0;
-
 
 	command = NULL;
 	updated_args = NULL;
@@ -181,10 +206,9 @@ int	parser(char *userInp)
 	commands = NULL;
 	token_list = NULL;
 	tokenizer(userInp, &token_list);
-	extract_cmds(token_list, &commands);
-	// commands = parse_tokens(token_list);
-	// printtokens(token_list);
-	printcommnads(commands);
-	
+	printtokens(token_list);
+	validat_syntax(token_list);
+	// extract_cmds(token_list, &commands);
+	// printcommnads(commands);
 	return (0);
 }
