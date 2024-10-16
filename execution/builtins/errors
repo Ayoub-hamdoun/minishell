@@ -1,0 +1,5 @@
+"" = you don t need to check after = 
+a=42 export a again
++ remove it 
+don t append if variable already there
+declare_x xxx1="21212dasdasd"
