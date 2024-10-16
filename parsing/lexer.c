@@ -1,29 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/10/16 16:04:16 by ayhamdou         ###   ########.fr       */
+/*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/10/16 11:36:38 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-#include <readline/readline.h>
-#include <readline/history.h>
-
-int main(int argc, char *argv[])
-{
-	(void)argc;
-	(void)argv;
-	while(1)
-	{
-		char *input = readline("GUMBALL$>");
-		add_history(input);
-		parser(input);
-	}
-	// parser(argv[1]);
-	return (0);
-}
+//lexer
