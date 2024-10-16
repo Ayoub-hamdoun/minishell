@@ -1,54 +1,50 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strtrim.c                                       :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/04 15:53:11 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/10/16 10:14:14 by ayhamdou         ###   ########.fr       */
+/*   Created: 2023/11/04 17:00:50 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/10/16 10:12:06 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	isin(const char *str, char c)
+static size_t	fix_len(char *str, int start)
 {
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (str[start])
 	{
-		if (str[i] == c)
-			return (1);
 		i++;
+		start++;
 	}
-	return (0);
+	return (i);
 }
 
-char	*ft_strtrim(char *s1, char *set)
+char	*ft_substr(char *s, int start, int len)
 {
-	int		start;
-	int		end;
 	int		i;
-	char	*res;
+	char	*subs;
 
-	if (!s1 || !set)
-		return (ft_strdup(""));
-	start = 0;
-	end = ft_strlen(s1) - 1;
-	i = 0;
-	while (isin(set, s1[start]))
-		start++;
-	while (end >= 0 && isin(set, s1[end]))
-		end--;
-	if (end < start)
-		return (ft_strdup(""));
-	res = (char *) malloc((end - start + 1) + 1);
-	if (!res)
+	if (!s)
 		return (NULL);
-	while (start <= end)
-		res[i++] = s1[start++];
-	res[i] = '\0';
-	return (res);
+	if (start >= ft_strlen(s))
+		return (ft_strdup(""));
+	if (len + start > ft_strlen(s))
+		len = fix_len((char *)s, start);
+	subs = (char *)malloc (len * sizeof(char) + 1);
+	if (!subs)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		subs[i] = s[i + start];
+		i++;
+	}
+	subs[i] = '\0';
+	return (subs);
 }

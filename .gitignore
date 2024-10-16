@@ -4,4 +4,3 @@ a.out
 *.tldr
 libft/*
 parsing/testingArea.c
-/minishell

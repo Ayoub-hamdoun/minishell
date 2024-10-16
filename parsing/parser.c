@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/09/26 16:12:14 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/10/16 11:06:23 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,13 @@
 //NOTE - TMPFUNCTIONS
 void printtokens(t_token *lst)
 {
+	int i = 0;
+
 	while (lst)
 	{
-		printf("\nTOKENS : ---------------------------------\n");
-		printf("%s : %d", lst->str, lst->tokenType);
+		i++;
+		printf("\nTOKEN : -------------------------\n");
+		printf("%d; ==>%s : %d", i, lst->str, lst->tokenType);
 		printf("\n---------------------------------\n");
 		lst = lst->next;
 	}
@@ -85,40 +88,7 @@ void	validat_syntax(t_token *tokens)
 	}
 }
 
-void	tokenizer(char *userInp, t_token **tokenList)
-{
-	int		i;
-	char	**splitted_arg;
-	t_token *token;
-	t_token *tmp;
 
-	i = 0;
-	splitted_arg = ft_split(userInp, ' ');
-	while (splitted_arg[i])
-	{
-		token = (t_token *) malloc(sizeof(t_token));
-		token->str = splitted_arg[i];
-		if (!ft_strcmp(splitted_arg[i], ">"))
-			token->tokenType = R_OUT;
-		else if (!ft_strcmp(splitted_arg[i], "<"))
-			token->tokenType = R_IN;
-		else if ((!ft_strcmp(splitted_arg[i], "|")))
-			token->tokenType = PIPE;
-		else
-			token->tokenType = WORD;
-		token->next = NULL;
-		i++;
-		if (!(*tokenList))
-			*tokenList = token;
-		else
-		{
-			tmp = *tokenList;
-			while (tmp && tmp->next)
-				tmp = tmp->next;
-			tmp->next = token;
-		}
-	}
-}
 
 void extract_cmds(t_token *token_list, t_command **commands)
 {
@@ -207,7 +177,7 @@ int	parser(char *userInp)
 	token_list = NULL;
 	tokenizer(userInp, &token_list);
 	printtokens(token_list);
-	validat_syntax(token_list);
+	// validat_syntax(token_list);
 	// extract_cmds(token_list, &commands);
 	// printcommnads(commands);
 	return (0);
