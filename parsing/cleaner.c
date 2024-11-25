@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   cleaner.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/25 20:27:40 by ayhamdou         ###   ########.fr       */
+/*   Created: 2024/11/22 16:05:53 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/11/22 17:20:52 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void lexer(t_token *tokens)
+void	clean_tokens(t_token **tokens)
 {
-	t_token *tmp = tokens;
+	t_token *tmp;
 
-	while (tmp)
+	while (*tokens)
 	{
-		tmp  = tmp->next;
+		tmp = *tokens;
+		*tokens = (*tokens)->next;
+		free(tmp->str);
+		free(tmp);
 	}
 }
-
