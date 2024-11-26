@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/26 16:43:32 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:48:08 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,3 +99,6 @@ void	tokenizer(char *userInp, t_token **token_list)
 	}
 }
 //TODO: handl leaks ;;;;
+//TODO: don t pass only spaces " "
+//TODO: handle if there is one quote it should not be contained in the word more like a syntax error example '$ or $' or $" or "$
+//TODO:

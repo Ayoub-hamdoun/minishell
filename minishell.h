@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/10/16 10:19:34 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:46:55 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,25 @@
 
 typedef enum type
 {
+	DOUBLE,	//double quote ...
+	SINGLE,
+	NONE, // no quote
 	WORD,
 	R_IN,
 	R_OUT,
 	APP,
 	HER,
-	PIPE
+	ENV,
+	PIPE 
 }	t_etype;
+
 
 // Token structure
 typedef struct s_token
 {
-	char			*str;
-	t_etype			tokenType;
+	char	*str;
+	t_etype	tokenType;
+	t_etype	q_type;		// type of the quote, needed for expanding purpose
 	struct s_token	*next;
 }	t_token;
 
@@ -55,8 +61,12 @@ typedef struct s_command
 // parsing funcs
 int		parser(char *userInp);
 void	tokenizer(char *userInp, t_token **tokenList);
+void	expander(t_token **tokens);
+// end of parsing func\
 
-// end of parsing funcs
+
+// cleaners
+void	clean_tokens(t_token **tokens);
 
 // utils
 int		ft_strlen(char	*str);
@@ -65,9 +75,13 @@ char	*ft_strtrim(char *s1, char *set);
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_strdup(char *s1);
 char	*ft_substr(char *s, int start, int len);
+char	*ft_strjoin(char *s1, char *s2);
+int		ft_isalnum(int c);
+int		ft_isalpha(int c);
 
 //temp
 void printtokens(t_token *lst);
+void	rm_qt(char *str);
 //end temp
 
 #endif
