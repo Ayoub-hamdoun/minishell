@@ -3,13 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 04:49:24 by rallali           #+#    #+#             */
-/*   Updated: 2024/11/26 04:49:25 by rallali          ###   ########.fr       */
+/*   Created: 2023/11/04 15:53:11 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/10/16 10:14:14 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../minishell.h"
 

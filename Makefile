@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: rallali <rallali@student.42.fr>            +#+  +:+       +#+         #
+#    By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 15:45:29 by ayhamdou          #+#    #+#              #
-#    Updated: 2024/11/26 00:31:23 by rallali          ###   ########.fr        #
+#    Updated: 2024/10/16 10:13:37 by ayhamdou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,9 +14,8 @@ NAME = minishell
 HEADER = minishell.h
 
 SRCS = utils/ft_split.c utils/ft_strcmp.c utils/ft_strdup.c utils/ft_strlen.c utils/ft_substr.c\
-		utils/ft_strtrim.c utils/ft_strjoin.c utils/ft_isalnum.c parsing/env.c parsing/cleaner.c \
-		parsing/parser.c parsing/tokenizer.c parsing/expander.c\
-		parsing/lexer.c\
+		utils/ft_strtrim.c\
+		parsing/parser.c parsing/tokenizer.c
 
 OBJS = $(SRCS:%.c=%.o)
 MAIN = minishell.c

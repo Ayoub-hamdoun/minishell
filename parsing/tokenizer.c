@@ -3,27 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/26 04:49:18 by rallali           #+#    #+#             */
-/*   Updated: 2024/11/26 04:49:19 by rallali          ###   ########.fr       */
+/*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/10/16 15:23:34 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "../minishell.h"
 
-void	create_token(t_token **token, char *data, t_etype type, t_etype qt)
+void	create_token(t_token **token, char *data, t_etype type)
 {
 	t_token	*tmp;
 	t_token	*current;
 
 	current = (t_token *)malloc(sizeof(t_token));
-	current->str = ft_strdup(data);
-	// if (qt != NONE)
-	// 	rm_qt(current->str);
+	current->str = data;
 	current->tokenType = type;
-	current->q_type = qt;
 	current->next = NULL;
 	if (!(*token))
 		*token = current;
@@ -38,77 +34,50 @@ void	create_token(t_token **token, char *data, t_etype type, t_etype qt)
 
 int	is_special_char(char *trimmed, t_token **token_list, int pos)
 {
-	int h;
-	char *str;
-
-	str = NULL;
 	if (trimmed[pos] == '|')
-		create_token(token_list, "|", PIPE, NONE);
-	else if (trimmed[pos] == '$')
-	{
-		h = pos;
-		while (trimmed[pos] && (trimmed[pos] != ' ' && trimmed[pos] != '\t'))
-			pos++;
-		str = ft_substr(trimmed, h, pos - h);
-		create_token(token_list, str, ENV, NONE);
-	}
-	//check for ~
+		create_token(token_list, "|", PIPE);
 	else if (trimmed[pos] == '>')
 	{
 		if (trimmed[pos + 1] == '>')
 		{
-			create_token(token_list, ">>", APP, NONE);
+			create_token(token_list, ">>", APP);
 			pos++;
 		}
 		else
-			create_token(token_list, ">", R_OUT, NONE);
+			create_token(token_list, ">", R_OUT);
 	}
 	else if (trimmed[pos] == '<')
 	{
 		if (trimmed[pos + 1] == '<')
 		{
-			create_token(token_list, "<<", HER, NONE);
+			create_token(token_list, "<<", HER);
 			pos++;
 		}
 		else
-			create_token(token_list, "<", R_IN, NONE);
+			create_token(token_list, "<", R_IN);
 	}
 	pos++;
-	if (str)
-		free(str);
 	return (pos);
 }
 
 int is_normal_word(char *trimmed, int pos, t_token **token_list)
 {
-	int		start;
-	char	quote;
-	char	*str;
-	t_etype	qt;
+	int	start;
 
 	start = pos;
-	qt = NONE;
 	if (trimmed[pos] == '\'' || trimmed[pos] == '\"')
 	{
-		quote = trimmed[pos];
 		pos++;
-		while (trimmed[pos] && trimmed[pos] != quote)
+		while (trimmed[pos] && trimmed[pos] != '\'' && trimmed[pos] != '\"')
 			pos++;
-		pos++;
-		if (quote == '\"')
-			qt = DOUBLE;
-		else
-			qt = SINGLE;
 	}
 	else
 	{
 		while (trimmed[pos] && trimmed[pos] != ' ' && trimmed[pos] != '|')
 			pos++;
 	}
-	str = ft_substr(trimmed, start, pos - start);
-	create_token(token_list, str, WORD, qt);
-	if (str)
-		free(str);
+	pos++;
+	create_token(token_list, ft_substr(trimmed, start, pos - start), WORD);
 	return (pos);
 }
 
@@ -121,19 +90,12 @@ void	tokenizer(char *userInp, t_token **token_list)
 	trimmed = ft_strtrim(userInp, " \t");
 	while (trimmed[i])
 	{
-		while (trimmed[i] == ' ' || trimmed[i] == '\t') // add white spaces
+		if (trimmed[i] == ' ' || trimmed[i] == '\t')
 			i++;
-		if (!trimmed[i])
-			break ;
-		if (trimmed[i] == '|' || trimmed[i] == '>' || trimmed[i] == '<'
-			|| trimmed[i] == '$')
+		if (trimmed[i] == '|' || trimmed[i] == '>' || trimmed[i] == '<')
 			i = is_special_char(trimmed, token_list, i);
 		else
 			i = is_normal_word(trimmed, i, token_list);
 	}
-	free(trimmed);
 }
 //TODO: handl leaks ;;;;
-//TODO: don t pass only spaces " "
-//TODO: handle if there is one quote it should not be contained in the word more like a syntax error example '$ or $' or $" or "$
-//TODO:

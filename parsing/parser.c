@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/26 03:05:40 by rallali          ###   ########.fr       */
+/*   Updated: 2024/10/16 11:06:23 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-//SECTION - TMPFUNCTIONS
-
+//NOTE - TMPFUNCTIONS
 void printtokens(t_token *lst)
 {
 	int i = 0;
@@ -21,7 +20,7 @@ void printtokens(t_token *lst)
 	{
 		i++;
 		printf("\nTOKEN : -------------------------\n");
-		printf("%d; content [%s] ; type [%d] ; qoute type [%d]", i, lst->str, lst->tokenType, lst->q_type);
+		printf("%d; ==>%s : %d", i, lst->str, lst->tokenType);
 		printf("\n---------------------------------\n");
 		lst = lst->next;
 	}
@@ -33,7 +32,7 @@ void printredirections(t_redir *lst)
 	while (lst)
 	{
 		printf("\nREDIRECTIONS : ~~~~~~~~~~~~~~~~\n");
-		printf("filename :[%s], file type [%d]", lst->filename, lst->type);
+		printf("filename :%s, file type %d", lst->filename, lst->type);
 		printf("\n~~~~~~~~~~~~~~~~\n");
 		lst = lst->next;
 	}
@@ -42,7 +41,6 @@ void printredirections(t_redir *lst)
 void printcommnads(t_command *lst)
 {
 	int i = 0;
-
 	if (!lst)
 		printf("no commands");
 	while (lst)
@@ -61,16 +59,16 @@ void printcommnads(t_command *lst)
 	}
 }
 
-
 void exit_funcs()
 {
 	printf("\nSYNTAX ERROR\n");
 }
-//!SECTION END TMPFUNCTIONS
+//NOTE - END TMPFUNCTIONS
+
+
 
 void	validat_syntax(t_token *tokens)
 {
-	//temp solution :
 	int i;
 
 	i = 0;
@@ -89,6 +87,8 @@ void	validat_syntax(t_token *tokens)
 		tokens = tokens->next;
 	}
 }
+
+
 
 void extract_cmds(t_token *token_list, t_command **commands)
 {
@@ -138,8 +138,6 @@ void extract_cmds(t_token *token_list, t_command **commands)
 		}
 		else if (token_list->tokenType == R_OUT || token_list->tokenType == R_IN || token_list->tokenType == HER )
 		{
-			if (!token_list->next)
-				break ;
 			token_list = token_list->next;
 			redir = (t_redir *) malloc(sizeof(t_redir));
 			redir->filename = ft_strdup(token_list->str);
@@ -157,6 +155,7 @@ void extract_cmds(t_token *token_list, t_command **commands)
 		}
 		else if (token_list->tokenType == PIPE)
 		{
+			// token_list = token_list->next;
 			command->next = (t_command *)malloc(sizeof(t_command));
 			command->next->args = (char **)malloc(2 * sizeof(char *));
 			command->next->args[0] = NULL;
@@ -177,12 +176,9 @@ int	parser(char *userInp)
 	commands = NULL;
 	token_list = NULL;
 	tokenizer(userInp, &token_list);
-	lexer(token_list);
-	// expander(&token_list);
 	printtokens(token_list);
-	validat_syntax(token_list);
+	// validat_syntax(token_list);
 	// extract_cmds(token_list, &commands);
 	// printcommnads(commands);
-	// clean_tokens(&token_list);
 	return (0);
 }
