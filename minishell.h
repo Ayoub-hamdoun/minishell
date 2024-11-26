@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/26 16:46:55 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:53:33 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef enum type
 	APP,
 	HER,
 	ENV,
-	PIPE 
+	PIPE
 }	t_etype;
 
 

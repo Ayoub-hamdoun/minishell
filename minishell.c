@@ -6,17 +6,19 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/26 16:47:26 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:52:03 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 #include <readline/readline.h>
 #include <readline/history.h>
-void l()
-{
-	system("leaks minishell");
-}
+
+
+// void l()
+// {
+// 	system("leaks minishell");
+// }
 
 int main(int argc, char *argv[])
 {
