@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/25 20:38:36 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:05:31 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ int	has_env(char *str)
 	return (0);
 }
 
-void	rm_qt(char *str)
+void	rm_qt(char **str)
 {
 	char	*res;
 
-	res = ft_substr(str, 1, ft_strlen(str) - 2);
-	free(str);
-	str = ft_strdup(res);
+	res = ft_substr(*str, 1, ft_strlen(*str) - 2);
+	free(*str);
+	*str = ft_strdup(res);
 	free(res);
 }
 
@@ -79,7 +79,7 @@ void	expander(t_token **tokens)
 		else if ((*tokens)->tokenType == WORD && (*tokens)->q_type == DOUBLE)
 		{
 			str = ft_strdup((*tokens)->str);
-			rm_qt(str);
+			rm_qt(&str);
 			res = ft_strdup("");
 			i = 0;
 			while (str[i])

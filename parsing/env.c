@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 23:23:02 by rallali           #+#    #+#             */
-/*   Updated: 2024/11/25 23:24:18 by rallali          ###   ########.fr       */
+/*   Updated: 2024/11/26 17:45:34 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	with_or_without_sign(t_env *env, char **ev, int i, char *sign)
 	else
 	{
 		env->key = strndup(ev[i], sign - ev[i]);
-		env->value = strdup(sign + 1);
+		env->value = ft_strdup(sign + 1);
 	}
 }
 

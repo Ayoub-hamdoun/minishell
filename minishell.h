@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/26 16:53:33 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 18:04:10 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,13 @@ typedef struct s_redir
 	struct s_redir	*next;
 }	t_redir;
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	struct s_env	*next;
+}	t_env;
+
 // Command structure
 typedef struct s_command
 {
@@ -81,7 +88,7 @@ int		ft_isalpha(int c);
 
 //temp
 void printtokens(t_token *lst);
-void	rm_qt(char *str);
+void	rm_qt(char **str);
 //end temp
 
 #endif
