@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 15:53:11 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/10/16 10:14:14 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 16:43:45 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,7 @@ char	*ft_strtrim(char *s1, char *set)
 		res[i++] = s1[start++];
 	res[i] = '\0';
 	return (res);
+<<<<<<< HEAD
+}
+=======
 }
