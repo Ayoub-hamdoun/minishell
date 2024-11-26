@@ -3,12 +3,13 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/25 20:29:33 by ayhamdou         ###   ########.fr       */
+/*   Created: 2024/11/26 04:49:18 by rallali           #+#    #+#             */
+/*   Updated: 2024/11/26 04:49:19 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "../minishell.h"
 
@@ -120,7 +121,7 @@ void	tokenizer(char *userInp, t_token **token_list)
 	trimmed = ft_strtrim(userInp, " \t");
 	while (trimmed[i])
 	{
-		while (trimmed[i] == ' ' || trimmed[i] == '\t')
+		while (trimmed[i] == ' ' || trimmed[i] == '\t') // add white spaces
 			i++;
 		if (!trimmed[i])
 			break ;
@@ -133,3 +134,6 @@ void	tokenizer(char *userInp, t_token **token_list)
 	free(trimmed);
 }
 //TODO: handl leaks ;;;;
+//TODO: don t pass only spaces " "
+//TODO: handle if there is one quote it should not be contained in the word more like a syntax error example '$ or $' or $" or "$
+//TODO:

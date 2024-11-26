@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/25 19:37:20 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 03:05:40 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,10 +177,10 @@ int	parser(char *userInp)
 	commands = NULL;
 	token_list = NULL;
 	tokenizer(userInp, &token_list);
-	// lexer(token_list);
-	expander(&token_list);
+	lexer(token_list);
+	// expander(&token_list);
 	printtokens(token_list);
-	// validat_syntax(token_list);
+	validat_syntax(token_list);
 	// extract_cmds(token_list, &commands);
 	// printcommnads(commands);
 	// clean_tokens(&token_list);

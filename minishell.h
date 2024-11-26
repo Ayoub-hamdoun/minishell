@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/10/16 10:19:34 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/26 02:19:59 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,28 @@ typedef enum type
 	R_OUT,
 	APP,
 	HER,
+	NONE,
+	DOUBLE,
+	SINGLE,
+	ENV,
 	PIPE
 }	t_etype;
+
+// env structure
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+	int				is_empty;
+	struct s_env	*next;
+}	t_env;
 
 // Token structure
 typedef struct s_token
 {
 	char			*str;
 	t_etype			tokenType;
+	t_etype			q_type;
 	struct s_token	*next;
 }	t_token;
 
@@ -55,7 +69,7 @@ typedef struct s_command
 // parsing funcs
 int		parser(char *userInp);
 void	tokenizer(char *userInp, t_token **tokenList);
-
+void	expander(t_token **tokens);
 // end of parsing funcs
 
 // utils
@@ -64,10 +78,19 @@ char	**ft_split(char *s, char c);
 char	*ft_strtrim(char *s1, char *set);
 int		ft_strcmp(char *s1, char *s2);
 char	*ft_strdup(char *s1);
+int	ft_isalnum(int c);
+int	ft_isalpha(int c);
+char	*ft_strjoin(char *s1, char *s2);
 char	*ft_substr(char *s, int start, int len);
 
 //temp
 void printtokens(t_token *lst);
+
+//lexer
+void quotes(t_token *tokens);
+void lexer(t_token *tokens);
+//for env
+void get_env(t_env *env, char **ev);
 //end temp
 
 #endif
