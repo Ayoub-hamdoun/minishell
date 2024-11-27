@@ -15,8 +15,7 @@ TOKEN : -------------------------
 TOKEN : -------------------------
 4; content [-a] ; type [3] ; qoute type [2]
 --------------------------------- 
-
-
+already handled in extract commnands 🙂
 
 
 
@@ -31,4 +30,54 @@ TOKEN : -------------------------
 2; content ['-la'] ; type [3] ; qoute type [1]
 ---------------------------------
 GUMBALL$> 
+
+todo : rmove quots e.g ech"o" c below:
+;; bash-3.2$ ech'o' hi
+;; bash-3.2$ 'ech'o'' hi
+;; hi
+;; bash-3.2$ "ech"o"" hi
+;; hi
+;; bash-3.2$ echo ""$USER""
+;; ayhamdou
+;; bash-3.2$ echo "$"USER""
+;; $USER
+;; bash-3.2$ echo "$"USER""
+;; $USER
+;; bash-3.2$ echo "$f"USER""
+;; USER
+;; bash-3.2$ echo "$"'USER'""
+;; $USER
+;; bash-3.2$ echo ""'USER'""
+;; USER
+;; bash-3.2$ echo ""USE'R'""
+;; USER
+;; bash-3.2$ "echo" ""USE'R'""
+;; USER
+;; bash-3.2$ "ech"o" ""USE'R'""
+;; > 
+;; bash-3.2$ "ech""o" ""USE'R'""
+;; USER
+;; bash-3.2$ "ech'""'o" ""USE'R'""
+;; bash: ech''o: command not found
+;; bash-3.2$ "ech'""'o" ""USE'R'""
+;; bash: ech''o: command not found
+;; bash-3.2$ "e""c""h""o" ji
+;; ji
+;; bash-3.2$ "e""c""h""o" hi
+;; hi
+;; bash-3.2$ "e""c""h""'o'" hi
+;; bash: ech'o': command not found
+;; bash-3.2$ "e""c""h""o" "h'i"
+;; h'i
+;; bash-3.2$ "e""c""h""o" "h'i'"
+;; h'i'
+;; bash-3.2$ "e""c""h""o" "$h'i'"
+;; 'i'
+;; bash-3.2$ "e""c""h""o" "$USER'i'"
+;; ayhamdou'i'
+;; bash-3.2$ "l's"
+;; bash: l's: command not found
+;; bash-3.2$ "l's'"
+;; bash: l's': command not found
+;; bash-3.2$ 
 

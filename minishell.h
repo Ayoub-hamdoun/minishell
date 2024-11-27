@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/27 00:37:49 by rallali          ###   ########.fr       */
+/*   Updated: 2024/11/27 17:35:47 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ typedef struct s_token
 typedef struct s_redir
 {
 	char			*filename;
+	int				flag_in;
+	int				flag_out;
 	t_etype			type;
 	struct s_redir	*next;
 }	t_redir;
@@ -85,10 +87,10 @@ char	*ft_substr(char *s, int start, int len);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
+void	rm_qt(char **str, int inextarction);
 
 //temp
-void printtokens(t_token *lst);
-void	rm_qt(char **str);
+void 	printtokens(t_token *lst);
 
 //lexer
 void lexer(t_token *tokens);

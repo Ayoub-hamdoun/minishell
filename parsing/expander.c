@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/26 18:05:31 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/27 19:38:32 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,28 @@ int	has_env(char *str)
 	return (0);
 }
 
-void	rm_qt(char **str)
+void	rm_qt(char **str, int inextarction)
 {
 	char	*res;
+	int		i;
+	char	target;
 
-	res = ft_substr(*str, 1, ft_strlen(*str) - 2);
-	free(*str);
-	*str = ft_strdup(res);
-	free(res);
+	if (!inextarction)
+	{
+		res = ft_substr(*str, 1, ft_strlen(*str) - 2);
+		free(*str);
+		*str = ft_strdup(res);
+		free(res);
+	}
+	else
+	{
+		i = 0;
+		while ((*str)[i])
+		{
+			if ((*str)[i] == '\'' || (*str)[i] == '\"')
+				target = (*str)[i];
+		}
+	}
 }
 
 char	*ret_env(char *str, int *i)
@@ -65,9 +79,12 @@ void	expander(t_token **tokens)
 		if ((*tokens)->tokenType == ENV)
 		{
 			res = ft_strdup(((*tokens)->str) + 1);
-			free((*tokens)->str);
-			(*tokens)->str = ft_strdup(getenv(res));
-			free(res);
+			if (ft_isalpha(str[0]))
+			{
+				free((*tokens)->str);
+				(*tokens)->str = ft_strdup(getenv(res));
+				free(res);
+			}
 		}
 		else if (!ft_strcmp((*tokens)->str, "~"))
 		{
@@ -79,7 +96,7 @@ void	expander(t_token **tokens)
 		else if ((*tokens)->tokenType == WORD && (*tokens)->q_type == DOUBLE)
 		{
 			str = ft_strdup((*tokens)->str);
-			rm_qt(&str);
+			rm_qt(&str, 0);
 			res = ft_strdup("");
 			i = 0;
 			while (str[i])

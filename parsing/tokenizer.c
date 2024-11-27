@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/27 03:47:21 by rallali          ###   ########.fr       */
+/*   Updated: 2024/11/27 18:12:02 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ int	is_special_char(char *trimmed, t_token **token_list, int pos)
 	return (pos);
 }
 
-int is_normal_word(char *trimmed, int pos, t_token **token_list)
+int is_normal_word(char *trimmed, t_token **token_list, int pos)
 {
 	int		start;
 	char	quote;
@@ -101,7 +101,8 @@ int is_normal_word(char *trimmed, int pos, t_token **token_list)
 	}
 	else
 	{
-		while (trimmed[pos] && trimmed[pos] != ' ' && trimmed[pos] != '|' && trimmed[pos] != '>' && trimmed[pos] != '<' )
+		while (trimmed[pos] && trimmed[pos] != ' ' && trimmed[pos] != '|'
+			&& trimmed[pos] != '>' && trimmed[pos] != '<' )
 			pos++;
 	}
 	str = ft_substr(trimmed, start, pos - start);
@@ -128,7 +129,7 @@ void	tokenizer(char *userInp, t_token **token_list)
 			|| trimmed[i] == '$')
 			i = is_special_char(trimmed, token_list, i);
 		else
-			i = is_normal_word(trimmed, i, token_list);
+			i = is_normal_word(trimmed, token_list, i);
 	}
 	free(trimmed);
 }

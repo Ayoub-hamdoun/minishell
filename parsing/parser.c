@@ -3,15 +3,39 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/27 13:28:28 by rallali          ###   ########.fr       */
+/*   Updated: 2024/11/27 20:41:05 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 //SECTION - TMPFUNCTIONS
+
+char*	gettype(t_etype type)
+{
+	if (type == DOUBLE)
+		return ("DOUBLE");
+	else if (type == SINGLE)
+		return "SINGLE";
+	else if (type == NONE)
+		return "NONE";
+	else if (type == WORD)
+		return "WORD";
+	else if (type == R_IN)
+		return "R_IN";
+	else if (type == R_OUT)
+		return "R_OUT";
+	else if (type == APP)
+		return "APP";
+	else if (type == HER)
+		return "HER";
+	else if (type == ENV)
+		return "ENV";
+	else 
+		return "PIPE";
+}
 
 void printtokens(t_token *lst)
 {
@@ -21,7 +45,7 @@ void printtokens(t_token *lst)
 	{
 		i++;
 		printf("\nTOKEN : -------------------------\n");
-		printf("%d; content [%s] ; type [%d] ; qoute type [%d]", i, lst->str, lst->tokenType, lst->q_type);
+		printf("%d; content [%s] ; type [%s] ; qoute type [%s]", i, lst->str, gettype(lst->tokenType), gettype(lst->q_type));
 		printf("\n---------------------------------\n");
 		lst = lst->next;
 	}
@@ -33,7 +57,7 @@ void printredirections(t_redir *lst)
 	while (lst)
 	{
 		printf("\nREDIRECTIONS : ~~~~~~~~~~~~~~~~\n");
-		printf("filename :[%s], file type [%d]", lst->filename, lst->type);
+		printf("filename :[%s], file type [%s]", lst->filename, gettype(lst->type));
 		printf("\n~~~~~~~~~~~~~~~~\n");
 		lst = lst->next;
 	}
@@ -44,7 +68,7 @@ void printcommnads(t_command *lst)
 	int i = 0;
 
 	if (!lst)
-		printf("no commands");
+		printf("no commands\n");
 	while (lst)
 	{
 		printf("\nCOMMANDS : ---------------------------------\n");
@@ -89,6 +113,11 @@ void	validat_syntax(t_token *tokens)
 		tokens = tokens->next;
 	}
 }
+// need more explanation to do this
+// void	last_file(t_command *commands)
+// {
+
+// }
 
 void extract_cmds(t_token *token_list, t_command **commands)
 {
@@ -110,9 +139,11 @@ void extract_cmds(t_token *token_list, t_command **commands)
 			{
 				command = (t_command *)malloc(sizeof(t_command));
 				command->args = (char **)malloc(2 * sizeof(char *));
+				// if (token_list->q_type != NONE) // was doin stuff here
+				// 	rm_qt(&(token_list->str), 1);
 				command->args[0] = strdup(token_list->str);
 				command->args[1] = NULL;
-				argcount = 1;
+				argcount = 1; //temp
 				command->is_builtin = 0;
 				command->rederects = NULL;
 				command->next = NULL;
@@ -136,14 +167,29 @@ void extract_cmds(t_token *token_list, t_command **commands)
 				argcount++;
 			}
 		}
-		else if (token_list->tokenType == R_OUT || token_list->tokenType == R_IN || token_list->tokenType == HER)
+		// create red list if true
+		else if (token_list->tokenType == R_OUT || token_list->tokenType == R_IN
+			|| token_list->tokenType == HER || token_list->tokenType == APP)
 		{
 			if (!token_list->next)
 				break ;
-			token_list = token_list->next;
+			if (!command) // if !commnd create a new command with empty args
+			{
+				command = (t_command *)malloc(sizeof(t_command));
+				command->args = (char **)malloc(2 * sizeof(char *));
+				command->args[0] = NULL;
+				command->args[1] = NULL;
+				argcount = 0; //temp
+				command->is_builtin = 0;
+				command->rederects = NULL;
+				command->next = NULL;
+				if (!(* commands))
+					*commands = command;
+			}
 			redir = (t_redir *) malloc(sizeof(t_redir));
-			redir->filename = ft_strdup(token_list->str);
 			redir->type = token_list->tokenType;
+			token_list = token_list->next;
+			redir->filename = ft_strdup(token_list->str);
 			redir->next = NULL;
 			if (!(command->rederects))
 				command->rederects = redir;
@@ -177,12 +223,16 @@ int	parser(char *userInp)
 	commands = NULL;
 	token_list = NULL;
 	tokenizer(userInp, &token_list);
-	lexer(token_list);
+	// lexer(token_list);
 	// expander(&token_list);
-	printtokens(token_list);
+	// printtokens(token_list);
 	// validat_syntax(token_list);
-	// extract_cmds(token_list, &commands);
-	// printcommnads(commands);
+	extract_cmds(token_list, &commands);
+	printcommnads(commands);
+	// last_file(&commands);
 	// clean_tokens(&token_list);
 	return (0);
 }
+
+
+// TODO : create function helpers (create commnad ...) (do it later);
