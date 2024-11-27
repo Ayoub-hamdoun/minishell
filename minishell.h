@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/26 18:04:10 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/27 00:37:49 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,10 @@ int		ft_isalpha(int c);
 //temp
 void printtokens(t_token *lst);
 void	rm_qt(char **str);
+
+//lexer
+void lexer(t_token *tokens);
+void check_quotes_alt(t_token *token);
 //end temp
 
 #endif

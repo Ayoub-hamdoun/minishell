@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/26 18:10:52 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/27 03:47:21 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int is_normal_word(char *trimmed, int pos, t_token **token_list)
 	}
 	else
 	{
-		while (trimmed[pos] && trimmed[pos] != ' ' && trimmed[pos] != '|')
+		while (trimmed[pos] && trimmed[pos] != ' ' && trimmed[pos] != '|' && trimmed[pos] != '>' && trimmed[pos] != '<' )
 			pos++;
 	}
 	str = ft_substr(trimmed, start, pos - start);
