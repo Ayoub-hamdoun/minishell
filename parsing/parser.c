@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/27 20:41:05 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:22:45 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void printcommnads(t_command *lst)
 		printf("\nCOMMANDS : ---------------------------------\n");
 		while (lst->args[i])
 		{
-			printf("'%s' ", lst->args[i]);
+			printf("'%s' \n", lst->args[i]);
 			i++;
 		}
 		i = 0;
@@ -118,7 +118,38 @@ void	validat_syntax(t_token *tokens)
 // {
 
 // }
-
+void rm_middle_quotes(char *str)
+{
+	int i;
+	int j;
+	int len;
+	if (!str)
+		return ;
+	i = 0;
+	j = 0;
+	len = strlen(str);
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+		{
+			i++;
+			while (str[i] && str[i] != '\'' && str[i] != '\"')
+			{
+				str[j] = str[i];
+				i++;
+				j++;
+			}
+			i++;
+		}
+		else
+		{
+			str[j] = str[i];
+			i++;
+			j++;
+		}
+	}
+	str[j] = '\0';
+}
 void extract_cmds(t_token *token_list, t_command **commands)
 {
 	t_command *command;
@@ -140,13 +171,14 @@ void extract_cmds(t_token *token_list, t_command **commands)
 				command = (t_command *)malloc(sizeof(t_command));
 				command->args = (char **)malloc(2 * sizeof(char *));
 				// if (token_list->q_type != NONE) // was doin stuff here
-				// 	rm_qt(&(token_list->str), 1);
+				
 				command->args[0] = strdup(token_list->str);
 				command->args[1] = NULL;
 				argcount = 1; //temp
 				command->is_builtin = 0;
 				command->rederects = NULL;
 				command->next = NULL;
+				rm_middle_quotes(command->args[0]);
 				if (!(* commands))
 					*commands = command;
 			}
@@ -164,6 +196,7 @@ void extract_cmds(t_token *token_list, t_command **commands)
 				updated_args[argcount + 1] = NULL;
 				free(command->args);
 				command->args = updated_args;
+				rm_middle_quotes(command->args[argcount]);
 				argcount++;
 			}
 		}
@@ -223,9 +256,9 @@ int	parser(char *userInp)
 	commands = NULL;
 	token_list = NULL;
 	tokenizer(userInp, &token_list);
-	// lexer(token_list);
-	// expander(&token_list);
-	// printtokens(token_list);
+	lexer(token_list);
+	expander(&token_list);
+	printtokens(token_list);
 	// validat_syntax(token_list);
 	extract_cmds(token_list, &commands);
 	printcommnads(commands);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/27 19:38:32 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:25:33 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,18 @@ void	rm_qt(char **str, int inextarction)
 		{
 			if ((*str)[i] == '\'' || (*str)[i] == '\"')
 				target = (*str)[i];
+			i++;
 		}
 	}
 }
+// char print_all(t_token *token)
+// {
+// 	while (token)
+// 	{
+// 		printf("str: %s\n", token->str);
 
+// 	return (0);
+// }
 char	*ret_env(char *str, int *i)
 {
 	int start;
@@ -72,7 +80,9 @@ void	expander(t_token **tokens)
 	char	tmp[2];
 	char	*expanded;
 	int		i;
-
+	// handdle /~ tahiya kat3tiha lhome
+	//$? 5ask t3tiha a5ir exit code
+	//expandi hadi * ma3rftch wach daroriya tho hadi kata5od ga3 lfiles li kaynin flblaysa fin kayn nta
 	head = *tokens;
 	while ((*tokens))
 	{
