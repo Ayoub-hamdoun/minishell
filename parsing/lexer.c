@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/27 08:18:40 by rallali          ###   ########.fr       */
+/*   Updated: 2024/11/29 17:07:58 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,31 +71,32 @@
 // }
 void check_quotes_alt(t_token *token) 
 {
-    int total_single = 0;
-    int total_double = 0;
-    t_token *current = token;
+	int total_single = 0;
+	int total_double = 0;
+	t_token *current = token;
 	if (!current)
 		return ;
-    while (current) 
+	while (current) 
 	{
-        int i = 0;
-        while (current->str[i]) 
+		int i = 0;
+		while (current->str[i]) 
 		{
-            if (current->str[i] == '\'')
+			if (current->str[i] == '\'')
 				total_single++;
-            if (current->str[i] == '"')
+			if (current->str[i] == '"')
 				total_double++;
-            i++;
-        }
-        current = current->next;
-    }
+			i++;
+		}
+		current = current->next;
+	}
 	
-    if (total_single % 2 != 0 || total_double % 2 != 0) 
+	if (total_single % 2 != 0 || total_double % 2 != 0) 
 	{
-        printf(">\n");
-        exit(1);
-    }
+		printf(">\n");
+		exit(1);
+	}
 }
+
 void check_first_p(t_token *token)
 {
 	t_token *current = token;
@@ -117,26 +118,26 @@ void check_first_p(t_token *token)
 }
 void check_doubled_pipe(t_token *token)
 {
-    t_token *current = token;
+	t_token *current = token;
 	if (!current)
 		return ;
-    while (current)
-    {
-        if (current->tokenType == PIPE)
-        {
-            if (!current->next)
-            {
-                printf("> nothing after pipe\n");
+	while (current)
+	{
+		if (current->tokenType == PIPE)
+		{
+			if (!current->next)
+			{
+				printf("> nothing after pipe\n");
 				exit(1);
-            }
-            else if (current->next->tokenType == PIPE)
-            {
-                printf("minishell: syntax error: mismatched pipes\n");
-                exit(1);
-            }
-        }
-        current = current->next;
-    }
+			}
+			else if (current->next->tokenType == PIPE)
+			{
+				printf("minishell: syntax error: mismatched pipes\n");
+				exit(1);
+			}
+		}
+		current = current->next;
+	}
 }
 void check_redirection(t_token *token)
 {

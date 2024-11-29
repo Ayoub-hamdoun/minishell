@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/27 18:12:02 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:39:01 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,32 +78,66 @@ int	is_special_char(char *trimmed, t_token **token_list, int pos)
 	return (pos);
 }
 
+// int is_normal_word(char *trimmed, t_token **token_list, int pos)
+// {
+	// int		start;
+	// char	quote;
+	// char	*str;
+	// t_etype	qt;
+// 
+	// start = pos;
+	// qt = NONE;
+	// if (trimmed[pos] == '\'' || trimmed[pos] == '\"')
+	// {
+		// quote = trimmed[pos];
+		// pos++;
+		// while (trimmed[pos] && trimmed[pos] != quote)
+			// pos++;
+		// pos++;
+		// if (quote == '\"')
+			// qt = DOUBLE;
+		// else
+			// qt = SINGLE;
+	// }
+	// else
+	// {
+		// while (trimmed[pos] && trimmed[pos] != ' ' && trimmed[pos] != '|'
+			// && trimmed[pos] != '>' && trimmed[pos] != '<' )
+			// pos++;
+	// }
+	// str = ft_substr(trimmed, start, pos - start);
+	// create_token(token_list, str, WORD, qt);
+	// if (str)
+		// free(str);
+	// return (pos);
+// }
+
 int is_normal_word(char *trimmed, t_token **token_list, int pos)
 {
-	int		start;
-	char	quote;
-	char	*str;
-	t_etype	qt;
+	int start;
+	char quote;
+	char *str;
+	t_etype qt;
 
 	start = pos;
+	quote = '\0';
 	qt = NONE;
-	if (trimmed[pos] == '\'' || trimmed[pos] == '\"')
+	while (trimmed[pos])
 	{
-		quote = trimmed[pos];
+		if ((trimmed[pos] == '\'' || trimmed[pos] == '\"') && !quote)
+		{
+			quote = trimmed[pos];
+			if (quote == '\"')
+				qt = DOUBLE;
+			else if (quote == '\'')
+				qt = SINGLE;
+		}
+		else if (trimmed[pos] == quote)
+			quote = '\0';
+		else if (quote == '\0' && (trimmed[pos] == ' ' || trimmed[pos] == '|'
+				|| trimmed[pos] == '>' || trimmed[pos] == '<'))
+			break ;
 		pos++;
-		while (trimmed[pos] && trimmed[pos] != quote)
-			pos++;
-		pos++;
-		if (quote == '\"')
-			qt = DOUBLE;
-		else
-			qt = SINGLE;
-	}
-	else
-	{
-		while (trimmed[pos] && trimmed[pos] != ' ' && trimmed[pos] != '|'
-			&& trimmed[pos] != '>' && trimmed[pos] != '<' )
-			pos++;
 	}
 	str = ft_substr(trimmed, start, pos - start);
 	create_token(token_list, str, WORD, qt);

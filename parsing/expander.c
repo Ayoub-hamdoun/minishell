@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expander.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/28 14:25:33 by rallali          ###   ########.fr       */
+/*   Updated: 2024/11/29 17:05:48 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,14 +50,7 @@ void	rm_qt(char **str, int inextarction)
 		}
 	}
 }
-// char print_all(t_token *token)
-// {
-// 	while (token)
-// 	{
-// 		printf("str: %s\n", token->str);
 
-// 	return (0);
-// }
 char	*ret_env(char *str, int *i)
 {
 	int start;
