@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/28 17:02:02 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:09:55 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,6 @@ void 	printtokens(t_token *lst);
 void lexer(t_token *tokens);
 void check_quotes_alt(t_token *token);
 //end temp
-
+void check_last_out(t_command *token);
+void check_last(t_command *token);
 #endif

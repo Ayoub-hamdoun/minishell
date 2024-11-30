@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/29 17:07:58 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:11:40 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,34 +69,79 @@
 // 		}
 // 	}
 // }
-void check_quotes_alt(t_token *token) 
+// void check_quotes_alt(t_token *token) 
+// {
+// 	int total_single = 0;
+// 	int total_double = 0;
+// 	t_token *current = token;
+// 	if (!current)
+// 		return ;
+// 	while (current) 
+// 	{
+// 		int i = 0;
+// 		while (current->str[i]) 
+// 		{
+// 			if (current->str[i] == '\'')
+// 				total_single++;
+// 			if (current->str[i] == '"')
+// 				total_double++;
+// 			i++;
+// 		}
+// 		current = current->next;
+// 	}
+	
+// 	if (total_single % 2 != 0 || total_double % 2 != 0) 
+// 	{
+// 		printf(">\n");
+// 		exit(1);
+// 	}
+// }
+
+int check_first_quote(t_token *token)
 {
-	int total_single = 0;
-	int total_double = 0;
+	if (!token)
+		return (-1);
+	if (token->str[0] == '\'')
+		return (1);
+	else if (token->str[0] == '"')
+		return (2);
+	return (0);
+}
+int check_last_quote(t_token *token)
+{
+	if (!token)
+		return (-1);
+	int i = ft_strlen(token->str) - 1;
+	if (token->str[i] == '\'')
+		return (1);
+	else if (token->str[i] == '"')
+		return (2);
+	return (0);
+}
+void check_quotes(t_token *token)
+{
 	t_token *current = token;
+	// int i = 0;
+	int checker = 0;
+	int checker2 = 0;
 	if (!current)
 		return ;
-	while (current) 
+	while (current)
 	{
-		int i = 0;
-		while (current->str[i]) 
+		if (current ->str[0] == '\'' || current->str[0] == '"')
 		{
-			if (current->str[i] == '\'')
-				total_single++;
-			if (current->str[i] == '"')
-				total_double++;
-			i++;
-		}
+			checker = check_first_quote(current);
+			checker2 = check_last_quote(current);
+		}	
 		current = current->next;
 	}
-	
-	if (total_single % 2 != 0 || total_double % 2 != 0) 
+	if (checker != checker2 || checker == -1 || checker2 == -1)
 	{
-		printf(">\n");
+		printf("minishell: syntax error: mismatched quotes\n");
 		exit(1);
 	}
+	return ;
 }
-
 void check_first_p(t_token *token)
 {
 	t_token *current = token;
@@ -170,7 +215,7 @@ void lexer(t_token *tokens)
 	while (tmp)
 	{
 		check_redirection(tmp);
-		check_quotes_alt(tmp);
+		check_quotes(tmp);
 		check_doubled_pipe(tmp);
 		tmp  = tmp->next;
 	}

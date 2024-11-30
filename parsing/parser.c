@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/30 21:04:12 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:11:22 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -261,6 +261,8 @@ int	parser(char *userInp)
 	printtokens(token_list);
 	// validat_syntax(token_list);
 	extract_cmds(token_list, &commands);
+	check_last(commands);
+	check_last_out(commands);
 	printcommnads(commands);
 	// last_file(&commands);
 	// clean_tokens(&token_list);
