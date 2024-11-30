@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/29 18:55:08 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/30 21:04:12 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void printredirections(t_redir *lst)
 	while (lst)
 	{
 		printf("\nREDIRECTIONS : ~~~~~~~~~~~~~~~~\n");
-		printf("filename :[%s], file type [%s]", lst->filename, gettype(lst->type));
+		printf("filename :[%s], file type [%s], in [%d], out [%d]", lst->filename, gettype(lst->type), lst->flag_in, lst->flag_out);
 		printf("\n~~~~~~~~~~~~~~~~\n");
 		lst = lst->next;
 	}
@@ -67,8 +67,8 @@ void printcommnads(t_command *lst)
 {
 	int i = 0;
 
-	if (!lst)
-		printf("no commands\n");
+	// if (!lst)
+	// 	printf("no commands\n");
 	while (lst)
 	{
 		printf("\nCOMMANDS : ---------------------------------\n");
@@ -164,13 +164,13 @@ void extract_cmds(t_token *token_list, t_command **commands)
 	while (token_list)
 	{
 		// new commnad
-		if (token_list->tokenType == WORD)
+		if (token_list->tokenType == WORD || token_list->tokenType == ENV)
 		{
 			if (!command)
 			{
 				command = (t_command *)malloc(sizeof(t_command));
 				command->args = (char **)malloc(2 * sizeof(char *));
-				command->args[0] = strdup(token_list->str);
+				command->args[0] = ft_strdup(token_list->str);
 				command->args[1] = NULL;
 				argcount = 1; //temp
 				command->is_builtin = 0;
@@ -220,6 +220,8 @@ void extract_cmds(t_token *token_list, t_command **commands)
 			redir->type = token_list->tokenType;
 			token_list = token_list->next;
 			redir->filename = ft_strdup(token_list->str);
+			redir->flag_in = 0;
+			redir->flag_out = 0;
 			redir->next = NULL;
 			if (!(command->rederects))
 				command->rederects = redir;
@@ -237,6 +239,7 @@ void extract_cmds(t_token *token_list, t_command **commands)
 			command->next->args = (char **)malloc(2 * sizeof(char *));
 			command->next->args[0] = NULL;
 			command->next->is_builtin = 0;
+			command->next->rederects = NULL;
 			command->next->next = NULL;
 			command = command->next;
 			argcount = 0;

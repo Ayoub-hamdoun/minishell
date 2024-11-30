@@ -6,7 +6,7 @@
 #    By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 15:45:29 by ayhamdou          #+#    #+#              #
-#    Updated: 2024/11/28 17:07:01 by ayhamdou         ###   ########.fr        #
+#    Updated: 2024/11/30 19:15:29 by ayhamdou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,8 +21,8 @@ OBJS = $(SRCS:%.c=%.o)
 MAIN = minishell.c
 
 CC = cc
-FLAGS = -Wall -Wextra -Werror
-#FLAGS = -Wall -Wextra -Werror #-fsanitize=address -g -O
+# FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -fsanitize=address -g -O
 
 RM = rm -rf
 

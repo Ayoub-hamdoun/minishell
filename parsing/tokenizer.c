@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/29 16:39:01 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/11/30 20:36:30 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,9 @@ void	create_token(t_token **token, char *data, t_etype type, t_etype qt)
 	t_token	*tmp;
 	t_token	*current;
 
+	printf("{%s}", data);
 	current = (t_token *)malloc(sizeof(t_token));
 	current->str = ft_strdup(data);
-	// if (qt != NONE)
-	// 	rm_qt(current->str);
 	current->tokenType = type;
 	current->q_type = qt;
 	current->next = NULL;
@@ -50,6 +49,8 @@ int	is_special_char(char *trimmed, t_token **token_list, int pos)
 			pos++;
 		str = ft_substr(trimmed, h, pos - h);
 		create_token(token_list, str, ENV, NONE);
+		free (str);
+		return (pos);
 	}
 	//check for ~
 	else if (trimmed[pos] == '>')
