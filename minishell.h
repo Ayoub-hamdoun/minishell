@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 16:32:52 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:33:53 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,5 @@ void check_quotes_alt(t_token *token);
 //end temp
 void check_last_out(t_command *token);
 void check_last(t_command *token);
+void	ft_getenv(t_env *env, char **ev);
 #endif

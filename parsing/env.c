@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 23:23:02 by rallali           #+#    #+#             */
-/*   Updated: 2024/11/26 17:45:34 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:33:30 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,21 @@ void	with_or_without_sign(t_env *env, char **ev, int i, char *sign)
 	}
 }
 
-void	get_env(t_env *env, char **ev)
+char *get_line(t_env *env,char *key)
+{
+	t_env *tmp;
+
+	tmp = env;
+	while (tmp)
+	{
+		if (!ft_strcmp(env->key, key))
+			return(env->value);
+		tmp = tmp->next;
+	}
+	return (NULL);
+}
+
+void	ft_getenv(t_env *env, char **ev)
 {
 	char	*sign;
 	int		i;

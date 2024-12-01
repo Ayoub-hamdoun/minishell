@@ -6,7 +6,7 @@
 #    By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 15:45:29 by ayhamdou          #+#    #+#              #
-#    Updated: 2024/12/01 17:33:14 by ayhamdou         ###   ########.fr        #
+#    Updated: 2024/12/01 19:20:10 by ayhamdou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ HEADER = minishell.h
 SRCS = utils/ft_split.c utils/ft_strcmp.c utils/ft_strdup.c utils/ft_strlen.c utils/ft_substr.c\
 		utils/ft_strtrim.c utils/ft_strjoin.c utils/ft_isalnum.c\
 		parsing/parser.c parsing/tokenizer.c parsing/expander.c parsing/cleaner.c parsing/lexer.c\
-		parsing/check_last_red.c\
+		parsing/check_last_red.c parsing/env.c\
 		minishell.c
 
 OBJS = $(SRCS:%.c=%.o)

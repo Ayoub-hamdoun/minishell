@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/30 20:37:34 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:41:09 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,11 @@ char	*ret_env(char *str, int *i)
 	char *env;
 
 	start = *i;
-	while (str[*i] && ft_isalnum(str[*i]))
+	while (str[*i] && (ft_isalnum(str[*i] || str[*i] == '_')))
 		(*i)++;
 	env = ft_substr(str, start, (*i) - start);
 	if (getenv(env))
-		return (ft_strdup(getenv(env)));
+		return (ft_strdup((env)));
 	return (ft_strdup(""));
 }
 
@@ -82,7 +82,7 @@ void	expander(t_token **tokens)
 		if ((*tokens)->tokenType == ENV)
 		{
 			res = ft_strdup(((*tokens)->str) + 1);
-			if (ft_isalpha(res[0]))
+			if (ft_isalpha(res[0]) || res[0] == '_')
 			{
 				free((*tokens)->str);
 				(*tokens)->str = ft_strdup(getenv(res));
@@ -99,12 +99,11 @@ void	expander(t_token **tokens)
 		else if ((*tokens)->tokenType == WORD && (*tokens)->q_type == DOUBLE)
 		{
 			str = ft_strdup((*tokens)->str);
-			// rm_qt(&str, 0);
 			res = ft_strdup("");
 			i = 0;
 			while (str[i])
 			{
-				if (str[i] == '$' && ft_isalpha(str[i + 1]))
+				if (str[i] == '$' && (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
 				{
 					i++;
 					expanded = ret_env(str, &i);

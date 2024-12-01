@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 17:50:16 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/01 17:56:34 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int check_first_quote(t_token *token)
 }
 int check_last_quote(t_token *token)
 {
-	if (!token)
+	if (!token || ft_strlen(token->str) == 1)
 		return (-1);
 	int i = ft_strlen(token->str) - 1;
 	if (token->str[i] == '\'')
@@ -133,11 +133,11 @@ void check_quotes(t_token *token)
 			checker = check_first_quote(current);
 			checker2 = check_last_quote(current);
 		}
-		else if (current->str[ft_strlen(current->str) - 1] == '\'' || current->str[ft_strlen(current->str) - 1] == '"')
-		{
-			checker = check_first_quote(current);
-			checker2 = check_last_quote(current);
-		}
+		// else if (current->str[ft_strlen(current->str) - 1] == '\'' || current->str[ft_strlen(current->str) - 1] == '"')
+		// {
+		// 	checker = check_first_quote(current);
+		// 	checker2 = check_last_quote(current);
+		// }
 		current = current->next;
 	}
 	if (checker != checker2 || checker == -1 || checker2 == -1)

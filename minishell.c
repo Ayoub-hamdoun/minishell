@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 17:41:27 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/01 19:37:14 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,28 @@ void handle_sig(int sig)
 	rl_on_new_line();
 	rl_redisplay();
 }
+void print_ev(t_env *env)
+{
+	t_env *tmp;
 
-int main(int argc, char *argv[])
+	tmp  = env;
+	while (tmp)
+	{
+		printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
+}
+int main(int argc, char *argv[], char **env)
 {
 	(void)argc;
 	(void)argv;
+	t_env *ev;
+	ev = malloc (sizeof(t_env));
 	// char *str = "     $HOME";
 	// atexit(l);
 	rl_catch_signals = 0;
+	ft_getenv(ev, env);
+	print_ev(ev);
 	while(1)
 	{
 		signal(SIGINT, handle_sig);
