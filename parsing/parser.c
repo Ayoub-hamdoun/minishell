@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/30 21:11:22 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/01 16:22:23 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,37 +118,53 @@ void	validat_syntax(t_token *tokens)
 // {
 
 // }
-void rm_middle_quotes(char *str)
+
+void	remove_quotes(t_token **tokens)
 {
-	int i;
-	int j;
-	int len;
-	if (!str)
-		return ;
-	i = 0;
-	j = 0;
-	len = strlen(str);
-	while (str[i])
+	t_token	*current;
+	char	*new_str;
+	char	*tmp;
+	char quote;
+	int		i;
+	int		start;
+
+	current = *tokens;
+	while (current)
 	{
-		if (str[i] == '\'' || str[i] == '\"')
+		if (current->q_type != NONE)
 		{
-			i++;
-			while (str[i] && str[i] != '\'' && str[i] != '\"')
+			new_str = ft_strdup("");
+			i = 0;
+			while (current->str[i])
 			{
-				str[j] = str[i];
-				i++;
-				j++;
+				if (current->str[i] == '\'' || current->str[i] == '\"')
+				{
+					quote = current->str[i];
+					i++;
+					start = i;
+					while (current->str[i] && current->str[i] != quote)
+						i++;
+					tmp = ft_substr(current->str, start, i - start); // Extract content inside quotes
+					new_str = ft_strjoin(new_str, tmp);
+					free(tmp);
+					if (current->str[i] == quote)
+						i++;
+				}
+				else
+				{
+					start = i;
+					while (current->str[i] && current->str[i] != '\'' && current->str[i] != '\"')
+						i++;
+					tmp = ft_substr(current->str, start, i - start);
+					new_str = ft_strjoin(new_str, tmp);
+					free(tmp);
+				}
 			}
-			i++;
+			free(current->str);
+			current->str = new_str;
 		}
-		else
-		{
-			str[j] = str[i];
-			i++;
-			j++;
-		}
+		current = current->next;
 	}
-	str[j] = '\0';
 }
 void extract_cmds(t_token *token_list, t_command **commands)
 {
@@ -161,6 +177,7 @@ void extract_cmds(t_token *token_list, t_command **commands)
 
 	command = NULL;
 	updated_args = NULL;
+	remove_quotes(&token_list);
 	while (token_list)
 	{
 		// new commnad
@@ -256,7 +273,7 @@ int	parser(char *userInp)
 	commands = NULL;
 	token_list = NULL;
 	tokenizer(userInp, &token_list);
-	// lexer(token_list);
+	lexer(token_list);
 	expander(&token_list);
 	printtokens(token_list);
 	// validat_syntax(token_list);

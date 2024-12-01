@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/30 21:09:55 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/01 16:32:52 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <unistd.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <signal.h>
 
 typedef enum type
 {
@@ -74,7 +75,7 @@ typedef struct s_command
 int		parser(char *userInp);
 void	tokenizer(char *userInp, t_token **tokenList);
 void	expander(t_token **tokens);
-// end of parsing func\
+// end of parsing func
 
 
 // cleaners

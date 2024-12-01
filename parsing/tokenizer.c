@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/30 20:36:30 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/01 16:31:24 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ void	create_token(t_token **token, char *data, t_etype type, t_etype qt)
 	t_token	*tmp;
 	t_token	*current;
 
-	printf("{%s}", data);
 	current = (t_token *)malloc(sizeof(t_token));
 	current->str = ft_strdup(data);
 	current->tokenType = type;
@@ -78,40 +77,6 @@ int	is_special_char(char *trimmed, t_token **token_list, int pos)
 		free(str);
 	return (pos);
 }
-
-// int is_normal_word(char *trimmed, t_token **token_list, int pos)
-// {
-	// int		start;
-	// char	quote;
-	// char	*str;
-	// t_etype	qt;
-// 
-	// start = pos;
-	// qt = NONE;
-	// if (trimmed[pos] == '\'' || trimmed[pos] == '\"')
-	// {
-		// quote = trimmed[pos];
-		// pos++;
-		// while (trimmed[pos] && trimmed[pos] != quote)
-			// pos++;
-		// pos++;
-		// if (quote == '\"')
-			// qt = DOUBLE;
-		// else
-			// qt = SINGLE;
-	// }
-	// else
-	// {
-		// while (trimmed[pos] && trimmed[pos] != ' ' && trimmed[pos] != '|'
-			// && trimmed[pos] != '>' && trimmed[pos] != '<' )
-			// pos++;
-	// }
-	// str = ft_substr(trimmed, start, pos - start);
-	// create_token(token_list, str, WORD, qt);
-	// if (str)
-		// free(str);
-	// return (pos);
-// }
 
 int is_normal_word(char *trimmed, t_token **token_list, int pos)
 {
