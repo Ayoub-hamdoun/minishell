@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 16:22:23 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/01 20:33:14 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -275,7 +275,7 @@ int	parser(char *userInp)
 	tokenizer(userInp, &token_list);
 	lexer(token_list);
 	expander(&token_list);
-	printtokens(token_list);
+	// printtokens(token_list);
 	// validat_syntax(token_list);
 	extract_cmds(token_list, &commands);
 	check_last(commands);
