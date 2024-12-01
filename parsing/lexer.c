@@ -6,7 +6,7 @@
 /*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/30 21:11:40 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/01 17:50:16 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,11 +128,16 @@ void check_quotes(t_token *token)
 		return ;
 	while (current)
 	{
-		if (current ->str[0] == '\'' || current->str[0] == '"')
+		if (current ->str[0] == '\'' || current->str[0] == '"' )
 		{
 			checker = check_first_quote(current);
 			checker2 = check_last_quote(current);
-		}	
+		}
+		else if (current->str[ft_strlen(current->str) - 1] == '\'' || current->str[ft_strlen(current->str) - 1] == '"')
+		{
+			checker = check_first_quote(current);
+			checker2 = check_last_quote(current);
+		}
 		current = current->next;
 	}
 	if (checker != checker2 || checker == -1 || checker2 == -1)
