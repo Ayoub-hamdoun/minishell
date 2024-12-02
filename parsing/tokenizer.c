@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/02 14:31:17 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 19:23:51 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,40 @@ void	create_token(t_token **token, char *data, t_etype type, t_etype qt)
 	}
 }
 
+int	check_in_or_herdoc(char *trimmed, t_token **token_list, int pos)
+{
+	if (trimmed[pos] == '<')
+	{
+		if (trimmed[pos + 1] == '<')
+		{
+			create_token(token_list, "<<", HER, NONE);
+			pos++;
+		}
+		else
+			create_token(token_list, "<", R_IN, NONE);
+	}
+	return (pos);
+}
+
+int	check_out_or_append(char *trimmed, t_token **token_list, int pos)
+{
+	if (trimmed[pos] == '>')
+	{
+		if (trimmed[pos + 1] == '>')
+		{
+			create_token(token_list, ">>", APP, NONE);
+			pos++;
+		}
+		else
+			create_token(token_list, ">", R_OUT, NONE);
+	}
+	return (pos);
+}
+
 int	is_special_char(char *trimmed, t_token **token_list, int pos)
 {
-	int h;
-	char *str;
+	int		h;
+	char	*str;
 
 	str = NULL;
 	if (trimmed[pos] == '|')
@@ -51,54 +81,40 @@ int	is_special_char(char *trimmed, t_token **token_list, int pos)
 		free (str);
 		return (pos);
 	}
-	//check for ~
-	else if (trimmed[pos] == '>')
-	{
-		if (trimmed[pos + 1] == '>')
-		{
-			create_token(token_list, ">>", APP, NONE);
-			pos++;
-		}
-		else
-			create_token(token_list, ">", R_OUT, NONE);
-	}
-	else if (trimmed[pos] == '<')
-	{
-		if (trimmed[pos + 1] == '<')
-		{
-			create_token(token_list, "<<", HER, NONE);
-			pos++;
-		}
-		else
-			create_token(token_list, "<", R_IN, NONE);
-	}
+	pos = check_out_or_append(trimmed, token_list, pos);
+	pos = check_in_or_herdoc(trimmed, token_list, pos);
 	pos++;
 	if (str)
 		free(str);
 	return (pos);
 }
 
-int is_normal_word(char *trimmed, t_token **token_list, int pos)
+void	check_one_quote(char *trimmed, char *quote, int pos, t_etype *qt)
 {
-	int start;
-	char quote;
-	char *str;
-	t_etype qt;
+	if ((trimmed[pos] == '\'' || trimmed[pos] == '\"') && !(*quote))
+	{
+		*quote = trimmed[pos];
+		if (*quote == '\"')
+			*qt = DOUBLE;
+		else if (*quote == '\'')
+			*qt = SINGLE;
+	}
+}
+
+int	is_normal_word(char *trimmed, t_token **token_list, int pos)
+{
+	int		start;
+	char	quote;
+	char	*str;
+	t_etype	qt;
 
 	start = pos;
 	quote = '\0';
 	qt = NONE;
 	while (trimmed[pos])
 	{
-		if ((trimmed[pos] == '\'' || trimmed[pos] == '\"') && !quote)
-		{
-			quote = trimmed[pos];
-			if (quote == '\"')
-				qt = DOUBLE;
-			else if (quote == '\'')
-				qt = SINGLE;
-		}
-		else if (trimmed[pos] == quote)
+		check_one_quote(trimmed, &quote, pos, &qt);
+		if (trimmed[pos] == quote)
 			quote = '\0';
 		else if (quote == '\0' && (trimmed[pos] == ' ' || trimmed[pos] == '|'
 				|| trimmed[pos] == '>' || trimmed[pos] == '<'))
@@ -121,7 +137,7 @@ void	tokenizer(char *userInp, t_token **token_list)
 	trimmed = ft_strtrim(userInp, " \t");
 	while (trimmed[i])
 	{
-		while (trimmed[i] == ' ' || trimmed[i] == '\t') // add white spaces
+		while (trimmed[i] == ' ' || trimmed[i] == '\t')
 			i++;
 		if (!trimmed[i])
 			break ;
