@@ -6,283 +6,149 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/02 15:26:43 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 18:23:38 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-//SECTION - TMPFUNCTIONS
 
-char*	gettype(t_etype type)
+t_command	*cmd_new(t_command **commands)
 {
-	if (type == DOUBLE)
-		return ("DOUBLE");
-	else if (type == SINGLE)
-		return "SINGLE";
-	else if (type == NONE)
-		return "NONE";
-	else if (type == WORD)
-		return "WORD";
-	else if (type == R_IN)
-		return "R_IN";
-	else if (type == R_OUT)
-		return "R_OUT";
-	else if (type == APP)
-		return "APP";
-	else if (type == HER)
-		return "HER";
-	else if (type == ENV)
-		return "ENV";
-	else 
-		return "PIPE";
+	t_command	*cmd;
+
+	cmd = (t_command *)malloc(sizeof(t_command));
+	if (!cmd)
+		return (NULL);
+	cmd->args = (char **)malloc(2 * sizeof(char *));
+	cmd->args[0] = NULL;
+	cmd->args[1] = NULL;
+	cmd->is_builtin = 0;
+	cmd->rederects = NULL;
+	cmd->next = NULL;
+	if (!(*commands))
+		*commands = cmd;
+	return (cmd);
 }
 
-void printtokens(t_token *lst)
+void	handle_word(t_command **command, char *str, int *argcount)
 {
-	int i = 0;
+	int		i;
+	char	**updated_args;
 
-	while (lst)
+	if (!(*command)->args)
 	{
-		i++;
-		printf("\nTOKEN : -------------------------\n");
-		printf("%d; content [%s] ; type [%s] ; qoute type [%s]", i, lst->str, gettype(lst->token_type), gettype(lst->q_type));
-		printf("\n---------------------------------\n");
-		lst = lst->next;
+		(*command)->args[0] = ft_strdup(str);
+		(*command)->args[1] = NULL;
+		*argcount = 1;
 	}
-}
-void printredirections(t_redir *lst)
-{
-	if (!lst)
-		printf("\nno redirections");
-	while (lst)
+	else
 	{
-		printf("\nREDIRECTIONS : ~~~~~~~~~~~~~~~~\n");
-		printf("filename :[%s], file type [%s], in [%d], out [%d]", lst->filename, gettype(lst->type), lst->flag_in, lst->flag_out);
-		printf("\n~~~~~~~~~~~~~~~~\n");
-		lst = lst->next;
-	}
-}
-
-void printcommnads(t_command *lst)
-{
-	int i = 0;
-
-	// if (!lst)
-	// 	printf("no commands\n");
-	while (lst)
-	{
-		printf("\nCOMMANDS : ---------------------------------\n");
-		while (lst->args[i])
+		updated_args = (char **)malloc(((*argcount) + 2) * sizeof(char *));
+		i = 0;
+		while (i < (*argcount))
 		{
-			printf("[%s] \n", lst->args[i]);
+			updated_args[i] = (*command)->args[i];
 			i++;
 		}
-		i = 0;
-		printf ("\n%d", lst->is_builtin);
-		printredirections(lst->rederects);
-		printf("\n---------------------------------\n");
-		lst = lst->next;
+		updated_args[(*argcount)] = ft_strdup(str);
+		updated_args[(*argcount) + 1] = NULL;
+		free((*command)->args);
+		(*command)->args = updated_args;
+		(*argcount)++;
 	}
 }
 
-
-void exit_funcs()
+void	handle_redirections(t_command *command, t_token **token_list)
 {
-	printf("\nSYNTAX ERROR\n");
+	t_redir	*redir;
+	t_redir	*tmp;
+
+	if (!(*token_list)->next)
+		return ;
+	redir = (t_redir *) malloc(sizeof(t_redir));
+	if (!redir)
+		return ;
+	redir->type = (*token_list)->token_type;
+	*token_list = (*token_list)->next;
+	redir->filename = ft_strdup((*token_list)->str);
+	redir->flag_in = 0;
+	redir->flag_out = 0;
+	redir->next = NULL;
+	if (!(command->rederects))
+		command->rederects = redir;
+	else
+	{
+		tmp = command->rederects;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = redir;
+	}
 }
-//!SECTION END TMPFUNCTIONS
 
-void	validat_syntax(t_token *tokens)
+t_command	*handle_pip(t_command *command, t_command **commands)
 {
-	//temp solution :
-	int i;
+	if (!command)
+		command = cmd_new(commands);
+	else
+	{
+		command->next = cmd_new(commands);
+		command = command->next;
+	}
+	return (command);
+}
 
-	i = 0;
+void	check_command(t_command **command, t_command ***commands)
+{
+	if (!(*command))
+		(*command) = cmd_new(&(**commands));
+}
+
+
+void	extract_cmds(t_token *tokens, t_command **commands)
+{
+	t_command	*command;
+	int			argcount;
+
+	command = NULL;
+	argcount = 0;
 	while (tokens)
 	{
-		if (tokens->token_type == R_IN || tokens->token_type == R_OUT)
+		if (tokens->token_type == WORD || tokens->token_type == ENV)
 		{
-			if (!tokens->next || tokens->next->token_type != WORD)
-				exit_funcs();
+			check_command(&command, &commands);
+			handle_word(&command, tokens->str, &argcount);
+		}
+		else if (tokens->token_type == R_OUT || tokens->token_type == R_IN
+			|| tokens->token_type == HER || tokens->token_type == APP)
+		{
+			check_command(&command, &commands);
+			handle_redirections(command, &tokens);
 		}
 		else if (tokens->token_type == PIPE)
 		{
-			if (tokens->next->token_type == PIPE)
-				exit_funcs();
-		}
-		tokens = tokens->next;
-	}
-}
-// need more explanation to do this
-// void	last_file(t_command *commands)
-// {
-
-// }
-
-void	remove_quotes(t_token **tokens)
-{
-	t_token	*current;
-	char	*new_str;
-	char	*tmp;
-	char quote;
-	int		i;
-	int		start;
-
-	current = *tokens;
-	while (current)
-	{
-		if (current->q_type != NONE)
-		{
-			new_str = ft_strdup("");
-			i = 0;
-			while (current->str[i])
-			{
-				if (current->str[i] == '\'' || current->str[i] == '\"')
-				{
-					quote = current->str[i];
-					i++;
-					start = i;
-					while (current->str[i] && current->str[i] != quote)
-						i++;
-					tmp = ft_substr(current->str, start, i - start); // Extract content inside quotes
-					new_str = ft_strjoin(new_str, tmp);
-					free(tmp);
-					if (current->str[i] == quote)
-						i++;
-				}
-				else
-				{
-					start = i;
-					while (current->str[i] && current->str[i] != '\'' && current->str[i] != '\"')
-						i++;
-					tmp = ft_substr(current->str, start, i - start);
-					new_str = ft_strjoin(new_str, tmp);
-					free(tmp);
-				}
-			}
-			free(current->str);
-			current->str = new_str;
-		}
-		current = current->next;
-	}
-}
-void extract_cmds(t_token *token_list, t_command **commands)
-{
-	t_command *command;
-	t_redir *redir;
-	t_redir *tmp;
-	char **updated_args;
-	int argcount = 0;
-	int i = 0;
-
-	command = NULL;
-	updated_args = NULL;
-	remove_quotes(&token_list);
-	while (token_list)
-	{
-		// new commnad
-		if (token_list->token_type == WORD || token_list->token_type == ENV)
-		{
-			if (!command)
-			{
-				command = (t_command *)malloc(sizeof(t_command));
-				command->args = (char **)malloc(2 * sizeof(char *));
-				command->args[0] = ft_strdup(token_list->str);
-				command->args[1] = NULL;
-				argcount = 1; //temp
-				command->is_builtin = 0;
-				command->rederects = NULL;
-				command->next = NULL;
-				// rm_middle_quotes(command->args[0]);
-				if (!(* commands))
-					*commands = command;
-			}
-			else
-			{
-				// Add the new argument
-				updated_args = (char **)malloc((argcount + 2) * sizeof(char *));
-				i = 0;
-				while (i < argcount)
-				{
-					updated_args[i] = command->args[i];
-					i++;
-				}
-				updated_args[argcount] = ft_strdup(token_list->str);
-				updated_args[argcount + 1] = NULL;
-				free(command->args);
-				command->args = updated_args;
-				argcount++;
-			}
-		}
-		// create red list if true
-		else if (token_list->token_type == R_OUT || token_list->token_type == R_IN
-			|| token_list->token_type == HER || token_list->token_type == APP)
-		{
-			if (!token_list->next)
-				break ;
-			if (!command) // if !commnd create a new command with empty args
-			{
-				command = (t_command *)malloc(sizeof(t_command));
-				command->args = (char **)malloc(2 * sizeof(char *));
-				command->args[0] = NULL;
-				command->args[1] = NULL;
-				argcount = 0; //temp
-				command->is_builtin = 0;
-				command->rederects = NULL;
-				command->next = NULL;
-				if (!(* commands))
-					*commands = command;
-			}
-			redir = (t_redir *) malloc(sizeof(t_redir));
-			redir->type = token_list->token_type;
-			token_list = token_list->next;
-			redir->filename = ft_strdup(token_list->str);
-			redir->flag_in = 0;
-			redir->flag_out = 0;
-			redir->next = NULL;
-			if (!(command->rederects))
-				command->rederects = redir;
-			else
-			{
-				tmp = command->rederects;
-				while (tmp->next)
-					tmp = tmp->next;
-				tmp->next = redir;
-			}
-		}
-		else if (token_list->token_type == PIPE)
-		{
-			command->next = (t_command *)malloc(sizeof(t_command));
-			command->next->args = (char **)malloc(2 * sizeof(char *));
-			command->next->args[0] = NULL;
-			command->next->is_builtin = 0;
-			command->next->rederects = NULL;
-			command->next->next = NULL;
-			command = command->next;
+			command = handle_pip(command, commands);
 			argcount = 0;
 		}
-		token_list = token_list->next;
+		tokens = tokens->next;
 	}
 }
 
 int	parser(char *userInp)
 {
-	t_token *token_list;
-	t_command *commands;
+	t_token 	*token_list;
+	t_command 	*commands;
 
 	commands = NULL;
 	token_list = NULL;
 	tokenizer(userInp, &token_list);
-	lexer(token_list);
+	// lexer(token_list);
 	expander(&token_list);
 	// printtokens(token_list);
-	// validat_syntax(token_list);
+	remove_quotes(&token_list);
 	extract_cmds(token_list, &commands);
 	check_last(commands);
 	check_last_out(commands);
 	printcommnads(commands);
-	// last_file(&commands);
-	// clean_tokens(&token_list);
 	return (0);
 }
 

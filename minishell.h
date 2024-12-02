@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/02 14:21:54 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:43:11 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ void	lexer(t_token *tokens);
 void	check_last_out(t_command *token);
 void	check_last(t_command *token);
 void	ft_getenv(t_env *env, char **ev);
+void	remove_quotes(t_token **tokens);
 // end of parsing func
 
 // cleaners
@@ -104,6 +105,9 @@ void	rm_qt(char **str, int inextarction);
 
 //temp
 void 	printtokens(t_token *lst);
-
+void	printredirections(t_redir *lst);
+void	printcommnads(t_command *lst);
+char	*gettype(t_etype type);
+void	exit_funcs(void);
 //end temp
 #endif
