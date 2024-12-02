@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 16:31:24 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:31:17 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	create_token(t_token **token, char *data, t_etype type, t_etype qt)
 
 	current = (t_token *)malloc(sizeof(t_token));
 	current->str = ft_strdup(data);
-	current->tokenType = type;
+	current->token_type = type;
 	current->q_type = qt;
 	current->next = NULL;
 	if (!(*token))

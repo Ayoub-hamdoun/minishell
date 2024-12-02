@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 19:33:53 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:21:54 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,12 @@ typedef enum type
 	PIPE
 }	t_etype;
 
-
 // Token structure
 typedef struct s_token
 {
-	char	*str;
-	t_etype	tokenType;
-	t_etype	q_type;		// type of the quote, needed for expanding purpose
+	char			*str;
+	t_etype			token_type;
+	t_etype			q_type;
 	struct s_token	*next;
 }	t_token;
 
@@ -71,12 +70,22 @@ typedef struct s_command
 	struct s_command	*next;
 }	t_command;
 
+typedef struct s_vars
+{
+	int		i;
+	int		argcount;
+	char	**args;
+}	t_vars;
+
 // parsing funcs
 int		parser(char *userInp);
 void	tokenizer(char *userInp, t_token **tokenList);
 void	expander(t_token **tokens);
+void	lexer(t_token *tokens);
+void	check_last_out(t_command *token);
+void	check_last(t_command *token);
+void	ft_getenv(t_env *env, char **ev);
 // end of parsing func
-
 
 // cleaners
 void	clean_tokens(t_token **tokens);
@@ -96,11 +105,5 @@ void	rm_qt(char **str, int inextarction);
 //temp
 void 	printtokens(t_token *lst);
 
-//lexer
-void lexer(t_token *tokens);
-void check_quotes_alt(t_token *token);
 //end temp
-void check_last_out(t_command *token);
-void check_last(t_command *token);
-void	ft_getenv(t_env *env, char **ev);
 #endif

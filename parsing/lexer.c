@@ -6,96 +6,11 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 17:56:34 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:31:17 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-// i check here if the number of quotes is even or not 
-//!!!!!!big warning you don t need to make it here tho but this function will help tho
-//cases needed to be hanlded
-//{
-		//	"'"'"even tho the count is even it should return command error i dunno the cases tho but there is some cases that
-		//the "'" is considered as a word and not a quote maybe we should handle it in the tokenizer
-//}
-
-// int check_first(t_token *token)
-// {
-// 	int i;
-
-// 	i = 0;
-// 	while (token->str[i] )
-// 	{
-// 		if (token->str[i] == '\'')
-// 			return (i);
-// 		else if (token->str[i] == '"')
-// 			return (i);
-// 		i++;
-// 	}
-// return (-1);
-// }
-// int check_last(t_token *token)
-// {
-// 	int i;
-
-// 	i = ft_strlen(token->str) - 1;
-// 	while (i >= 0)
-// 	{
-// 		if (token->str[i] == '\'')
-// 			return (i);
-// 		else if (token->str[i] == '"')
-// 			return (i);
-// 		i--;
-// 	}
-// 	return (-1);
-// }
-
-// void check_first_last(t_token *token)
-// {
-// 	int first;
-// 	int last;
-
-// 	first = check_first(token);
-// 	last = check_last(token);
-// 	if (first != -1 && last != -1)
-// 	{
-// 		if (first == 0 && last == ft_strlen(token->str) - 1)
-// 		{
-// 			if (token->str[first] == token->str[last])
-// 			{
-// 				printf("minishell: syntax error: mismatched quotes\n");
-// 				exit(1);
-// 			}
-// 		}
-// 	}
-// }
-// void check_quotes_alt(t_token *token) 
-// {
-// 	int total_single = 0;
-// 	int total_double = 0;
-// 	t_token *current = token;
-// 	if (!current)
-// 		return ;
-// 	while (current) 
-// 	{
-// 		int i = 0;
-// 		while (current->str[i]) 
-// 		{
-// 			if (current->str[i] == '\'')
-// 				total_single++;
-// 			if (current->str[i] == '"')
-// 				total_double++;
-// 			i++;
-// 		}
-// 		current = current->next;
-// 	}
-	
-// 	if (total_single % 2 != 0 || total_double % 2 != 0) 
-// 	{
-// 		printf(">\n");
-// 		exit(1);
-// 	}
-// }
 
 int check_first_quote(t_token *token)
 {
@@ -109,21 +24,27 @@ int check_first_quote(t_token *token)
 }
 int check_last_quote(t_token *token)
 {
+	int	i;
+
 	if (!token || ft_strlen(token->str) == 1)
 		return (-1);
-	int i = ft_strlen(token->str) - 1;
+	i = ft_strlen(token->str) - 1;
 	if (token->str[i] == '\'')
 		return (1);
 	else if (token->str[i] == '"')
 		return (2);
 	return (0);
 }
-void check_quotes(t_token *token)
+
+void	check_quotes(t_token *token)
 {
-	t_token *current = token;
-	// int i = 0;
-	int checker = 0;
-	int checker2 = 0;
+	t_token	*current;
+	int		checker;
+	int		checker2;
+
+	current = token;
+	checker = 0;
+	checker2 = 0;
 	if (!current)
 		return ;
 	while (current)
@@ -133,11 +54,6 @@ void check_quotes(t_token *token)
 			checker = check_first_quote(current);
 			checker2 = check_last_quote(current);
 		}
-		// else if (current->str[ft_strlen(current->str) - 1] == '\'' || current->str[ft_strlen(current->str) - 1] == '"')
-		// {
-		// 	checker = check_first_quote(current);
-		// 	checker2 = check_last_quote(current);
-		// }
 		current = current->next;
 	}
 	if (checker != checker2 || checker == -1 || checker2 == -1)
@@ -147,6 +63,7 @@ void check_quotes(t_token *token)
 	}
 	return ;
 }
+
 void check_first_p(t_token *token)
 {
 	t_token *current = token;
@@ -164,7 +81,6 @@ void check_first_p(t_token *token)
 		}
 		i++;
 	}
-
 }
 void check_doubled_pipe(t_token *token)
 {
@@ -173,14 +89,14 @@ void check_doubled_pipe(t_token *token)
 		return ;
 	while (current)
 	{
-		if (current->tokenType == PIPE)
+		if (current->token_type == PIPE)
 		{
 			if (!current->next)
 			{
 				printf("> nothing after pipe\n");
 				exit(1);
 			}
-			else if (current->next->tokenType == PIPE)
+			else if (current->next->token_type == PIPE)
 			{
 				printf("minishell: syntax error: mismatched pipes\n");
 				exit(1);
@@ -193,17 +109,17 @@ void check_redirection(t_token *token)
 {
 	if (!token)
 		return ;
-	
+
 	while (token)
 	{
-		if (token->tokenType == R_IN || token->tokenType == R_OUT || token->tokenType == APP || token->tokenType == HER)
+		if (token->token_type == R_IN || token->token_type == R_OUT || token->token_type == APP || token->token_type == HER)
 		{
 			if (!token->next)
 			{
 				printf("minishell: syntax error: mismatched redirection\n");
 				exit(1);
 			}
-			else if (token->next->tokenType != WORD)
+			else if (token->next->token_type != WORD)
 			{
 				printf(": in: No such file or directory");
 				exit(1);

@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 20:33:14 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 15:26:43 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void printtokens(t_token *lst)
 	{
 		i++;
 		printf("\nTOKEN : -------------------------\n");
-		printf("%d; content [%s] ; type [%s] ; qoute type [%s]", i, lst->str, gettype(lst->tokenType), gettype(lst->q_type));
+		printf("%d; content [%s] ; type [%s] ; qoute type [%s]", i, lst->str, gettype(lst->token_type), gettype(lst->q_type));
 		printf("\n---------------------------------\n");
 		lst = lst->next;
 	}
@@ -100,14 +100,14 @@ void	validat_syntax(t_token *tokens)
 	i = 0;
 	while (tokens)
 	{
-		if (tokens->tokenType == R_IN || tokens->tokenType == R_OUT)
+		if (tokens->token_type == R_IN || tokens->token_type == R_OUT)
 		{
-			if (!tokens->next || tokens->next->tokenType != WORD)
+			if (!tokens->next || tokens->next->token_type != WORD)
 				exit_funcs();
 		}
-		else if (tokens->tokenType == PIPE)
+		else if (tokens->token_type == PIPE)
 		{
-			if (tokens->next->tokenType == PIPE)
+			if (tokens->next->token_type == PIPE)
 				exit_funcs();
 		}
 		tokens = tokens->next;
@@ -181,7 +181,7 @@ void extract_cmds(t_token *token_list, t_command **commands)
 	while (token_list)
 	{
 		// new commnad
-		if (token_list->tokenType == WORD || token_list->tokenType == ENV)
+		if (token_list->token_type == WORD || token_list->token_type == ENV)
 		{
 			if (!command)
 			{
@@ -215,8 +215,8 @@ void extract_cmds(t_token *token_list, t_command **commands)
 			}
 		}
 		// create red list if true
-		else if (token_list->tokenType == R_OUT || token_list->tokenType == R_IN
-			|| token_list->tokenType == HER || token_list->tokenType == APP)
+		else if (token_list->token_type == R_OUT || token_list->token_type == R_IN
+			|| token_list->token_type == HER || token_list->token_type == APP)
 		{
 			if (!token_list->next)
 				break ;
@@ -234,7 +234,7 @@ void extract_cmds(t_token *token_list, t_command **commands)
 					*commands = command;
 			}
 			redir = (t_redir *) malloc(sizeof(t_redir));
-			redir->type = token_list->tokenType;
+			redir->type = token_list->token_type;
 			token_list = token_list->next;
 			redir->filename = ft_strdup(token_list->str);
 			redir->flag_in = 0;
@@ -250,7 +250,7 @@ void extract_cmds(t_token *token_list, t_command **commands)
 				tmp->next = redir;
 			}
 		}
-		else if (token_list->tokenType == PIPE)
+		else if (token_list->token_type == PIPE)
 		{
 			command->next = (t_command *)malloc(sizeof(t_command));
 			command->next->args = (char **)malloc(2 * sizeof(char *));

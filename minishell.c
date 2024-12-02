@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 20:58:26 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:03:41 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int main(int argc, char *argv[], char **env)
 	while(1)
 	{
 		signal(SIGINT, handle_sig);
+		signal(SIGQUIT, SIG_IGN);
 		char *input = readline("GUMBALL$> ");
 		if (!input)
 			break;

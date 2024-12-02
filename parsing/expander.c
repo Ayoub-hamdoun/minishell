@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/01 19:41:09 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:31:17 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	expander(t_token **tokens)
 	head = *tokens;
 	while ((*tokens))
 	{
-		if ((*tokens)->tokenType == ENV)
+		if ((*tokens)->token_type == ENV)
 		{
 			res = ft_strdup(((*tokens)->str) + 1);
 			if (ft_isalpha(res[0]) || res[0] == '_')
@@ -96,7 +96,7 @@ void	expander(t_token **tokens)
 			(*tokens)->str = ft_strdup(getenv(res));
 			free(res);
 		}
-		else if ((*tokens)->tokenType == WORD && (*tokens)->q_type == DOUBLE)
+		else if ((*tokens)->token_type == WORD && (*tokens)->q_type == DOUBLE)
 		{
 			str = ft_strdup((*tokens)->str);
 			res = ft_strdup("");
