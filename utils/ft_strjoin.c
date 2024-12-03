@@ -6,13 +6,13 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 18:58:31 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/25 19:12:00 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:52:01 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void free_str(char *s1, char *s2)
+void	free_str(char *s1, char *s2)
 {
 	if (s1)
 		free(s1);

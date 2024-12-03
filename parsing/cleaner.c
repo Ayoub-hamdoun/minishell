@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/22 16:05:53 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/22 17:20:52 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/03 16:54:29 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	clean_tokens(t_token **tokens)
 {
-	t_token *tmp;
+	t_token	*tmp;
 
 	while (*tokens)
 	{
