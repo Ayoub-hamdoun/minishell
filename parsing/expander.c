@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/03 16:41:29 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:31:18 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	handle_env_token(t_token **tokens, t_env *ev)
 {
 	char	*res;
 
+	if (!ft_strcmp((*tokens)->str, "$"))
+		return ;
 	res = ft_strdup(((*tokens)->str) + 1);
 	if (ft_isalpha(res[0]) || res[0] == '_')
 	{

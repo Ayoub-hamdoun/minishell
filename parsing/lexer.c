@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/03 16:53:47 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:35:21 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,9 @@ int	check_redirection(t_token *token)
 				printf("minishell: syntax error: mismatched redirection\n");
 				return (1);
 			}
-			else if (token->next->token_type != WORD)
+			else if (token->next->token_type != WORD && token -> next-> token_type != ENV)
 			{
-				printf(": in: No such file or directory");
+				printf(": in: No such file or directory\n");
 				return (1);
 			}
 		}

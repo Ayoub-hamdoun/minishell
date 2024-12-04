@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/03 20:14:52 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:46:59 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@
 # include <signal.h>
 # include <sys/stat.h>
 # include <fcntl.h>
+# include <limits.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 typedef enum type
 {
@@ -98,6 +103,7 @@ void	check_last(t_command *token);
 void	dup_env(t_env *env, char **ev);
 char	*ft_getenv(t_env *env, char *key);
 void	remove_quotes(t_token **tokens);
+void	handle_sig(int sig);
 // end of parsing func
 
 // cleaners
