@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/04 13:31:18 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/05 16:09:52 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ void	handle_env_token(t_token **tokens, t_env *ev)
 		(*tokens)->str = ft_strdup(ft_getenv(ev, res));
 		free(res);
 	}
+	else
+		free(res);
 }
 
 void	handle_quoted_token(t_token **tokens, t_env *ev)

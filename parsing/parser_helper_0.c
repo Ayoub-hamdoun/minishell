@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:13:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/03 16:34:27 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:31:08 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ void	handle_word(t_command **command, char *str, int *argcount)
 		free((*command)->args);
 		(*command)->args = updated_args;
 		(*argcount)++;
+		(*command)->is_builtin = is_builtin((*command)->args[0]);
 	}
 }
 
@@ -55,6 +56,7 @@ void	handle_redirections(t_command *command, t_token **token_list)
 	redir->filename = ft_strdup((*token_list)->str);
 	redir->flag_in = 0;
 	redir->flag_out = 0;
+	redir->q_type = (*token_list)->q_type;
 	redir->next = NULL;
 	if (!(command->rederects))
 		command->rederects = redir;
@@ -65,4 +67,23 @@ void	handle_redirections(t_command *command, t_token **token_list)
 			tmp = tmp->next;
 		tmp->next = redir;
 	}
+}
+
+int is_builtin(char *cmd)
+{
+	if (!ft_strcmp(cmd, "echo"))
+		return (1);
+	else if (!ft_strcmp(cmd, "cd"))
+		return (1);
+	else if (!ft_strcmp(cmd, "pwd"))
+		return (1);
+	else if (!ft_strcmp(cmd, "export"))
+		return (1);
+	else if (!ft_strcmp(cmd, "unset"))
+		return (1);
+	else if (!ft_strcmp(cmd, "env"))
+		return (1);
+	else if (!ft_strcmp(cmd, "exit"))
+		return (1);
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:30:24 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/03 17:00:33 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:48:28 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ void	remove_quotes(t_token **tokens)
 				}
 			}
 			free(current->str);
-			current->str = new_str;
+			current->str = ft_strdup(new_str);
+			free(new_str);
 		}
 		current = current->next;
 	}

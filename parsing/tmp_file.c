@@ -66,7 +66,7 @@ void printcommnads(t_command *lst)
 			i++;
 		}
 		i = 0;
-		printf ("\n%d", lst->is_builtin);
+		printf ("\nis built in : %d", lst->is_builtin);
 		printredirections(lst->rederects);
 		printf("\n---------------------------------\n");
 		lst = lst->next;

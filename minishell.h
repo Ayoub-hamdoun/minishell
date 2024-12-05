@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/04 20:46:59 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:22:24 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_redir
 	int				fd;
 	int				is_open;
 	t_etype			type;
+	t_etype			q_type;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -104,10 +105,13 @@ void	dup_env(t_env *env, char **ev);
 char	*ft_getenv(t_env *env, char *key);
 void	remove_quotes(t_token **tokens);
 void	handle_sig(int sig);
+int		is_builtin(char *cmd);
 // end of parsing func
 
 // cleaners
 void	clean_tokens(t_token **tokens);
+void	clean_cmds(t_command **cmds);
+void	clean_red(t_redir **reds);
 
 // utils
 int		ft_strlen(char	*str);
@@ -129,6 +133,7 @@ char	*gettype(t_etype type);
 void	exit_funcs(void);
 
 //thats
-int	do_all(char *user_inp, t_env *ev);
+//builtins
+void	the_echo(t_command *cmd);
 //end temp
 #endif

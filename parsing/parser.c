@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/04 20:48:43 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/05 21:02:23 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,42 +76,41 @@ void	extract_cmds(t_token *tokens, t_command **commands)
 		tokens = tokens->next;
 	}
 }
-int check_file_in(char *file_name)
+int	check_file_in(char *file_name)
 {
-	//ambigious check
-	struct stat filestat;
+	struct stat	filestat;
 
 	if (stat(file_name, &filestat) == -1) 
 	{
 		perror("Error accessing file");
-		return -1;
+		return (-1);
 	}
-	if (!(filestat.st_mode & S_IRUSR)) 
+	if (!(filestat.st_mode & S_IRUSR))
 	{
 		fprintf(stderr, "Error: permission denied '%s'.\n", file_name);
-		return -1;
+		return (-1);
 	}
-	return 0;
+	return (0);
 }
-int is_directory(const char *path)
+int	is_directory(const char *path)
 {
-    struct stat path_stat;
-    if (stat(path, &path_stat) == -1)
-    {
-        perror("stat\n");
-        return -1;
-    }
+	struct stat	path_stat;
 
-    if (S_ISDIR(path_stat.st_mode))
-        return -1; 
+	if (stat(path, &path_stat) == -1)
+	{
+		perror("stat\n");
+		return (-1);
+	}
+	if (S_ISDIR(path_stat.st_mode))
+		return (-1); 
 	return (0);
 }
 int check_file_out(char *file_name)
 {
 	struct stat filestat;
-		stat(file_name, &filestat);
-		
-		if (!(filestat.st_mode & S_IWUSR)) 
+
+	stat(file_name, &filestat);
+	if (!(filestat.st_mode & S_IWUSR)) 
 	{
 		fprintf(stderr, "Error: permission denied fnudgljrfkl'%s'.\n", file_name); // remove every fprintf
 		return -1;
@@ -120,31 +119,34 @@ int check_file_out(char *file_name)
 }
 char	*is_expand(char *str,int exp_flag, t_env *ev)
 {
-	char *res = ft_strdup("");
-	int	i = 0;
-	char tmp[2];
+	char *res;
+	// printf ("res = %p", res);
+	// int	i = 0;
+	// char tmp[2];
 	char *expanded;
 
 	if (!exp_flag)
 	{
 		expanded = NULL;
-		while (str[i])
-		{
-			if (str[i] == '$' && (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
-			{
-				i++;
-				expanded = ret_env(str, &i, ev);
-				res = ft_strjoin(res, expanded);
-				free(expanded);
-			}
-			else
-			{
-				tmp[0] = str[i];
-				tmp[1] = '\0';
-				res = ft_strjoin(res, tmp);
-				i++;
-			}
-		}
+		res = ft_strdup("");
+		expand_it(str, &res, &expanded, ev);
+		// while (str[i])
+		// {
+		// 	if (str[i] == '$' && (ft_isalpha(str[i + 1]) || str[i + 1] == '_'))
+		// 	{
+		// 		i++;
+		// 		expanded = ret_env(str, &i, ev);
+		// 		res = ft_strjoin(res, expanded);
+		// 		free(expanded);
+		// 	}
+		// 	else
+		// 	{
+		// 		tmp[0] = str[i];
+		// 		tmp[1] = '\0';
+		// 		res = ft_strjoin(res, tmp);
+		// 		i++;
+		// 	}
+		// }
 		free(str);
 		return (res);
 	}
@@ -155,6 +157,8 @@ void lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 {
 	char *str;
 
+	(void)ev;
+	(void)exp_flag;
 	str = NULL;
 	while (1)
 	{
@@ -168,29 +172,34 @@ void lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 			close (pipe);
 			break ;
 		}
-		str = ft_strdup(is_expand(str, exp_flag,ev));
+		str = /*ft_strdup(*/is_expand(str, exp_flag,ev)/*)*/;
+		printf ("str = %p\n", str);
 		// dup2(STDOUT_FILENO,pipe);
 		write (pipe, str, ft_strlen(str));
 		write (pipe, "\n", 1);
 		free(str);
 	}
 }
-int check_on_quotes(t_redir *red)
-{
+// int check_on_quotes(t_redir *red)
+// {
+// 	if (red->q_type == NONE)
+// 		return (0);
+// 	return (1);
+// }
 
-	if (red->filename[0] == '\'' || red->filename[0] == '\"')
-			return (1);
-	return (0);
-}
-void check_on_herdoc(t_redir *r,t_env *ev)
+void	check_on_herdoc(t_redir *r, t_env *ev)
 {
 	int ld[2];
 	int exp_flag;
 	
-	exp_flag = check_on_quotes(r);
+	// exp_flag = check_on_quotes(r);
+	if (r->q_type != NONE)
+		exp_flag = 1;
+	else
+		exp_flag = 0;
 	if ((pipe(ld)) == - 1)
 		return;
-	lherdoc(r,ld[1], exp_flag,ev);
+	lherdoc(r, ld[1], exp_flag, ev);
 	r->fd = ld[0];
 }
 
@@ -237,7 +246,7 @@ void open_files(t_command **commands, t_env *ev)
 		while (r)
 		{
 			if (ambigious_check(r, ev) == 1)
-				return;
+				return ;
 			if (r ->type == R_IN)
 			{
 				if (check_file_in(r->filename) == -1 || is_directory(r->filename) == -1)
@@ -263,20 +272,58 @@ void open_files(t_command **commands, t_env *ev)
 				}
 			}
 			else if (r -> type == HER)
-			{
 				check_on_herdoc(r,ev);
-			}
 			r = r -> next;
 		}
 		*commands = (*commands) -> next;
 	}
+	*commands = tmp;
+}
+void exec_builtin(t_command *command,t_env *ev)
+{
+	if (!command)
+		return ;
+	(void)ev;
+	if (!ft_strcmp(command -> args[0], "echo"))
+		the_echo(command);
+	
+	// else if (!ft_strcmp(cmd, "cd"))
+	// 	the_cd();
+	// else if (!ft_strcmp(cmd, "pwd"))
+	// 	the_pwd();
+	// else if (!ft_strcmp(cmd, "export"))
+	// 	the_export();
+	// else if (!ft_strcmp(cmd, "unset"))
+	// 	unset()
+	// else if (!ft_strcmp(cmd, "env"))
+	// 	print_env();
+	// else if (!ft_strcmp(cmd, "exit"))
+	// 	exec
+	// return (0);
+}
+void exec_single(t_command *command,t_env *ev)
+{
+	if (!command)
+		return ;
+	if (command -> is_builtin)
+		exec_builtin(command,ev);
+}
+void	exec_command(t_command *command,t_env *ev)
+{
+	if (!command)
+		return ;
+	if (!command -> next)
+		exec_single(command ,ev);
 }
 
 void exec(t_command *commands, t_env *ev)
 {
+	(void)ev;
 	if (!commands)
 		return ;
 	open_files(&commands, ev);
+	exec_command(commands,ev);
+	// printf("%s",commands -> args[0]);
 }
 int	parser(char *user_inp, t_env *ev)
 {
@@ -287,7 +334,10 @@ int	parser(char *user_inp, t_env *ev)
 	token_list = NULL;
 	tokenizer(user_inp, &token_list);
 	if (lexer(token_list))
+	{
+		clean_tokens(&token_list);
 		return (1);
+	}
 	expander(&token_list, ev);
 	// printtokens(token_list);
 	remove_quotes(&token_list);
@@ -296,6 +346,8 @@ int	parser(char *user_inp, t_env *ev)
 	check_last_out(commands);
 	// printcommnads(commands);
 	exec(commands, ev);
+	clean_tokens(&token_list);
+	clean_cmds(&commands);
 	return (0);
 }
 
