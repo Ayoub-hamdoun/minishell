@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:58:07 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/05 20:07:29 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/05 21:11:32 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int	count_n(char *cmd)
 	}
 	return (1);
 }
+
 int rederctes_out(t_redir *reder)
 {
 	while (reder)
@@ -39,6 +40,7 @@ int rederctes_out(t_redir *reder)
 	}
 	return(1);
 }
+
 void	the_echo(t_command *cmd)
 {
 	int	count;

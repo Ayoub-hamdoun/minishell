@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:32:00 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/06 13:32:00 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/06 17:14:35 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_exit(t_command *command)
 	exit_status = 0;
 	if (i > 2)
 	{
-		write(2, "bash: exit: too many arguments\n", 31);
+		write(2, "minishell: exit: too many arguments\n", 36);
 		return ;
 	}
 	if (!command->args[1])
@@ -33,7 +33,7 @@ void	ft_exit(t_command *command)
 	}
 	if (ft_isalpha(command->args[1][0]))
 	{
-		write(2, "bash: exit: numeric argument required\n", 38);
+		write(2, "minishell: exit: numeric argument required\n", 43);
 		return ;
 	}
 	else

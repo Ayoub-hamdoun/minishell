@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 23:23:02 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/03 16:39:43 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/06 18:44:01 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*ft_getenv(t_env *env, char *key)
 			return (tmp->value);
 		tmp = tmp->next;
 	}
-	return (NULL);
+	return ("");
 }
 
 void	dup_env(t_env *env, char **ev)

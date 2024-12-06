@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/05 21:02:23 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/06 17:09:27 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ void lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 			break ;
 		}
 		str = /*ft_strdup(*/is_expand(str, exp_flag,ev)/*)*/;
-		printf ("str = %p\n", str);
+		printf ("str = %s\n", str);
 		// dup2(STDOUT_FILENO,pipe);
 		write (pipe, str, ft_strlen(str));
 		write (pipe, "\n", 1);
@@ -284,9 +284,8 @@ void exec_builtin(t_command *command,t_env *ev)
 	if (!command)
 		return ;
 	(void)ev;
-	if (!ft_strcmp(command -> args[0], "echo"))
+	if (!ft_strcmp(command->args[0], "echo"))
 		the_echo(command);
-	
 	// else if (!ft_strcmp(cmd, "cd"))
 	// 	the_cd();
 	// else if (!ft_strcmp(cmd, "pwd"))
@@ -297,8 +296,8 @@ void exec_builtin(t_command *command,t_env *ev)
 	// 	unset()
 	// else if (!ft_strcmp(cmd, "env"))
 	// 	print_env();
-	// else if (!ft_strcmp(cmd, "exit"))
-	// 	exec
+	else if (!ft_strcmp(command->args[0], "exit"))
+		ft_exit(command);
 	// return (0);
 }
 void exec_single(t_command *command,t_env *ev)

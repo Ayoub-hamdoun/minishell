@@ -6,7 +6,7 @@
 #    By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/05 15:45:29 by ayhamdou          #+#    #+#              #
-#    Updated: 2024/12/05 20:45:18 by ayhamdou         ###   ########.fr        #
+#    Updated: 2024/12/06 17:12:21 by ayhamdou         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,11 @@ NAME = minishell
 HEADER = minishell.h
 
 SRCS = utils/ft_split.c utils/ft_strcmp.c utils/ft_strdup.c utils/ft_strlen.c utils/ft_substr.c\
-		utils/ft_strtrim.c utils/ft_strjoin.c utils/ft_isalnum.c\
+		utils/ft_strtrim.c utils/ft_strjoin.c utils/ft_isalnum.c utils/ft_atoi.c\
 		parsing/parser.c parsing/tokenizer.c parsing/expander.c parsing/cleaner.c parsing/lexer.c\
 		parsing/check_last_red.c parsing/env.c parsing/parser_helper_0.c parsing/quotes_handler.c\
 		parsing/lexer_helper_0.c parsing/expander_helper_0.c parsing/tokenizer_helper_0.c\
-		execution/builtins/the_echo.c\
+		execution/builtins/the_echo.c execution/builtins/ft_exit.c\
 		minishell.c\
 		parsing/tmp_file.c\
 

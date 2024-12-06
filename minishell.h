@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/05 17:22:24 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/06 17:10:10 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,7 +123,7 @@ char	*ft_substr(char *s, int start, int len);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
-void	rm_qt(char **str, int inextarction);
+int		ft_atoi(const char *str);
 
 //temp
 void 	printtokens(t_token *lst);
@@ -135,5 +135,6 @@ void	exit_funcs(void);
 //thats
 //builtins
 void	the_echo(t_command *cmd);
+void	ft_exit(t_command *command);
 //end temp
 #endif
