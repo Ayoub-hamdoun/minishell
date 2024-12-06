@@ -55,7 +55,8 @@ void printcommnads(t_command *lst)
 	int i = 0;
 
 	if (!lst)
-		printf("no commands\n");
+		// printf("no commands\n");
+		return ;
 	while (lst)
 	{
 		printf("\nCOMMANDS : ---------------------------------\n");
@@ -65,7 +66,7 @@ void printcommnads(t_command *lst)
 			i++;
 		}
 		i = 0;
-		printf ("\n%d", lst->is_builtin);
+		printf ("\nis built in : %d", lst->is_builtin);
 		printredirections(lst->rederects);
 		printf("\n---------------------------------\n");
 		lst = lst->next;
@@ -76,4 +77,16 @@ void printcommnads(t_command *lst)
 void exit_funcs(void)
 {
 	printf("\nSYNTAX ERROR\n");
+}
+
+void print_ev(t_env *env)
+{
+	t_env *tmp;
+
+	tmp  = env;
+	while (tmp)
+	{
+		printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
 }

@@ -6,16 +6,11 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/02 14:03:41 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/04 20:48:02 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// void l()
-// {
-// 	system("leaks minishell");
-// }
 
 void handle_sig(int sig)
 {
@@ -25,23 +20,14 @@ void handle_sig(int sig)
 	rl_on_new_line();
 	rl_redisplay();
 }
-void print_ev(t_env *env)
-{
-	t_env *tmp;
 
-	tmp  = env;
-	while (tmp)
-	{
-		printf("%s=%s\n", tmp->key, tmp->value);
-		tmp = tmp->next;
-	}
-}
 
 int main(int argc, char *argv[], char **env)
 {
 	(void)argc;
 	(void)argv;
 	t_env *ev;
+	// t_command *commands = NULL;
 
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
 	{
@@ -49,21 +35,21 @@ int main(int argc, char *argv[], char **env)
 		return (0);
 	}
 	ev = malloc (sizeof(t_env));
-	// char *str = "     $HOME";
 	// atexit(l);
 	rl_catch_signals = 0;
-	ft_getenv(ev, env);
-	// print_ev(ev);
+	dup_env(ev, env);
 	while(1)
 	{
 		signal(SIGINT, handle_sig);
 		signal(SIGQUIT, SIG_IGN);
 		char *input = readline("GUMBALL$> ");
 		if (!input)
-			break;
+			break ;
 		add_history(input);
-		parser(input); 
+		// do_all(input,ev);
+		parser(input, ev);
+
+		// exec();
 	}
-	// parser(str);
 	return (0);
 }

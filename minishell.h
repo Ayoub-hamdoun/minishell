@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/02 15:43:11 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/05 17:22:24 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,13 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <limits.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 typedef enum type
 {
@@ -50,7 +57,10 @@ typedef struct s_redir
 	char			*filename;
 	int				flag_in;
 	int				flag_out;
+	int				fd;
+	int				is_open;
 	t_etype			type;
+	t_etype			q_type;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -78,18 +88,30 @@ typedef struct s_vars
 }	t_vars;
 
 // parsing funcs
-int		parser(char *userInp);
-void	tokenizer(char *userInp, t_token **tokenList);
-void	expander(t_token **tokens);
-void	lexer(t_token *tokens);
+int		parser(char *user_inp, t_env *ev);
+void	handle_word(t_command **command, char *str, int *argcount);
+void	handle_redirections(t_command *command, t_token **token_list);
+void	tokenizer(char *user_inp, t_token **tokenList);
+void	create_token(t_token **token, char *data, t_etype type, t_etype qt);
+void	expander(t_token **tokens, t_env *ev);
+void	expand_it(char *str, char **res, char **expanded, t_env *ev);
+char	*ret_env(char *str, int *i, t_env *ev);
+int		lexer(t_token *tokens);
+int		check_doubled_pipe(t_token *token);
+int		check_first_p(t_token *token);
 void	check_last_out(t_command *token);
 void	check_last(t_command *token);
-void	ft_getenv(t_env *env, char **ev);
+void	dup_env(t_env *env, char **ev);
+char	*ft_getenv(t_env *env, char *key);
 void	remove_quotes(t_token **tokens);
+void	handle_sig(int sig);
+int		is_builtin(char *cmd);
 // end of parsing func
 
 // cleaners
 void	clean_tokens(t_token **tokens);
+void	clean_cmds(t_command **cmds);
+void	clean_red(t_redir **reds);
 
 // utils
 int		ft_strlen(char	*str);
@@ -109,5 +131,9 @@ void	printredirections(t_redir *lst);
 void	printcommnads(t_command *lst);
 char	*gettype(t_etype type);
 void	exit_funcs(void);
+
+//thats
+//builtins
+void	the_echo(t_command *cmd);
 //end temp
 #endif
