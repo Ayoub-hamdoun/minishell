@@ -6,11 +6,11 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/10/16 16:33:55 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/07 19:28:05 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 char	*extract_key(char *cmd, char *equal_pos)
 {
@@ -148,6 +148,7 @@ void	add_var(char *cmd, t_env **env, int append)
 	char	*key;
 	char	*value;
 
+	equal_pos = NULL;
 	value = extract_value(equal_pos);
 	equal_pos = strchr(cmd, '=');
 	key = extract_key(cmd, equal_pos);

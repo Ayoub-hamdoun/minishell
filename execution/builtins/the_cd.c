@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   the_cd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:38:54 by rallali           #+#    #+#             */
-/*   Updated: 2024/10/15 11:56:52 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/07 19:26:03 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 char	*get_need(t_env *env, char *key)
 {

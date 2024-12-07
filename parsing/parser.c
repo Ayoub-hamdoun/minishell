@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/06 17:09:27 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/07 20:59:12 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,10 +232,10 @@ int	ambigious_check(t_redir *r, t_env *ev)
 	return(0);
 }
 
-void open_files(t_command **commands, t_env *ev)
+int open_files(t_command **commands, t_env *ev)
 {
 	if (!*commands)
-		return ;
+		return (1);
 
 	t_command *tmp;
 	t_redir *r;
@@ -246,11 +246,11 @@ void open_files(t_command **commands, t_env *ev)
 		while (r)
 		{
 			if (ambigious_check(r, ev) == 1)
-				return ;
+				return (1);
 			if (r ->type == R_IN)
 			{
 				if (check_file_in(r->filename) == -1 || is_directory(r->filename) == -1)
-					return ;
+					return (1);
 				r->fd = open(r->filename, O_RDONLY);
 			}
 			else if (r -> type == R_OUT)
@@ -259,7 +259,7 @@ void open_files(t_command **commands, t_env *ev)
 				if (check_file_out(r->filename) == -1 || is_directory(r->filename) == - 1)
 				{
 					close(r -> fd);
-					return ;
+					return (1);
 				}
 			}
 			else if (r->type == APP)
@@ -268,7 +268,7 @@ void open_files(t_command **commands, t_env *ev)
 				if (check_file_out(r->filename) == -1 || is_directory(r->filename) == - 1)
 				{
 					close(r -> fd);
-					return ;
+					return (1);
 				}
 			}
 			else if (r -> type == HER)
@@ -278,7 +278,44 @@ void open_files(t_command **commands, t_env *ev)
 		*commands = (*commands) -> next;
 	}
 	*commands = tmp;
+	return (0);
 }
+
+void print_env(t_command *cmd, t_env *env)
+{
+    int i;
+	int fd;
+	fd = rederctes_out(cmd->rederects);
+    while (env)
+    {
+        i = 0;
+        while (cmd->args[i])
+        {
+            if (env->key && env->value)
+            {
+                if (check_equal(cmd->args[i]) == 1)
+                {
+                    // printf("%s=%s\n", env->key, env->value);
+					write(fd, env->key, ft_strlen(env->key));
+					write(fd, "=", 1);
+					write(fd, env->value, ft_strlen(env->value));
+					write(fd, "\n", 1);
+                }
+            }
+            else if (env->key)
+                {
+                    if (check_equal(cmd->args[i]) == 0)
+					{
+						write(fd, env->key, ft_strlen(env->key));
+						write(fd, "\n", 1);
+					}
+                }
+            i++;
+        }
+        env = env->next;
+    }
+}
+
 void exec_builtin(t_command *command,t_env *ev)
 {
 	if (!command)
@@ -286,45 +323,102 @@ void exec_builtin(t_command *command,t_env *ev)
 	(void)ev;
 	if (!ft_strcmp(command->args[0], "echo"))
 		the_echo(command);
-	// else if (!ft_strcmp(cmd, "cd"))
-	// 	the_cd();
-	// else if (!ft_strcmp(cmd, "pwd"))
-	// 	the_pwd();
-	// else if (!ft_strcmp(cmd, "export"))
-	// 	the_export();
-	// else if (!ft_strcmp(cmd, "unset"))
-	// 	unset()
-	// else if (!ft_strcmp(cmd, "env"))
-	// 	print_env();
+	// else if (!ft_strcmp(command -> args[0], "cd"))
+	// 	the_cd(command,ev);
+	// else if (!ft_strcmp(command -> args[0], "pwd"))
+	// 	the_pwd(command -> rederects);
+	// else if (!ft_strcmp(command -> args[0], "export"))
+	// 	the_export(command,&ev);
+	// else if (!ft_strcmp(command -> args[0], "unset"))
+	// 	the_unset(command, &ev);
+	// else if (!ft_strcmp(command -> args[0], "env") && !command -> args[1])
+	// 	print_env(command ,ev);
 	else if (!ft_strcmp(command->args[0], "exit"))
 		ft_exit(command);
 	// return (0);
 }
-void exec_single(t_command *command,t_env *ev)
+
+char  *get_path(t_command *command,t_env *env)
 {
+	char *path;
+	char **paths;
+	int i;
+	path = ft_getenv(env, "PATH");
+	paths = ft_split(path, ':');
+	i = 0;
+	while (paths[i])
+	{
+		if (paths[i][ft_strlen(paths[i]) - 1] != '/')
+		{
+		paths[i] = ft_strjoin(paths[i], "/");
+		paths[i] = ft_strjoin(paths[i], command -> args[0]);	
+		}
+		if (access(paths[i], F_OK) == 0)
+		{
+			command -> args[0] = paths[i];
+			return (paths[i]);
+		}
+		i++;
+	}
+	return (NULL);
+}
+
+void exec_single(t_command *command,t_env *ev, char **env)
+{
+	char *s;
+	s = command -> args[0];
 	if (!command)
 		return ;
 	if (command -> is_builtin)
 		exec_builtin(command,ev);
+	else
+	{
+		if (command -> args[0][0] != '/')
+			s = get_path(command, ev);
+		pid_t pid = fork();
+		if (pid == 0)
+		{
+			if (command -> rederects)
+			{
+				t_redir *r = command -> rederects;
+				while (r)
+				{
+					if (r -> type == R_IN)
+						dup2(r -> fd, 0);
+					else if (r -> type == R_OUT || r -> type == APP)
+						dup2(r -> fd, 1);
+					r = r -> next;
+				}
+			}
+			execve(s, command -> args, env);
+			perror("execve");
+			exit(1);
+		}
+		else
+		{
+			waitpid(pid, NULL, 0);
+		}
+	}
 }
-void	exec_command(t_command *command,t_env *ev)
+void	exec_command(t_command *command,t_env *ev,char **env)
 {
 	if (!command)
 		return ;
 	if (!command -> next)
-		exec_single(command ,ev);
+		exec_single(command ,ev,env);
 }
 
-void exec(t_command *commands, t_env *ev)
+void exec(t_command *commands, t_env *ev, char **env)
 {
 	(void)ev;
 	if (!commands)
 		return ;
-	open_files(&commands, ev);
-	exec_command(commands,ev);
+	if (open_files(&commands, ev) == 1)
+		return ;
+	exec_command(commands,ev,env);
 	// printf("%s",commands -> args[0]);
 }
-int	parser(char *user_inp, t_env *ev)
+int	parser(char *user_inp, t_env *ev,char **env)
 {
 	t_token		*token_list;
 	t_command	*commands;
@@ -344,7 +438,7 @@ int	parser(char *user_inp, t_env *ev)
 	check_last(commands);
 	check_last_out(commands);
 	// printcommnads(commands);
-	exec(commands, ev);
+	exec(commands, ev, env);
 	clean_tokens(&token_list);
 	clean_cmds(&commands);
 	return (0);

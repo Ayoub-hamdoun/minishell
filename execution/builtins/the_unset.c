@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   the_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:17:58 by rallali           #+#    #+#             */
-/*   Updated: 2024/10/16 15:21:06 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/07 19:28:25 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 void	remove_env_var(t_env **env, const char *key)
 {

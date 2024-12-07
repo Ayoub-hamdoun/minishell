@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/04 20:48:02 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/07 19:49:24 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int main(int argc, char *argv[], char **env)
 			break ;
 		add_history(input);
 		// do_all(input,ev);
-		parser(input, ev);
+		parser(input, ev, env);
 
 		// exec();
 	}

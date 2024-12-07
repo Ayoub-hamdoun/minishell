@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/06 17:10:10 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/07 19:27:43 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ typedef struct s_vars
 }	t_vars;
 
 // parsing funcs
-int		parser(char *user_inp, t_env *ev);
+int		parser(char *user_inp, t_env *ev,char **env);
 void	handle_word(t_command **command, char *str, int *argcount);
 void	handle_redirections(t_command *command, t_token **token_list);
 void	tokenizer(char *user_inp, t_token **tokenList);
@@ -136,5 +136,14 @@ void	exit_funcs(void);
 //builtins
 void	the_echo(t_command *cmd);
 void	ft_exit(t_command *command);
+int		rederctes_out(t_redir *reder);
+int		check_equal(char *cmd);
+void	the_cd(t_command *cmd, t_env *env);
+void	the_pwd(void);
+void	the_unset(t_command *cmd, t_env **env);
+void	update_oldpwd(char *path, t_env *env);
+void	re_pwd(char *path, t_env *env);
+char	*extract_value(char *equal_pos);
+
 //end temp
 #endif

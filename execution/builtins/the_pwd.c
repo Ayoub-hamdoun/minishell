@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   the_pwd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 12:38:21 by rallali           #+#    #+#             */
-/*   Updated: 2024/10/16 12:41:23 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/07 19:28:18 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minishell.h"
+#include "../../minishell.h"
 
 void	update_oldpwd(char *path, t_env *env)
 {
