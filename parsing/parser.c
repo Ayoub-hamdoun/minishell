@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/07 20:59:12 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/08 19:30:13 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,6 @@ void lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 			break ;
 		}
 		str = /*ft_strdup(*/is_expand(str, exp_flag,ev)/*)*/;
-		printf ("str = %s\n", str);
 		// dup2(STDOUT_FILENO,pipe);
 		write (pipe, str, ft_strlen(str));
 		write (pipe, "\n", 1);
@@ -201,6 +200,8 @@ void	check_on_herdoc(t_redir *r, t_env *ev)
 		return;
 	lherdoc(r, ld[1], exp_flag, ev);
 	r->fd = ld[0];
+	dup2(ld[0], STDIN_FILENO);
+	close(ld[0]);
 }
 
 int	has_space(char *str)
@@ -255,7 +256,7 @@ int open_files(t_command **commands, t_env *ev)
 			}
 			else if (r -> type == R_OUT)
 			{
-				r->fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+				r->fd = open(r->filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 				if (check_file_out(r->filename) == -1 || is_directory(r->filename) == - 1)
 				{
 					close(r -> fd);
@@ -264,7 +265,7 @@ int open_files(t_command **commands, t_env *ev)
 			}
 			else if (r->type == APP)
 			{
-				r->fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+				r->fd = open(r->filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
 				if (check_file_out(r->filename) == -1 || is_directory(r->filename) == - 1)
 				{
 					close(r -> fd);
@@ -323,16 +324,16 @@ void exec_builtin(t_command *command,t_env *ev)
 	(void)ev;
 	if (!ft_strcmp(command->args[0], "echo"))
 		the_echo(command);
-	// else if (!ft_strcmp(command -> args[0], "cd"))
-	// 	the_cd(command,ev);
-	// else if (!ft_strcmp(command -> args[0], "pwd"))
-	// 	the_pwd(command -> rederects);
-	// else if (!ft_strcmp(command -> args[0], "export"))
-	// 	the_export(command,&ev);
-	// else if (!ft_strcmp(command -> args[0], "unset"))
-	// 	the_unset(command, &ev);
-	// else if (!ft_strcmp(command -> args[0], "env") && !command -> args[1])
-	// 	print_env(command ,ev);
+	else if (!ft_strcmp(command -> args[0], "cd"))
+		the_cd(command,ev);
+	else if (!ft_strcmp(command -> args[0], "pwd"))
+		the_pwd(command -> rederects, ev);
+	else if (!ft_strcmp(command -> args[0], "export"))
+		the_export(command,&ev);
+	else if (!ft_strcmp(command -> args[0], "unset"))
+		the_unset(command, &ev);
+	else if (!ft_strcmp(command -> args[0], "env") && !command -> args[1])
+		print_env(command ,ev);
 	else if (!ft_strcmp(command->args[0], "exit"))
 		ft_exit(command);
 	// return (0);
@@ -343,6 +344,8 @@ char  *get_path(t_command *command,t_env *env)
 	char *path;
 	char **paths;
 	int i;
+	if (!command)
+		return (NULL);
 	path = ft_getenv(env, "PATH");
 	paths = ft_split(path, ':');
 	i = 0;
@@ -367,12 +370,13 @@ void exec_single(t_command *command,t_env *ev, char **env)
 {
 	char *s;
 	s = command -> args[0];
-	if (!command)
-		return ;
+
 	if (command -> is_builtin)
 		exec_builtin(command,ev);
 	else
 	{
+		if (!s)
+			return;
 		if (command -> args[0][0] != '/')
 			s = get_path(command, ev);
 		pid_t pid = fork();
@@ -391,7 +395,7 @@ void exec_single(t_command *command,t_env *ev, char **env)
 				}
 			}
 			execve(s, command -> args, env);
-			perror("execve");
+			printf("%s: command not found\n",command -> args[0]);
 			exit(1);
 		}
 		else
@@ -402,10 +406,15 @@ void exec_single(t_command *command,t_env *ev, char **env)
 }
 void	exec_command(t_command *command,t_env *ev,char **env)
 {
-	if (!command)
+	if (!command || !command->args)
 		return ;
 	if (!command -> next)
 		exec_single(command ,ev,env);
+	// else
+	// {
+	// 	int fd[2] = pipe();
+	// 	dup2(fd[0], STDOUT_FILENO);
+	// }
 }
 
 void exec(t_command *commands, t_env *ev, char **env)
@@ -422,6 +431,7 @@ int	parser(char *user_inp, t_env *ev,char **env)
 {
 	t_token		*token_list;
 	t_command	*commands;
+	(void)env;
 
 	commands = NULL;
 	token_list = NULL;

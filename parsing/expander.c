@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/05 16:09:52 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/08 19:43:08 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,45 @@ void	update_token(t_token **token, char **res, t_env *ev)
 	free(*res);
 }
 
-void	handle_env_token(t_token **tokens, t_env *ev)
+void    handle_env_token(t_token **tokens, t_env *ev)
 {
-	char	*res;
+    char    *res;
+    char    **splitted;
+    t_token        *new;
+    t_token        *tmp;
+    int    i = 1;
 
-	if (!ft_strcmp((*tokens)->str, "$"))
-		return ;
-	res = ft_strdup(((*tokens)->str) + 1);
-	if (ft_isalpha(res[0]) || res[0] == '_')
-	{
-		free((*tokens)->str);
-		(*tokens)->str = ft_strdup(ft_getenv(ev, res));
-		free(res);
-	}
-	else
-		free(res);
+    if (!ft_strcmp((*tokens)->str, "$"))
+        return ;
+    res = ft_strdup(((*tokens)->str) + 1);
+    if (ft_isalpha(res[0]) || res[0] == '_')
+    {
+        free((*tokens)->str);
+        splitted = ft_split(ft_getenv(ev, res), ' ');
+		if (!splitted || !sizeofarray(splitted))
+			(*tokens)->str = ft_strdup("");
+		else
+		{
+			(*tokens)->str = ft_strdup(splitted[0]);
+			tmp = (*tokens);
+			while (splitted[i])
+			{
+				new = malloc(sizeof(t_token));
+				new->str = ft_strdup(splitted[i]);
+				new->token_type = WORD;
+				new->q_type = NONE;
+				new->next = tmp->next;
+				tmp->next = new;
+				tmp = new;
+				i++;
+			}
+		}
+        free(res);
+    }
+    else
+        free(res);
 }
+
 
 void	handle_quoted_token(t_token **tokens, t_env *ev)
 {

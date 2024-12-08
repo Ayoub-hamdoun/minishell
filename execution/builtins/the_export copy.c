@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   the_export.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/08 19:50:42 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/08 00:35:05 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -273,7 +273,31 @@ int check_plus(char *cmd,int flag)
 	}
 	return (0);
 }
+char * ft_strjoin(char *s1, char *s2)
+{
+	char *str;
+	int i;
+	int j;
 
+	i = 0;
+	j = 0;
+	str = malloc(strlen(s1) + strlen(s2) + 1);
+	if (!str)
+		return (NULL);
+	while (s1[i])
+	{
+		str[i] = s1[i];
+		i++;
+	}
+	while (s2[j])
+	{
+		str[i] = s2[j];
+		i++;
+		j++;
+	}
+	str[i] = '\0';
+	return (str);
+}
 void join_var(char *cmd, t_env **env)
 {
 	t_env *current = *env;
@@ -301,7 +325,6 @@ void the_export(t_command *cmd, t_env **env)
 	int	i;
 	int flag;
 	i = 1;
-
 	if (!cmd->args[i])
 	{
 		declare_x(env);

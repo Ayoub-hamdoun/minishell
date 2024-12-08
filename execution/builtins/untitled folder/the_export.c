@@ -6,15 +6,15 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/08 19:50:42 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/08 13:58:07 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-//the variable can be appended even if no cmd already their done
-//even if there is an error you should set the error then continue on setting the other variables done
-// if the variable was without = and we want to append it segfault  done
+//the variable can be appended even if no cmd already their 
+//even if there is an error you should set the error then continue on setting the other variables
+// if the variable was without = and we want to append it segfault
 void declare_x(t_env **env)
 {
 	t_env	*tmp;
@@ -193,6 +193,7 @@ void add_variable(char *cmd, t_env **env)
     t_env *new;
     char *key = extract_key(cmd);
     char *value = extract_value(cmd);
+
     if (key == NULL)
         return;
 
@@ -286,10 +287,7 @@ void join_var(char *cmd, t_env **env)
 		if (current->key && strcmp(current->key, key) == 0)
 		{
 			tmp = current->value;
-			if (current->value == NULL)
-				current->value = value;
-			else
-				current->value = ft_strjoin(current ->value, value);
+			current->value = ft_strjoin(current ->value, value);
 			free(tmp);
 			return ;
 		}
@@ -299,9 +297,8 @@ void join_var(char *cmd, t_env **env)
 void the_export(t_command *cmd, t_env **env)
 {
 	int	i;
-	int flag;
-	i = 1;
 
+	i = 1;
 	if (!cmd->args[i])
 	{
 		declare_x(env);
@@ -310,18 +307,13 @@ void the_export(t_command *cmd, t_env **env)
 	while (cmd -> args[i])
 	{
 		if (check_valid(cmd -> args[i]) == 1)
-			flag = 1;
+			return ;
 		else
 		{
 			if (check_equal(cmd -> args[i]) == 1)
 			{
 				if (check_plus(cmd -> args[i],0) == 0)
-				{
-					if (check_duplicate(cmd -> args[i], env) == 1)
-						add_variable(cmd -> args[i], env);
-					else
-						join_var(cmd -> args[i], env);
-				}
+					join_var(cmd -> args[i], env);
 				else if (check_plus(cmd -> args[i],1) == 2)
 					add_var(cmd->args[i], env);
 			}
@@ -333,6 +325,4 @@ void the_export(t_command *cmd, t_env **env)
 		}
 		i++;
 	}
-	if (flag == i)
-		return ;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   the_cd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:38:54 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/07 21:56:59 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/07 19:26:03 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,9 @@ char	*with_commands(t_command *cmd, char *need, t_env *env)
 				printf("OLDPWD not set\n");
 		}
 		else if (chdir(cmd->args[1]) != 0)
-			chdir("HOME");
+		{
+			perror("chdir");
+		}
 	}
 	return (need);
 }
@@ -57,8 +59,10 @@ void	the_cd(t_command *cmd, t_env *env)
 	{
 		need = get_need(env, "HOME");
 		if (need)
+		{
 			if (chdir(need) != 0)
 				perror("chdir");
+		}
 	}
 	need = get_need(env, "PWD");
 	update_oldpwd(need, env);

@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/04 13:35:21 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/08 19:55:19 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	check_redirection(t_token *token)
 			}
 			else if (token->next->token_type != WORD && token -> next-> token_type != ENV)
 			{
-				printf(": in: No such file or directory\n");
+				printf("syntax error near unexpected token\n");
 				return (1);
 			}
 		}

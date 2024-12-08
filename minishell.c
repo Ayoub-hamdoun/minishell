@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/07 19:49:24 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/08 19:49:58 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,12 @@ void handle_sig(int sig)
 	rl_redisplay();
 }
 
+void	fill_env(char **env)
+{
+	*env = malloc(sizeof(char *) * 2);
+	env[0] = ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/munki:/Library/Apple/usr/bin");
+	env[1] = NULL;
+}
 
 int main(int argc, char *argv[], char **env)
 {
@@ -34,6 +40,8 @@ int main(int argc, char *argv[], char **env)
 		write(2, "not a tty!\n", 12);
 		return (0);
 	}
+	if (!env[0])
+		fill_env(env);
 	ev = malloc (sizeof(t_env));
 	// atexit(l);
 	rl_catch_signals = 0;

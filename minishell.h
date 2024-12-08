@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/07 19:27:43 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/08 16:23:26 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ int		is_builtin(char *cmd);
 void	clean_tokens(t_token **tokens);
 void	clean_cmds(t_command **cmds);
 void	clean_red(t_redir **reds);
+int		sizeofarray(char **array);
 
 // utils
 int		ft_strlen(char	*str);
@@ -124,11 +125,13 @@ char	*ft_strjoin(char *s1, char *s2);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
 int		ft_atoi(const char *str);
+char	*ft_strchr(char *str, int c);
 
 //temp
 void 	printtokens(t_token *lst);
 void	printredirections(t_redir *lst);
 void	printcommnads(t_command *lst);
+void	the_export(t_command *cmd, t_env **env);
 char	*gettype(t_etype type);
 void	exit_funcs(void);
 
@@ -139,7 +142,7 @@ void	ft_exit(t_command *command);
 int		rederctes_out(t_redir *reder);
 int		check_equal(char *cmd);
 void	the_cd(t_command *cmd, t_env *env);
-void	the_pwd(void);
+void	the_pwd(t_redir *reder, t_env *env);
 void	the_unset(t_command *cmd, t_env **env);
 void	update_oldpwd(char *path, t_env *env);
 void	re_pwd(char *path, t_env *env);

@@ -54,9 +54,10 @@ void printcommnads(t_command *lst)
 {
 	int i = 0;
 
-	if (!lst)
-		// printf("no commands\n");
-		return ;
+	if (!lst){
+		printf("no commands\n");
+		return ;}
+		
 	while (lst)
 	{
 		printf("\nCOMMANDS : ---------------------------------\n");
