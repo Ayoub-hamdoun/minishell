@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/08 20:08:58 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 20:58:26 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void handle_sig(int sig)
 {
 	(void)sig;
 	write(1, "\n", 1);
-	rl_replace_line("", 0);
+	// rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
@@ -44,7 +44,7 @@ int main(int argc, char *argv[], char **env)
 		fill_env(env);
 	ev = malloc (sizeof(t_env));
 	// atexit(l);
-	rl_catch_signals = 0;
+	// rl_catch_signals = 0;
 	dup_env(ev, env);
 	while(1)
 	{
@@ -55,7 +55,7 @@ int main(int argc, char *argv[], char **env)
 			break ;
 		add_history(input);
 		// do_all(input,ev);
-		parser(input, ev, env);
+		parser(input, ev);
 
 		// exec();
 	}

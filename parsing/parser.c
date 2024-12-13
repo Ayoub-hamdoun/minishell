@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/13 18:43:12 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 21:11:09 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,10 +157,12 @@ char	*is_expand(char *str,int exp_flag, t_env *ev)
 void lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 {
 	char *str;
+	int hold;
 
 	(void)ev;
 	(void)exp_flag;
 	str = NULL;
+	hold = dup(STDIN_FILENO); 
 	while (1)
 	{
 		signal(SIGINT, handle_sig);
@@ -169,6 +171,7 @@ void lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 		if (!str || ft_strcmp(str, r->filename) == 0)
 		{
 			free (str);
+			close (0);
 			str = NULL;
 			close (pipe);
 			break ;
@@ -179,6 +182,7 @@ void lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 		write (pipe, "\n", 1);
 		free(str);
 	}
+	dup2(hold, STDIN_FILENO);
 }
 // int check_on_quotes(t_redir *red)
 // {
@@ -201,8 +205,6 @@ void	check_on_herdoc(t_redir *r, t_env *ev)
 		return;
 	lherdoc(r, ld[1], exp_flag, ev);
 	r->fd = ld[0];
-	dup(ld[0]);
-	close(ld[0]);
 }
 
 int	has_space(char *str)
@@ -295,22 +297,16 @@ void print_env(t_command *cmd, t_env *env)
         {
             if (env->key && env->value)
             {
-                if (check_equal(cmd->args[i]) == 1)
-                {
                     // printf("%s=%s\n", env->key, env->value);
 					write(fd, env->key, ft_strlen(env->key));
 					write(fd, "=", 1);
 					write(fd, env->value, ft_strlen(env->value));
 					write(fd, "\n", 1);
-                }
             }
-            else if (env->key)
+            else if (env->key && env->value)
                 {
-                    if (check_equal(cmd->args[i]) == 0)
-					{
 						write(fd, env->key, ft_strlen(env->key));
 						write(fd, "\n", 1);
-					}
                 }
             i++;
         }
@@ -322,18 +318,17 @@ void exec_builtin(t_command *command,t_env *ev)
 {
 	if (!command)
 		return ;
-	(void)ev;
 	if (!ft_strcmp(command->args[0], "echo"))
 		the_echo(command);
 	else if (!ft_strcmp(command -> args[0], "cd"))
 		the_cd(command,ev);
-	else if (!ft_strcmp(command -> args[0], "pwd"))
+	else if (!ft_strcmp(command -> args[0], "pwd") || !ft_strcmp(command -> args[0], "PWD"))
 		the_pwd(command -> rederects, ev);
 	else if (!ft_strcmp(command -> args[0], "export"))
 		the_export(command,&ev);
 	else if (!ft_strcmp(command -> args[0], "unset"))
 		the_unset(command, &ev);
-	else if (!ft_strcmp(command -> args[0], "env") && !command -> args[1])
+	else if (!ft_strcmp(command -> args[0], "env") || !ft_strcmp(command -> args[0], "ENV"))
 		print_env(command ,ev);
 	else if (!ft_strcmp(command->args[0], "exit"))
 		ft_exit(command);
@@ -347,6 +342,8 @@ char  *get_path(t_command *command,t_env *env)
 	int i;
 	if (!command)
 		return (NULL);
+	if (access(command -> args[0], F_OK) == 0)
+		return (command -> args[0]);
 	path = ft_getenv(env, "PATH");
 	paths = ft_split(path, ':');
 	i = 0;
@@ -366,73 +363,182 @@ char  *get_path(t_command *command,t_env *env)
 	}
 	return (NULL);
 }
-
-void exec_single(t_command *command,t_env *ev, char **env)
+void print_envp(char **envp)
 {
-	char *s;
-	s = command -> args[0];
-
-	if (command -> is_builtin)
-		exec_builtin(command,ev);
-	else
+	int i;
+	i = 0;
+	while (envp[i])
 	{
-		if (!s)
-			return;
-		if (command -> args[0][0] != '/')
-			s = get_path(command, ev);
-		pid_t pid = fork();
-		if (pid == 0)
-		{
-			if (command -> rederects)
-			{
-				t_redir *r = command -> rederects;
-				while (r)
-				{
-					if (r -> type == R_IN)
-						dup2(r -> fd, 0);
-					else if (r -> type == R_OUT || r -> type == APP)
-						dup2(r -> fd, 1);
-					r = r -> next;
-				}
-			}
-			execve(s, command -> args, env);
-			printf("%s: command not found\n",command -> args[0]);
-			exit(1);
-		}
-		else
-		{
-			waitpid(pid, NULL, 0);
-		}
+		printf("%s\n",envp[i]);
+		i++;
 	}
 }
-void	exec_command(t_command *command,t_env *ev,char **env)
+
+void multiple_commands(t_command *command, t_env *ev)
+{
+    int prev_fd = -1;
+    int pipe_fd[2];
+	char **env = NULL;
+    pid_t pid;
+	         if (command->is_builtin && !command -> next)
+                exec_builtin(command, ev);
+    while (command)
+    {
+        if (command->next && pipe(pipe_fd) == -1)
+        {
+            perror("pipe failed");
+            exit(EXIT_FAILURE);
+        }
+        pid = fork();
+        if (pid == 0)
+        {
+            if (prev_fd != -1)
+            {
+                if (dup2(prev_fd, STDIN_FILENO) == -1)
+                {
+                    perror("dup2 failed for input");
+                    exit(EXIT_FAILURE);
+                }
+                close(prev_fd);
+            }
+            if (command->next)
+            {
+                if (dup2(pipe_fd[1], STDOUT_FILENO) == -1)
+                {
+                    perror("dup2 failed for output");
+                    exit(EXIT_FAILURE);
+                }
+                close(pipe_fd[1]);
+                close(pipe_fd[0]);
+            }
+            t_redir *r = command->rederects;
+            while (r)
+            {
+                if (r->type == R_IN || r->type == HER)
+                    dup2(r->fd, STDIN_FILENO);
+                else if (r->type == R_OUT || r->type == APP)
+                    dup2(r->fd, STDOUT_FILENO);
+                close(r->fd);
+                r = r->next;
+            }
+            if (command->is_builtin)
+                exec_builtin(command, ev);
+            else
+            {
+                char *s = command->args[0];
+                    s = get_path(command, ev);
+                execve(s, command->args, env);
+                perror("execve failed");
+                printf("%s: command not found\n", command->args[0]);
+            }
+            exit(EXIT_FAILURE);
+        }
+        else if (pid < 0)
+        {
+            perror("fork failed");
+            exit(EXIT_FAILURE);
+        }
+        if (prev_fd != -1)
+            close(prev_fd);
+        if (command->next)
+        {
+            close(pipe_fd[1]);
+            prev_fd = pipe_fd[0];
+        }
+        else
+            prev_fd = -1;
+        while (command->rederects)
+        {
+            close(command->rederects->fd);
+            command->rederects = command->rederects->next;
+        }
+        command = command->next;
+    }
+    while (wait(NULL) > 0);
+}
+void print_e(t_env *ev)
+{
+	t_env *temp = ev;
+	while (temp)
+	{
+		if (temp->key && temp->value)
+			printf("%s=%s\n", temp->key, temp->value);
+		else if (temp->key)
+			printf("%s\n", temp->key);
+		temp = temp->next;
+	}
+}
+void	exec_command(t_command *command,t_env *ev)
 {
 	if (!command || !command->args)
 		return ;
-	if (!command -> next)
-		exec_single(command ,ev,env);
+	// if (!command -> next)
+	// 	exec_single(command ,ev,env);
+	// else
+	multiple_commands(command, ev);		
+	// print_envp(env);
 	// else
 	// {
 	// 	int fd[2] = pipe();
 	// 	dup2(fd[0], STDOUT_FILENO);
 	// }
 }
-
-void exec(t_command *commands, t_env *ev, char **env)
+char **convert_ev(t_env *ev)
 {
-	(void)ev;
+	char **env;
+	int count = 0;
+	t_env *temp = ev;
+	char *t;
+
+	while (temp)
+	{
+		count++;
+		temp = temp->next;
+	}
+	env = malloc(sizeof(char *) * (count + 1));
+	if (!env)
+		return (NULL);
+	int i = 0;
+	while (ev)
+	{
+		if (ev->key && ev->value)
+		{
+			t = ft_strjoin(ev->key, "=");
+			env[i] = ft_strjoin(t, ev->value);
+			free(temp);
+		}
+		else if (ev->key)
+			env[i] = ft_strdup(ev->key);
+		else
+			env[i] = NULL;
+		i++;
+		ev = ev->next;
+	}
+	env[i] = NULL;
+	return (env);
+}
+void exec(t_command *commands, t_env *ev)
+{
+	// char **env = NULL;
+	
 	if (!commands)
 		return ;
 	if (open_files(&commands, ev) == 1)
 		return ;
-	exec_command(commands,ev,env);
-	// printf("%s",commands -> args[0]);
+	// env = convert_ev(ev);
+	// print_e(ev);
+	// if (!env)
+		// return;
+	exec_command(commands,ev);
+	// int i = 0;
+	// while (env[i])
+	// 	free(env[i++]);
+	// free(env);
 }
-int	parser(char *user_inp, t_env *ev,char **env)
+int	parser(char *user_inp, t_env *ev)
 {
 	t_token		*token_list;
 	t_command	*commands;
-	(void)env;
 
 	commands = NULL;
 	token_list = NULL;
@@ -443,13 +549,13 @@ int	parser(char *user_inp, t_env *ev,char **env)
 		return (1);
 	}
 	expander(&token_list, ev);
-	printtokens(token_list);
+	// printtokens(token_list);
 	remove_quotes(&token_list);
 	extract_cmds(token_list, &commands);
 	check_last(commands);
 	check_last_out(commands);
-	printcommnads(commands);
-	exec(commands, ev, env);
+	// printcommnads(commands);
+	exec(commands, ev);
 	clean_tokens(&token_list);
 	clean_cmds(&commands);
 	return (0);
