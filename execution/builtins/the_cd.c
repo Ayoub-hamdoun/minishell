@@ -32,6 +32,7 @@ char	*with_commands(t_command *cmd, char *need, t_env *env)
 		if (cmd ->args[1][0] == '-')
 		{
 			need = get_need(env, "OLDPWD");
+			printf("hu %s\n", need);
 			if (need)
 			{
 				if (chdir(need) != 0)
@@ -46,22 +47,91 @@ char	*with_commands(t_command *cmd, char *need, t_env *env)
 	return (need);
 }
 
+void	update_oldpwd(char *path, t_env *env)
+{
+	t_env *tmp = env;
+
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->key, "OLDPWD") == 0)
+		{
+			free(tmp->value);
+			tmp->value = ft_strdup(path);
+			return;
+		}
+		tmp = tmp->next;
+	}
+}
+
+void	update_pwd(char *pwd, t_env *env)
+{
+	t_env *tmp = env;
+
+	while (tmp)
+	{
+		if (strcmp(tmp->key, "PWD") == 0)
+		{
+			free(tmp->value);
+			tmp->value = ft_strdup(pwd);
+			return;
+		}
+		tmp = tmp->next;
+	}
+}
+
 void	the_cd(t_command *cmd, t_env *env)
 {
 	char	*need;
-	char	*path;
+	char	*oldpwd;
+	char	*newpwd;
+	int		chdir_result;
 
-	need = NULL;
-	need = with_commands(cmd, need, env);
-	if (!cmd -> args[1])
+	oldpwd = getcwd(NULL, 0);
+	if (!oldpwd)
+		oldpwd = ft_strdup(get_need(env, "PWD"));
+
+	if (!cmd->args[1] || !ft_strcmp(cmd->args[1], "~"))
 	{
 		need = get_need(env, "HOME");
-		if (need)
-			if (chdir(need) != 0)
-				perror("chdir");
+		if (!need)
+		{
+			fprintf(stderr, "cd: HOME not set\n");
+			return;
+		}
+		chdir_result = chdir(need);
 	}
-	need = get_need(env, "PWD");
-	update_oldpwd(need, env);
-	path = getcwd(NULL, 0);
-	re_pwd(path, env);
+	else if (!ft_strcmp(cmd->args[1], "-"))
+	{
+		need = get_need(env, "OLDPWD");
+		if (!need)
+		{
+			printf("cd: OLDPWD not set\n");
+			return;
+		}
+		chdir_result = chdir(need);
+		if (!chdir_result)
+			printf("%s\n", need);
+	}
+	else
+		chdir_result = chdir(cmd->args[1]);
+
+	newpwd = getcwd(NULL, 0);
+	if (chdir_result || !newpwd)
+	{
+		perror("here :cd");
+		if (!newpwd)
+		{
+			newpwd = ft_strjoin(ft_strdup(oldpwd), "/");
+			if (cmd->args[1])
+				newpwd = ft_strjoin(newpwd, cmd->args[1]);
+			else
+				newpwd = ft_strjoin(newpwd, "..");
+		}
+	}
+
+	update_oldpwd(oldpwd, env);
+	update_pwd(newpwd, env);
+
+	free(oldpwd);
+	free(newpwd);
 }

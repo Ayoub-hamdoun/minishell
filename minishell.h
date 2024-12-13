@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/08 16:23:26 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:17:08 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_redir
 	int				flag_out;
 	int				fd;
 	int				is_open;
+	int				check_her;
 	t_etype			type;
 	t_etype			q_type;
 	struct s_redir	*next;

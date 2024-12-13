@@ -3,31 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   the_pwd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 12:38:21 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/07 21:06:14 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/13 17:16:38 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	update_oldpwd(char *path, t_env *env)
-{
-	if (!path)
-		return ;
-	while (env)
-	{
-		if (strncmp(env->key, "OLDPWD", 3) == 0 && env -> value)
-		{
-			free(env->value);
-			env->value = strdup(path);
-			break ;
-		}
-		env = env->next;
-	}
-	return ;
-}
+// void	update_oldpwd(char *path, t_env *env)
+// {
+// 	if (!path)
+// 		return ;
+// 	while (env)
+// 	{
+// 		if (strncmp(env->key, "OLDPWD", 3) == 0 && env -> value)
+// 		{
+// 			free(env->value);
+// 			env->value = strdup(path);
+// 			break ;
+// 		}
+// 		env = env->next;
+// 	}
+// 	return ;
+// }
 
 void	re_pwd(char *path, t_env *env)
 {

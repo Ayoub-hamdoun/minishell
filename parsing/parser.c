@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/08 19:30:13 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:32:06 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	check_file_in(char *file_name)
 	}
 	return (0);
 }
+
 int	is_directory(const char *path)
 {
 	struct stat	path_stat;
@@ -200,7 +201,7 @@ void	check_on_herdoc(t_redir *r, t_env *ev)
 		return;
 	lherdoc(r, ld[1], exp_flag, ev);
 	r->fd = ld[0];
-	dup2(ld[0], STDIN_FILENO);
+	dup(ld[0]);
 	close(ld[0]);
 }
 

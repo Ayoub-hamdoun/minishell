@@ -6,61 +6,39 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/08 19:55:19 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:14:07 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	check_first_quote(t_token *token)
-{
-	if (!token)
-		return (-1);
-	if (token->str[0] == '\'')
-		return (1);
-	else if (token->str[0] == '"')
-		return (2);
-	return (0);
-}
-
-int	check_last_quote(t_token *token)
-{
-	int	i;
-
-	if (!token || ft_strlen(token->str) == 1)
-		return (-1);
-	i = ft_strlen(token->str) - 1;
-	if (token->str[i] == '\'')
-		return (1);
-	else if (token->str[i] == '"')
-		return (2);
-	return (0);
-}
-
 int	check_quotes(t_token *token)
 {
 	t_token	*current;
-	int		checker;
-	int		checker2;
+	int		i;
+	char	quote;
 
 	current = token;
-	checker = 0;
-	checker2 = 0;
 	if (!current)
 		return (1);
 	while (current)
 	{
-		if (current ->str[0] == '\'' || current->str[0] == '"' )
+		i = 0;
+		quote = 0;
+		while (current->str[i])
 		{
-			checker = check_first_quote(current);
-			checker2 = check_last_quote(current);
+			if ((current->str[i] == '\'' || current->str[i] == '\"') && !quote)
+				quote = current->str[i];
+			else if (current->str[i] == quote)
+				quote = 0;
+			i++;
+		}
+		if (quote)
+		{
+			printf("minishell: syntax error: mismatched quotes\n");
+			return (1);
 		}
 		current = current->next;
-	}
-	if (checker != checker2 || checker == -1 || checker2 == -1)
-	{
-		printf("minishell: syntax error: mismatched quotes\n");
-		return (1);
 	}
 	return (0);
 }
