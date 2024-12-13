@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:30:24 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/05 13:48:28 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:44:21 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	remove_quotes(t_token **tokens)
 	current = *tokens;
 	while (current)
 	{
-		if (current->q_type != NONE)
+		if (current->q_type != NONE || current->token_type == ENV)
 		{
 			new_str = ft_strdup("");
 			i = 0;

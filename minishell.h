@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/13 17:17:08 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:27:08 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ typedef struct s_vars
 	int		argcount;
 	char	**args;
 }	t_vars;
+
+int g_exit_no;
 
 // parsing funcs
 int		parser(char *user_inp, t_env *ev,char **env);

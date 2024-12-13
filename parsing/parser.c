@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/13 17:32:06 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 18:43:12 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -443,12 +443,12 @@ int	parser(char *user_inp, t_env *ev,char **env)
 		return (1);
 	}
 	expander(&token_list, ev);
-	// printtokens(token_list);
+	printtokens(token_list);
 	remove_quotes(&token_list);
 	extract_cmds(token_list, &commands);
 	check_last(commands);
 	check_last_out(commands);
-	// printcommnads(commands);
+	printcommnads(commands);
 	exec(commands, ev, env);
 	clean_tokens(&token_list);
 	clean_cmds(&commands);
