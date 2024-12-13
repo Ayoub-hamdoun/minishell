@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/13 18:27:08 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/13 20:58:17 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ typedef struct s_vars
 int g_exit_no;
 
 // parsing funcs
-int		parser(char *user_inp, t_env *ev,char **env);
+int		parser(char *user_inp, t_env *ev);
 void	handle_word(t_command **command, char *str, int *argcount);
 void	handle_redirections(t_command *command, t_token **token_list);
 void	tokenizer(char *user_inp, t_token **tokenList);
