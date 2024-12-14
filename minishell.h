@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/13 20:58:17 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/14 21:08:38 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,7 @@
 # include <fcntl.h>
 # include <limits.h>
 
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
-# endif
+int g_exit_no;
 
 typedef enum type
 {
@@ -88,8 +86,6 @@ typedef struct s_vars
 	char	**args;
 }	t_vars;
 
-int g_exit_no;
-
 // parsing funcs
 int		parser(char *user_inp, t_env *ev);
 void	handle_word(t_command **command, char *str, int *argcount);
@@ -99,6 +95,8 @@ void	create_token(t_token **token, char *data, t_etype type, t_etype qt);
 void	expander(t_token **tokens, t_env *ev);
 void	expand_it(char *str, char **res, char **expanded, t_env *ev);
 char	*ret_env(char *str, int *i, t_env *ev);
+int		has_quotes(char	*str);
+void	update_token(t_token **token, char **res, t_env *ev);
 int		lexer(t_token *tokens);
 int		check_doubled_pipe(t_token *token);
 int		check_first_p(t_token *token);
@@ -109,7 +107,27 @@ char	*ft_getenv(t_env *env, char *key);
 void	remove_quotes(t_token **tokens);
 void	handle_sig(int sig);
 int		is_builtin(char *cmd);
+void	wait_for_all_processes(void);
 // end of parsing func
+
+// exec funcs
+int		open_files(t_command **commands, t_env *ev);
+int		has_space(char *str);
+int		is_directory(const char *path);
+int		file_checkers(char	*file_name, t_etype file_type);
+int		check_file_in(char *file_name);
+int		check_file_out(char *file_name);
+char	*is_expand(char *str, int exp_flag, t_env *ev);
+void	check_on_herdoc(t_redir *r, t_env *ev);
+void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev);
+void	exec(t_command *commands, t_env *ev);
+void	exec_builtin(t_command *command, t_env *ev);
+void	pipe_in(int prev_fd);
+void	pipe_out(int pipe_fd[2]);
+void	close_red(t_redir *r);
+void	red_dup(t_redir **r);
+
+// end exec funcs
 
 // cleaners
 void	clean_tokens(t_token **tokens);
@@ -129,17 +147,22 @@ int		ft_isalnum(int c);
 int		ft_isalpha(int c);
 int		ft_atoi(const char *str);
 char	*ft_strchr(char *str, int c);
+void	ft_putstr_fd(char *s, int fd);
+void	put_err(char *str, int is_exit);
 
 //temp
 void 	printtokens(t_token *lst);
 void	printredirections(t_redir *lst);
 void	printcommnads(t_command *lst);
-void	the_export(t_command *cmd, t_env **env);
 char	*gettype(t_etype type);
 void	exit_funcs(void);
+void	print_envp(char **envp);
+void	print_e(t_env *ev);
+void	print_env(t_command *cmd, t_env *env);
+//end temp
 
-//thats
 //builtins
+void	the_export(t_command *cmd, t_env **env);
 void	the_echo(t_command *cmd);
 void	ft_exit(t_command *command);
 int		rederctes_out(t_redir *reder);
@@ -150,6 +173,5 @@ void	the_unset(t_command *cmd, t_env **env);
 void	update_oldpwd(char *path, t_env *env);
 void	re_pwd(char *path, t_env *env);
 char	*extract_value(char *equal_pos);
-
-//end temp
+//end builtins
 #endif

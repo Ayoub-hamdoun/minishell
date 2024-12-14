@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:40:39 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/03 16:54:06 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/14 17:27:59 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,25 @@ char	*ret_env(char *str, int *i, t_env *ev)
 	if (res)
 		return (ft_strdup(res));
 	return (ft_strdup(""));
+}
+
+int	has_quotes(char	*str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '\'' || str[i] == '\"')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
+void	update_token(t_token **token, char **res, t_env *ev)
+{
+	free((*token)->str);
+	(*token)->str = ft_strdup(ft_getenv(ev, *res));
+	free(*res);
 }

@@ -91,3 +91,56 @@ void print_ev(t_env *env)
 		tmp = tmp->next;
 	}
 }
+
+void print_e(t_env *ev)
+{
+	t_env *temp = ev;
+	while (temp)
+	{
+		if (temp->key && temp->value)
+			printf("%s=%s\n", temp->key, temp->value);
+		else if (temp->key)
+			printf("%s\n", temp->key);
+		temp = temp->next;
+	}
+}
+
+void print_envp(char **envp)
+{
+	int i;
+	i = 0;
+	while (envp[i])
+	{
+		printf("%s\n",envp[i]);
+		i++;
+	}
+}
+
+void print_env(t_command *cmd, t_env *env)
+{
+	int i;
+	int fd;
+	fd = rederctes_out(cmd->rederects);
+	while (env)
+	{
+		i = 0;
+		while (cmd->args[i])
+		{
+			if (env->key && env->value)
+			{
+					// printf("%s=%s\n", env->key, env->value);
+					write(fd, env->key, ft_strlen(env->key));
+					write(fd, "=", 1);
+					write(fd, env->value, ft_strlen(env->value));
+					write(fd, "\n", 1);
+			}
+			else if (env->key && env->value)
+				{
+						write(fd, env->key, ft_strlen(env->key));
+						write(fd, "\n", 1);
+				}
+			i++;
+		}
+		env = env->next;
+	}
+}

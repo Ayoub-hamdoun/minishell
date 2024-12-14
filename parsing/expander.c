@@ -6,54 +6,34 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/13 18:42:18 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/14 17:46:37 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	update_token(t_token **token, char **res, t_env *ev)
+void	handle_env_token(t_token **tokens, t_env *ev)
 {
-	free((*token)->str);
-	(*token)->str = ft_strdup(ft_getenv(ev, *res));
-	free(*res);
-}
+	char		*res;
+	char		**splitted;
+	t_token		*new;
+	t_token		*tmp;
+	int			i;
 
-int has_quotes(char	*str)
-{
-	int i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\'' || str[i] == '\"')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void    handle_env_token(t_token **tokens, t_env *ev)
-{
-    char    *res;
-    char    **splitted;
-    t_token        *new;
-    t_token        *tmp;
-    int    i = 1;
-
-    if (!ft_strcmp((*tokens)->str, "$"))
-        return ;
-    res = ft_strdup(((*tokens)->str) + 1);
+	if (!ft_strcmp((*tokens)->str, "$"))
+		return ;
+	res = ft_strdup(((*tokens)->str) + 1);
+	i = 1;
 	if (has_quotes(res))
 	{
 		free((*tokens)->str);
 		(*tokens)->str = ft_strdup(res);
 		free(res);
 	}
-    else if (ft_isalpha(res[0]) || res[0] == '_')
-    {
-        free((*tokens)->str);
-        splitted = ft_split(ft_getenv(ev, res), ' ');
+	else if (ft_isalpha(res[0]) || res[0] == '_')
+	{
+		free((*tokens)->str);
+		splitted = ft_split(ft_getenv(ev, res), ' ');
 		if (!splitted || !sizeofarray(splitted))
 			(*tokens)->str = ft_strdup("");
 		else
@@ -72,12 +52,11 @@ void    handle_env_token(t_token **tokens, t_env *ev)
 				i++;
 			}
 		}
-        free(res);
-    }
-    else
-        free(res);
+		free(res);
+	}
+	else
+		free(res);
 }
-
 
 void	handle_quoted_token(t_token **tokens, t_env *ev)
 {

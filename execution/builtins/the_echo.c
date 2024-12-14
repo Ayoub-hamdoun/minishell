@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   the_echo.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:58:07 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/07 21:43:39 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/14 18:14:59 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,28 +26,29 @@ int	count_n(char *cmd)
 	}
 	return (1);
 }
-int rederctes_out(t_redir *reder)
+
+int	rederctes_out(t_redir *reder)
 {
 	while (reder)
 	{
 		if (reder-> type == R_OUT)
 			if (reder -> flag_out)
 				return (reder -> fd);
-		reder= reder -> next;
+		reder = reder -> next;
 	}
-	return(1);
+	return (1);
 }
 
 void	the_echo(t_command *cmd)
 {
 	int	count;
 	int	i;
-	int fd;
-	
+	int	fd;
+
 	fd = rederctes_out(cmd -> rederects);
 	if (!cmd->args[1])
 	{
-		printf("\n");
+		write(fd, "\n", 1);
 		return ;
 	}
 	count = 0;
@@ -59,11 +60,11 @@ void	the_echo(t_command *cmd)
 	}
 	while (cmd->args[i])
 	{
-		write(fd,cmd -> args[i],strlen(cmd -> args[i]));
+		write(fd, cmd -> args[i], ft_strlen(cmd -> args[i]));
 		if (cmd->args[i + 1])
-			write(fd," ",1);
+			write(fd, " ", 1);
 		i++;
 	}
 	if (count == 0)
-		write(fd,"\n",1);
+		write(fd, "\n", 1);
 }

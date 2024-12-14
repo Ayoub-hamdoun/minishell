@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:30:24 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/13 18:44:21 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/14 17:22:56 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	remove_quotes(t_token **tokens)
 	t_token	*current;
 	char	*new_str;
 	char	*tmp;
-	char quote;
+	char	quote;
 	int		i;
 	int		start;
 

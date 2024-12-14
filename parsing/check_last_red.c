@@ -1,14 +1,18 @@
+// put your header
+
 #include "../minishell.h"
 
-void check_last(t_command *token)
+void	check_last(t_command *token)
 {
-	if (!token)
-		return;
+	t_redir	*last_in;
+	t_redir	*redir;
 
+	if (!token)
+		return ;
 	while (token)
 	{
-		t_redir *last_in = NULL;
-		t_redir *redir = token->rederects;
+		last_in = NULL;
+		redir = token->rederects;
 		while (redir)
 		{
 			if (redir->type == R_IN || redir->type == HER)
@@ -19,23 +23,23 @@ void check_last(t_command *token)
 			}
 			redir = redir->next;
 		}
-
 		if (last_in)
 			last_in->flag_in = 1;
-
 		token = token->next;
 	}
 }
-void check_last_out(t_command *token)
-{
-	if (!token)
-		return;
 
+void	check_last_out(t_command *token)
+{
+	t_redir	*last_out;
+	t_redir	*redir;
+
+	if (!token)
+		return ;
 	while (token)
 	{
-		t_redir *last_out = NULL;
-
-		t_redir *redir = token->rederects;
+		last_out = NULL;
+		redir = token->rederects;
 		while (redir)
 		{
 			if (redir->type == R_OUT || redir->type == APP)
@@ -46,10 +50,8 @@ void check_last_out(t_command *token)
 			}
 			redir = redir->next;
 		}
-
 		if (last_out)
 			last_out->flag_out = 1;
-
 		token = token->next;
 	}
 }
