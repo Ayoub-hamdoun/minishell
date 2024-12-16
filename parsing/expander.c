@@ -23,6 +23,15 @@ void	handle_env_token(t_token **tokens, t_env *ev)
 	if (!ft_strcmp((*tokens)->str, "$"))
 		return ;
 	res = ft_strdup(((*tokens)->str) + 1);
+	if (!ft_strcmp(res, "?"))
+	{
+		char *asc = ft_itoa(g_exit_status);
+		free((*tokens)->str);
+		(*tokens)->str = ft_strdup(asc);
+		free(res);
+		free(asc);
+		return ;
+	}
 	i = 1;
 	if (has_quotes(res))
 	{
@@ -64,7 +73,7 @@ void	handle_quoted_token(t_token **tokens, t_env *ev)
 	char	*res;
 	char	*expanded;
 
-	if ((*tokens)->token_type == WORD && (*tokens)->q_type == DOUBLE)
+	if ((*tokens)->token_type == WORD || (*tokens)->q_type == DOUBLE)
 	{
 		str = ft_strdup((*tokens)->str);
 		res = ft_strdup("");

@@ -21,10 +21,11 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
 # include <fcntl.h>
 # include <limits.h>
 
-int g_exit_no;
+extern int g_exit_status;
 
 typedef enum type
 {
@@ -107,7 +108,7 @@ char	*ft_getenv(t_env *env, char *key);
 void	remove_quotes(t_token **tokens);
 void	handle_sig(int sig);
 int		is_builtin(char *cmd);
-void	wait_for_all_processes(void);
+void	wait_for_all_processes(pid_t	last_pid);
 // end of parsing func
 
 // exec funcs
@@ -146,6 +147,7 @@ char	*ft_strjoin(char *s1, char *s2);
 int		ft_isalnum(int c);
 int		ft_isalpha(int c);
 int		ft_atoi(const char *str);
+char	*ft_itoa(int n);
 char	*ft_strchr(char *str, int c);
 void	ft_putstr_fd(char *s, int fd);
 void	put_err(char *str, int is_exit);

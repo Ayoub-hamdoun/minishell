@@ -16,6 +16,7 @@ void	expand_it(char *str, char **res, char **expanded, t_env *ev)
 {
 	char	tmp[2];
 	int		i;
+	char	*tmp_res;
 
 	i = 0;
 	while (str[i])
@@ -26,6 +27,13 @@ void	expand_it(char *str, char **res, char **expanded, t_env *ev)
 			*expanded = ret_env(str, &i, ev);
 			*res = ft_strjoin(*res, *expanded);
 			free(*expanded);
+		}
+		else if (str[i] == '$' && str[i + 1] == '?')
+		{
+			i += 2;
+			tmp_res = ft_itoa(g_exit_status);
+			*res = ft_strjoin(*res, tmp_res);
+			free(tmp_res);
 		}
 		else
 		{

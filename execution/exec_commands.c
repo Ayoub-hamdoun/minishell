@@ -72,10 +72,12 @@ void	multiple_commands(t_command *command, t_env *ev)
 {
 	int		prev_fd;
 	int		pipe_fd[2];
+	pid_t	last_pid;
 	pid_t	pid;
 
 	prev_fd = -1;
-	if (command->is_builtin && !command -> next)
+	last_pid = -1;
+	if (command->is_builtin && !command->next)
 		exec_builtin(command, ev);
 	else
 	{
@@ -88,12 +90,14 @@ void	multiple_commands(t_command *command, t_env *ev)
 				ft_child_process(prev_fd, pipe_fd, command, ev);
 			else if (pid < 0)
 				put_err("fork failed", 1);
+			else
+				last_pid = pid;
 			pipe_manipulation(&prev_fd, command, pipe_fd);
 			close_red(command -> rederects);
 			command = command->next;
 		}
 	}
-	wait_for_all_processes();
+	wait_for_all_processes(last_pid);
 }
 
 void	exec(t_command *commands, t_env *ev)

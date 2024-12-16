@@ -12,6 +12,8 @@
 
 #include "minishell.h"
 
+int g_exit_status = 0;
+
 void	handle_sig(int sig)
 {
 	(void)sig;

@@ -110,10 +110,10 @@ int check_without_equal(char *cmd)
 
 int check_valid (char *cmd)
 {
-	int i;
+	// int i;
 	int flag;
 	
-	i = 0;
+	// i = 0;
 	if (cmd[0] == '-')
 		{
 			printf("export: -%s: invalid option\n", cmd);
