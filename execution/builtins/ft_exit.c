@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:32:00 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/14 20:08:51 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 17:20:00 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,11 @@ void	ft_exit(t_command *command)
 	int	i;
 
 	i = 0;
-	while (command->args[i])
-		i++;
+	if (!command)
+	{
+		write(1, "exit\n", 5);
+		exit(0);
+	}
 	exit_status = 0;
 	if (i > 2)
 		put_err("minishell: exit: too many arguments\n", 0);

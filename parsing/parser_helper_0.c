@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:13:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/05 17:31:08 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:35:57 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	handle_word(t_command **command, char *str, int *argcount)
 	}
 	else
 	{
-		updated_args = (char **)malloc(((*argcount) + 2) * sizeof(char *));
+		updated_args = (char **)ft_malloc(((*argcount) + 2) * sizeof(char *));
 		i = 0;
 		while (i < (*argcount))
 		{
@@ -34,7 +34,7 @@ void	handle_word(t_command **command, char *str, int *argcount)
 		}
 		updated_args[(*argcount)] = ft_strdup(str);
 		updated_args[(*argcount) + 1] = NULL;
-		free((*command)->args);
+		////free((*command)->args);
 		(*command)->args = updated_args;
 		(*argcount)++;
 		(*command)->is_builtin = is_builtin((*command)->args[0]);
@@ -48,7 +48,7 @@ void	handle_redirections(t_command *command, t_token **token_list)
 
 	if (!(*token_list)->next)
 		return ;
-	redir = (t_redir *) malloc(sizeof(t_redir));
+	redir = (t_redir *) ft_malloc(sizeof(t_redir));
 	if (!redir)
 		return ;
 	redir->type = (*token_list)->token_type;

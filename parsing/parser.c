@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/14 20:30:16 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:59:25 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ t_command	*cmd_new(t_command **commands)
 {
 	t_command	*cmd;
 
-	cmd = (t_command *)malloc(sizeof(t_command));
+	cmd = (t_command *)ft_malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
-	cmd->args = (char **)malloc(2 * sizeof(char *));
+	cmd->args = (char **)ft_malloc(2 * sizeof(char *));
 	cmd->args[0] = NULL;
 	cmd->args[1] = NULL;
 	cmd->is_builtin = 0;
@@ -81,15 +81,17 @@ int	parser(char *user_inp, t_env *ev)
 {
 	t_token		*token_list;
 	t_command	*commands;
-
+	int lex_flag;
 	commands = NULL;
 	token_list = NULL;
+	lex_flag = 0;
 	tokenizer(user_inp, &token_list);
-	if (lexer(token_list))
-	{
-		clean_tokens(&token_list);
+	lex_flag = lexer(token_list);
+	if (lex_flag)
 		return (1);
-	}
+	// {
+		// clean_tokens(&token_list);
+	// }
 	expander(&token_list, ev);
 	// printtokens(token_list);
 	remove_quotes(&token_list);
@@ -97,8 +99,9 @@ int	parser(char *user_inp, t_env *ev)
 	check_last(commands);
 	check_last_out(commands);
 	// printcommnads(commands);
-	exec(commands, ev);
-	clean_tokens(&token_list);
-	clean_cmds(&commands);
+	if (lex_flag == 0)
+		exec(commands, ev);
+	// clean_tokens(&token_list);
+	// clean_cmds(&commands);
 	return (0);
 }

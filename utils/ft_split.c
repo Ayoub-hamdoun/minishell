@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/12 17:24:47 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/09/24 12:31:45 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:37:03 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,16 @@ static int	count_words(const char *str, char delimiter)
 	return (c);
 }
 
-static char	**free_tab(char **tab)
-{
-	unsigned int	i;
+// static char	**//free_tab(char **tab)
+// {
+// 	unsigned int	i;
 
-	i = 0;
-	while (tab[i])
-		free(tab[i++]);
-	free(tab);
-	return (NULL);
-}
+// 	i = 0;
+// 	while (tab[i])
+// 		//free(tab[i++]);
+// 	//free(tab);
+// 	return (NULL);
+// }
 
 static char	*ret_sub(const char *s1, int *index, char c)
 {
@@ -57,7 +57,7 @@ static char	*ret_sub(const char *s1, int *index, char c)
 		word_len++;
 		i++;
 	}
-	copy = malloc(sizeof(char) * (word_len + 1));
+	copy = ft_malloc(sizeof(char) * (word_len + 1));
 	if (!copy)
 		return (NULL);
 	i = 0;
@@ -79,14 +79,14 @@ char	**ft_split(char *s, char c)
 	if (!s)
 		return (NULL);
 	wc = count_words(s, c);
-	arr = malloc(sizeof(char *) * (wc + 1));
+	arr = ft_malloc(sizeof(char *) * (wc + 1));
 	if (!arr)
 		return (NULL);
 	while (i < wc)
 	{
 		arr[i] = ret_sub(s, &index, c);
 		if (!arr[i])
-			return (free_tab(arr));
+			return (arr);
 		i++;
 	}
 	arr[i] = 0;

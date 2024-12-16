@@ -55,7 +55,7 @@ void	update_oldpwd(char *path, t_env *env)
 	{
 		if (ft_strcmp(tmp->key, "OLDPWD") == 0)
 		{
-			free(tmp->value);
+			//free(tmp->value);
 			tmp->value = ft_strdup(path);
 			return;
 		}
@@ -71,7 +71,7 @@ void	update_pwd(char *pwd, t_env *env)
 	{
 		if (strcmp(tmp->key, "PWD") == 0)
 		{
-			free(tmp->value);
+			//free(tmp->value);
 			tmp->value = ft_strdup(pwd);
 			return;
 		}
@@ -87,6 +87,7 @@ void	the_cd(t_command *cmd, t_env *env)
 	int		chdir_result;
 
 	oldpwd = getcwd(NULL, 0);
+	free(oldpwd);
 	if (!oldpwd)
 		oldpwd = ft_strdup(get_need(env, "PWD"));
 
@@ -116,6 +117,7 @@ void	the_cd(t_command *cmd, t_env *env)
 		chdir_result = chdir(cmd->args[1]);
 
 	newpwd = getcwd(NULL, 0);
+	free(newpwd);
 	if (chdir_result || !newpwd)
 	{
 		perror("here :cd");
@@ -132,6 +134,6 @@ void	the_cd(t_command *cmd, t_env *env)
 	update_oldpwd(oldpwd, env);
 	update_pwd(newpwd, env);
 
-	free(oldpwd);
-	free(newpwd);
+	//free(oldpwd);
+	//free(newpwd);
 }

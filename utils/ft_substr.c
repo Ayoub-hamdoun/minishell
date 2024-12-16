@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/04 17:00:50 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/10/16 10:12:06 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:32:25 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ char	*ft_substr(char *s, int start, int len)
 		return (ft_strdup(""));
 	if (len + start > ft_strlen(s))
 		len = fix_len((char *)s, start);
-	subs = (char *)malloc (len * sizeof(char) + 1);
+	subs = (char *)ft_malloc (len * sizeof(char) + 1);
 	if (!subs)
 		return (NULL);
 	i = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   the_unset.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:17:58 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/13 21:15:54 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/16 20:34:27 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@ void	remove_env_var(t_env **env, const char *key)
 	{
 		if (strcmp(current->key, key) == 0)
 		{
-			free(current->key);
-			free(current->value);
+			//free(current->key);
+			//free(current->value);
 			if (prev)
 				prev->next = current->next;
 			else
 				*env = current->next;
-			free(current);
+			//free(current);
 			return ;
 		}
 		prev = current;

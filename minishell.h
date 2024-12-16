@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/14 21:08:38 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:43:28 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <limits.h>
+#include <stddef.h>
 
 extern int g_exit_status;
 
@@ -48,6 +49,7 @@ typedef struct s_token
 	t_etype			token_type;
 	t_etype			q_type;
 	struct s_token	*next;
+	struct s_token	*prev;
 }	t_token;
 
 // Redirection structure
@@ -86,6 +88,11 @@ typedef struct s_vars
 	int		argcount;
 	char	**args;
 }	t_vars;
+
+typedef struct s_grbdg {
+    void *ptr;
+    struct s_grbdg *next;
+} t_grbdg;
 
 // parsing funcs
 int		parser(char *user_inp, t_env *ev);
@@ -131,10 +138,14 @@ void	red_dup(t_redir **r);
 // end exec funcs
 
 // cleaners
-void	clean_tokens(t_token **tokens);
-void	clean_cmds(t_command **cmds);
-void	clean_red(t_redir **reds);
+// void	clean_tokens(t_token **tokens);
+// void	clean_cmds(t_command **cmds);
+// void	clean_red(t_redir **reds);
 int		sizeofarray(char **array);
+void 	free_all(void);
+void *ft_malloc(size_t size);
+int	sizeofarray(char **array);
+void add(void *ptr);
 
 // utils
 int		ft_strlen(char	*str);

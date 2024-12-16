@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:30:24 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/14 17:22:56 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:35:48 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	remove_quotes(t_token **tokens)
 						i++;
 					tmp = ft_substr(current->str, start, i - start); // Extract content inside quotes
 					new_str = ft_strjoin(new_str, tmp);
-					free(tmp);
+					//free(tmp);
 					if (current->str[i] == quote)
 						i++;
 				}
@@ -50,12 +50,12 @@ void	remove_quotes(t_token **tokens)
 						i++;
 					tmp = ft_substr(current->str, start, i - start);
 					new_str = ft_strjoin(new_str, tmp);
-					free(tmp);
+					//free(tmp);
 				}
 			}
-			free(current->str);
+			//free(current->str);
 			current->str = ft_strdup(new_str);
-			free(new_str);
+			//free(new_str);
 		}
 		current = current->next;
 	}

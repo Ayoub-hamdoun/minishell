@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/14 17:46:37 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:37:34 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,22 +26,22 @@ void	handle_env_token(t_token **tokens, t_env *ev)
 	if (!ft_strcmp(res, "?"))
 	{
 		char *asc = ft_itoa(g_exit_status);
-		free((*tokens)->str);
+		//free((*tokens)->str);
 		(*tokens)->str = ft_strdup(asc);
-		free(res);
-		free(asc);
+		//free(res);
+		//free(asc);
 		return ;
 	}
 	i = 1;
 	if (has_quotes(res))
 	{
-		free((*tokens)->str);
+		//free((*tokens)->str);
 		(*tokens)->str = ft_strdup(res);
-		free(res);
+		//free(res);
 	}
 	else if (ft_isalpha(res[0]) || res[0] == '_')
 	{
-		free((*tokens)->str);
+		//free((*tokens)->str);
 		splitted = ft_split(ft_getenv(ev, res), ' ');
 		if (!splitted || !sizeofarray(splitted))
 			(*tokens)->str = ft_strdup("");
@@ -51,20 +51,21 @@ void	handle_env_token(t_token **tokens, t_env *ev)
 			tmp = (*tokens);
 			while (splitted[i])
 			{
-				new = malloc(sizeof(t_token));
+				new = ft_malloc(sizeof(t_token));
 				new->str = ft_strdup(splitted[i]);
 				new->token_type = WORD;
 				new->q_type = NONE;
 				new->next = tmp->next;
+				new->prev = tmp;
 				tmp->next = new;
 				tmp = new;
 				i++;
 			}
 		}
-		free(res);
+		//(res);
 	}
-	else
-		free(res);
+	// else
+		//free(res);
 }
 
 void	handle_quoted_token(t_token **tokens, t_env *ev)
@@ -78,10 +79,10 @@ void	handle_quoted_token(t_token **tokens, t_env *ev)
 		str = ft_strdup((*tokens)->str);
 		res = ft_strdup("");
 		expand_it(str, &res, &expanded, ev);
-		free((*tokens)->str);
+		//free((*tokens)->str);
 		(*tokens)->str = ft_strdup(res);
-		free(res);
-		free(str);
+		//free(res);
+		//free(str);
 	}
 }
 
@@ -89,18 +90,30 @@ void	expander(t_token **tokens, t_env *ev)
 {
 	t_token	*head;
 	char	*res;
+	int		is_exp;
 
 	head = *tokens;
+	is_exp = 1;
 	while ((*tokens))
 	{
-		if ((*tokens)->token_type == ENV)
-			handle_env_token(tokens, ev);
-		else if (!ft_strcmp((*tokens)->str, "~"))
+		if ((*tokens)->prev)
 		{
-			res = ft_strdup("HOME");
-			update_token(tokens, &res, ev);
+			if ((*tokens)->prev->token_type == HER)
+				is_exp = 0;
+			else
+				is_exp = 1;
 		}
-		handle_quoted_token(tokens, ev);
+		if (is_exp)
+		{
+			if ((*tokens)->token_type == ENV)
+				handle_env_token(tokens, ev);
+			else if (!ft_strcmp((*tokens)->str, "~"))
+			{
+				res = ft_strdup("HOME");
+				update_token(tokens, &res, ev);
+			}
+			handle_quoted_token(tokens, ev);
+		}
 		(*tokens) = (*tokens)->next;
 	}
 	*tokens = head;

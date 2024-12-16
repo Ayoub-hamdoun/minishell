@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 12:38:21 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/13 17:16:38 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:52:17 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	re_pwd(char *path, t_env *env)
 	{
 		if (strncmp(env->key, "PWD", 3) == 0 && env->value)
 		{
-			free(env->value);
+			//free(env->value);
 			env->value = strdup(path);
 			break ;
 		}
@@ -61,8 +61,10 @@ void	the_pwd(t_redir *reder, t_env *env)
 {
 	char	*path;
 	int		fd;
-	
-	path = get_pwd(env);
+
+	(void)env;
+	path = getcwd(NULL, 0);
+	free(path);
 	fd = rederctes_out(reder);
 	write(fd, path, ft_strlen(path));
 	write(fd, "\n", 1);

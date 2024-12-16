@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/08 19:50:42 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:53:30 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,9 @@ char *extract_key(char *cmd)
     while (cmd[i] && cmd[i] != '=' && cmd[i] != '+')
         i++;
 
-    return strndup(cmd, i);
+	char *n = strndup(cmd, i);
+	add(n);
+    return (n);
 }
 
 
@@ -180,7 +182,7 @@ void change_value(char *cmd, t_env **env)
 	{
 		if (current->key && strcmp(current->key, key) == 0)
 		{
-			free(current->value);
+			//free(current->value);
 			current->value = value;
 			return ;
 		}
@@ -200,8 +202,8 @@ void add_variable(char *cmd, t_env **env)
     {
         if (strcmp(current->key, key) == 0)
         {
-            if (current->value != NULL)
-                free(current->value);
+            // if (current->value != NULL)
+                //free(current->value);
             if (value != NULL)
                 current->value = strdup(value);
             else
@@ -213,7 +215,7 @@ void add_variable(char *cmd, t_env **env)
             break;
         current = current->next;
     }
-    new = malloc(sizeof(t_env));
+    new = ft_malloc(sizeof(t_env));
     if (new == NULL)
         return;
 

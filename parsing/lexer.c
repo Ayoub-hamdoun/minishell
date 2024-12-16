@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/13 18:14:07 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 21:01:05 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,8 @@ int	lexer(t_token *tokens)
 	t_token	*tmp;
 
 	tmp = tokens;
-	check_first_p(tmp);
+	if (check_first_p(tmp))
+		return (1);
 	while (tmp)
 	{
 		if (check_redirection(tmp))

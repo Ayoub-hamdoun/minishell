@@ -26,7 +26,7 @@ char	*is_expand(char *str, int exp_flag, t_env *ev)
 		expanded = NULL;
 		res = ft_strdup("");
 		expand_it(str, &res, &expanded, ev);
-		free(str);
+		// free(str);
 		return (res);
 	}
 	return (str);
@@ -72,6 +72,7 @@ void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 		signal(SIGINT, handle_sig);
 		signal(SIGQUIT, SIG_IGN);
 		str = readline("herdoc> ");
+		add(str);
 		if (!str || ft_strcmp(str, r->filename) == 0)
 		{
 			free (str);

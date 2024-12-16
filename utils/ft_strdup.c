@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 17:43:02 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/11/30 19:31:51 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:32:21 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*ft_strdup(char *s1)
 		return (NULL);
 	i = 0;
 	s = ft_strlen(s1) + 1;
-	str = (char *) malloc(s * sizeof(char));
+	str = (char *) ft_malloc(s * sizeof(char));
 	if (!str)
 		return (NULL);
 	while (s1[i])

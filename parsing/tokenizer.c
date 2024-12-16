@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/03 16:52:32 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/16 20:37:25 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ int	is_special_char(char *trimmed, t_token **token_list, int pos)
 			pos++;
 		str = ft_substr(trimmed, h, pos - h);
 		create_token(token_list, str, ENV, NONE);
-		free (str);
+		//free (str);
 		return (pos);
 	}
 	check_red(token_list, trimmed, &pos);
 	pos++;
-	if (str)
-		free(str);
+	// if (str)
+		//free(str);
 	return (pos);
 }
 
@@ -93,8 +93,8 @@ int	is_normal_word(char *trimmed, t_token **token_list, int pos)
 	}
 	str = ft_substr(trimmed, start, pos - start);
 	create_token(token_list, str, WORD, qt);
-	if (str)
-		free(str);
+	// if (str)
+		//free(str);
 	return (pos);
 }
 
@@ -117,5 +117,5 @@ void	tokenizer(char *user_inp, t_token **token_list)
 		else
 			i = is_normal_word(trimmed, token_list, i);
 	}
-	free(trimmed);
+	//free(trimmed);
 }
