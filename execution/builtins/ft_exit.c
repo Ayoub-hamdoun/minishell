@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:32:00 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/16 17:20:00 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:31:05 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	ft_exit(t_command *command)
 		write(1, "exit\n", 5);
 		exit(0);
 	}
-	if (ft_isalpha(command->args[1][0]))
+	if (!ft_isalpha(command->args[1][0]))
 		put_err("minishell: exit: numeric argument required\n", 0);
 	else
 	{

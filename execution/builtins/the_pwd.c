@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 12:38:21 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/16 20:52:17 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:19:14 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ char  *get_pwd(t_env *env)
 	}
 	return (NULL);
 }
-void	the_pwd(t_redir *reder, t_env *env)
+int	the_pwd(t_redir *reder, t_env *env)
 {
 	char	*path;
 	int		fd;
@@ -68,4 +68,5 @@ void	the_pwd(t_redir *reder, t_env *env)
 	fd = rederctes_out(reder);
 	write(fd, path, ft_strlen(path));
 	write(fd, "\n", 1);
+	return (0);
 }

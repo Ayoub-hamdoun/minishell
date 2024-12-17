@@ -79,7 +79,7 @@ void	update_pwd(char *pwd, t_env *env)
 	}
 }
 
-void	the_cd(t_command *cmd, t_env *env)
+int	the_cd(t_command *cmd, t_env *env)
 {
 	char	*need;
 	char	*oldpwd;
@@ -97,7 +97,7 @@ void	the_cd(t_command *cmd, t_env *env)
 		if (!need)
 		{
 			fprintf(stderr, "cd: HOME not set\n");
-			return;
+			return (1);
 		}
 		chdir_result = chdir(need);
 	}
@@ -107,7 +107,7 @@ void	the_cd(t_command *cmd, t_env *env)
 		if (!need)
 		{
 			printf("cd: OLDPWD not set\n");
-			return;
+			return (1);
 		}
 		chdir_result = chdir(need);
 		if (!chdir_result)
@@ -115,7 +115,6 @@ void	the_cd(t_command *cmd, t_env *env)
 	}
 	else
 		chdir_result = chdir(cmd->args[1]);
-
 	newpwd = getcwd(NULL, 0);
 	free(newpwd);
 	if (chdir_result || !newpwd)
@@ -133,7 +132,5 @@ void	the_cd(t_command *cmd, t_env *env)
 
 	update_oldpwd(oldpwd, env);
 	update_pwd(newpwd, env);
-
-	//free(oldpwd);
-	//free(newpwd);
+	return (0);
 }

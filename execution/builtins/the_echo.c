@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:58:07 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/14 18:14:59 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:12:10 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	rederctes_out(t_redir *reder)
 	return (1);
 }
 
-void	the_echo(t_command *cmd)
+int	the_echo(t_command *cmd)
 {
 	int	count;
 	int	i;
@@ -49,7 +49,7 @@ void	the_echo(t_command *cmd)
 	if (!cmd->args[1])
 	{
 		write(fd, "\n", 1);
-		return ;
+		return (1);
 	}
 	count = 0;
 	i = 1;
@@ -67,4 +67,5 @@ void	the_echo(t_command *cmd)
 	}
 	if (count == 0)
 		write(fd, "\n", 1);
+	return (0);
 }

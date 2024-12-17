@@ -6,15 +6,21 @@ char	*get_path(t_command *command, t_env *env)
 	char	**paths;
 	int		i;
 
-	if (access(command -> args[0], F_OK) == 0)
-		return (command -> args[0]);
-	
+	// if (access(command -> args[0], F_OK) == 0)
+	// 	return (command -> args[0]);
+	if (ft_strchr(command->args[0], '/'))
+	{
+		if (access(command->args[0], F_OK | X_OK) == 0)
+			return (command->args[0]);
+		else
+			return (NULL);
+	}
 	path = ft_getenv(env, "PATH");
 	paths = ft_split(path, ':');
 	i = 0;
 	while (paths[i])
 	{
-		if (paths[i][ft_strlen(paths[i]) - 1] != '/')
+		if (paths[i][ft_strlen(paths[i]) - 1] != '/' )
 		{
 			paths[i] = ft_strjoin(paths[i], "/");
 			paths[i] = ft_strjoin(paths[i], command -> args[0]);
@@ -29,20 +35,20 @@ char	*get_path(t_command *command, t_env *env)
 	return (NULL);
 }
 
-int red(char *path)
-{
-    struct stat    statbuf;
+// int red(char *path)
+// {
+//     struct stat    statbuf;
 
-    if ((stat(path, &statbuf) == 0)
-        && ((path[0] == '.' && path[1] == '/') || path[0] == '/'))
-    {
-        if (S_ISDIR(statbuf.st_mode))
-            return (1);
-        else if (S_ISREG(statbuf.st_mode))
-            return (2);
-    }
-    return (0);
-}
+//     if ((stat(path, &statbuf) == 0)
+//         && ((path[0] == '.' && path[1] == '/') || path[0] == '/'))
+//     {
+//         if (S_ISDIR(statbuf.st_mode))
+//             return (1);
+//         else if (S_ISREG(statbuf.st_mode))
+//             return (2);
+//     }
+//     return (0);
+// }
 
 char **convert_ev(t_env *ev)
 {
@@ -78,24 +84,30 @@ char **convert_ev(t_env *ev)
 	return (env);
 }
 
-void    errors(char *str,char *path)
+void    errors(char *str)
 {
-    int    is_red;
+struct stat    statbuf;
 
-    if (!str)
-        return ;
-    is_red = red(path);
-    ft_putstr_fd("minishell: ", STDERR_FILENO);
-    ft_putstr_fd(str, STDERR_FILENO);
-    if (is_red == 1)
-        ft_putstr_fd(": is a directory\n", STDERR_FILENO);
-    else if (is_red == 2)
-        ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
-    else
-        ft_putstr_fd(": command not found\n", STDERR_FILENO);
-    if (is_red)
-        exit(126);
-    exit(127);
+	if (access(str, F_OK) == -1)
+	{
+		printf("minishell: %s: No such file or directory\n", str);
+		exit(127);
+	}
+	if (access(str, X_OK) == -1)
+	{
+		printf("minishell: %s: Permission denied\n", str);
+		exit(126);
+	}
+	if (stat(str, &statbuf) == -1)
+	{
+		printf("minishell: %s: No such file or directory\n", str);
+		exit(127);
+	}
+	if (S_ISDIR(statbuf.st_mode))
+	{
+		printf("minishell: %s: is a directory\n", str);
+		exit(126);
+	}
 }
 
 void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
@@ -119,7 +131,8 @@ void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
 	else
 	{
 		execve(get_path(cmd, ev), cmd->args, env);
-		errors(cmd->args[0], get_path(cmd, ev));
+		// errors(cmd->args[0], get_path(cmd, ev)); //to be fixed
+		errors(cmd->args[0]);
 		// perror("execve failed");
 		// printf("%s: command not found\n", cmd->args[0]);
 	}
@@ -176,7 +189,7 @@ void	multiple_commands(t_command *command, t_env *ev)
 				ft_child_process(prev_fd, pipe_fd, command, ev);
 			}
 			else if (pid < 0)
-				put_err("fork failed", 1);
+				break;
 			else
 			{
 				parent_signal();

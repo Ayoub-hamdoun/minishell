@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/16 20:43:28 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:41:49 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,14 +175,14 @@ void	print_env(t_command *cmd, t_env *env);
 //end temp
 
 //builtins
-void	the_export(t_command *cmd, t_env **env);
-void	the_echo(t_command *cmd);
-void	ft_exit(t_command *command);
 int		rederctes_out(t_redir *reder);
 int		check_equal(char *cmd);
-void	the_cd(t_command *cmd, t_env *env);
-void	the_pwd(t_redir *reder, t_env *env);
-void	the_unset(t_command *cmd, t_env **env);
+int		the_export(t_command *cmd, t_env **env);
+int		the_echo(t_command *cmd);
+void		ft_exit(t_command *command);
+int		the_cd(t_command *cmd, t_env *env);
+int		the_pwd(t_redir *reder, t_env *env);
+int		the_unset(t_command *cmd, t_env **env);
 void	update_oldpwd(char *path, t_env *env);
 void	re_pwd(char *path, t_env *env);
 char	*extract_value(char *equal_pos);

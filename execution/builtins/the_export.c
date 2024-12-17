@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/16 20:53:30 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:54:24 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -292,22 +292,21 @@ void join_var(char *cmd, t_env **env)
 				current->value = value;
 			else
 				current->value = ft_strjoin(current ->value, value);
-			free(tmp);
 			return ;
 		}
 		current = current->next;
 	}
 }
-void the_export(t_command *cmd, t_env **env)
+int the_export(t_command *cmd, t_env **env)
 {
 	int	i;
 	int flag;
 	i = 1;
 
-	if (!cmd->args[i])
+	if (!cmd->args[i] || ft_strlen (cmd -> args[i]) == 0)
 	{
 		declare_x(env);
-		return ;
+		return (1);
 	}
 	while (cmd -> args[i])
 	{
@@ -336,5 +335,6 @@ void the_export(t_command *cmd, t_env **env)
 		i++;
 	}
 	if (flag == i)
-		return ;
+		return (1);
+	return (0);
 }

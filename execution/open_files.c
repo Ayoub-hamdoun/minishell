@@ -10,7 +10,7 @@ int	ambigious_check(t_redir *r, t_env *ev)
 	if (!r || !ev)
 		return (0);
 	tmp = r;
-	if (!tmp -> filename || has_space(tmp->filename))
+	if (strcmp(tmp -> filename,"") == 0 )
 	{
 		printf("ambiguous redirect\n");
 		return (1);
@@ -18,31 +18,50 @@ int	ambigious_check(t_redir *r, t_env *ev)
 	return (0);
 }
 
+
 int	check_file_in(char *file_name)
 {
 	struct stat	filestat;
-
-	if (stat(file_name, &filestat) == -1) 
+	if (access(file_name, F_OK) == -1)
 	{
 		perror("Error accessing file");
 		return (-1);
 	}
-	if (!(filestat.st_mode & S_IRUSR))
+	if (access(file_name, R_OK) == -1)
 	{
-		fprintf(stderr, "Error: permission denied '%s'.\n", file_name);
+		printf("Error: permission denied '%s'.\n", file_name);
+		return (-1);
+	}
+	if (stat(file_name, &filestat) == -1)
+	{
+		perror("Error retrieving file info");
+		return (-1);
+	}
+	if (S_ISDIR(filestat.st_mode))
+	{
+		fprintf(stderr, "Error: '%s' is a directory.\n", file_name);
 		return (-1);
 	}
 	return (0);
 }
 
+
 int	check_file_out(char *file_name)
 {
 	struct stat	filestat;
-
-	stat(file_name, &filestat);
-	if (!(filestat.st_mode & S_IWUSR))
+	if (access(file_name, R_OK) == -1)
 	{
-		write(2, "Error: permission denied.\n", 26);
+		printf("Error: permission denied '%s'.\n", file_name);
+		return (-1);
+	}
+	if (stat(file_name, &filestat) == -1)
+	{
+		perror("Error retrieving file info");
+		return (-1);
+	}
+	if (S_ISDIR(filestat.st_mode))
+	{
+		fprintf(stderr, "Error: '%s' is a directory.\n", file_name);
 		return (-1);
 	}
 	return (0);
@@ -60,13 +79,13 @@ int	open_it(t_redir **r, t_env *ev)
 	{
 		(*r)->fd = open((*r)->filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 		if (file_checkers((*r)->filename, R_OUT))
-			return (close((*r)->fd), 1);
+			return (1);
 	}
 	else if ((*r)->type == APP)
 	{
 		(*r)->fd = open((*r)->filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
 		if (file_checkers((*r)->filename, APP))
-			return (close((*r)->fd), 1);
+			return (1);
 	}
 	else if ((*r)->type == HER)
 		check_on_herdoc((*r), ev);

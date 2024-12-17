@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/16 20:57:53 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/17 15:37:29 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,10 @@ int	main(int argc, char *argv[], char **env)
 	}
 	rl_catch_signals = 0;
 	if (!env[0])
-		return (0);
+	{
+		printf("no env set\n");
+		return (1);
+	}
 	ev = ft_malloc (sizeof(t_env));
 	dup_env(ev, env);
 	while (1)

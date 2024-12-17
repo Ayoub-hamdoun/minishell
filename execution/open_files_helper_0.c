@@ -32,20 +32,6 @@ char	*is_expand(char *str, int exp_flag, t_env *ev)
 	return (str);
 }
 
-int	is_directory(const char *path)
-{
-	struct stat	path_stat;
-
-	if (stat(path, &path_stat) == -1)
-	{
-		perror("stat\n");
-		return (-1);
-	}
-	if (S_ISDIR(path_stat.st_mode))
-		return (-1);
-	return (0);
-}
-
 int	has_space(char *str)
 {
 	int	i;
@@ -75,7 +61,7 @@ void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 		add(str);
 		if (!str || ft_strcmp(str, r->filename) == 0)
 		{
-			free (str);
+			// free (str);
 			close (0);
 			str = NULL;
 			close (pipe);
@@ -84,7 +70,7 @@ void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 		str = is_expand(str, exp_flag, ev);
 		write (pipe, str, ft_strlen(str));
 		write (pipe, "\n", 1);
-		free(str);
+		// free(str);
 	}
 	dup2(hold, STDIN_FILENO);
 }
