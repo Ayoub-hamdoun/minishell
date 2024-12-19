@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 17:20:11 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:13:29 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,10 @@ int	lexer(t_token *tokens)
 
 	tmp = tokens;
 	if (check_first_p(tmp))
+	{
+		exit_status(258);
 		return (1);
+	}
 	while (tmp)
 	{
 		if (check_redirection(tmp))

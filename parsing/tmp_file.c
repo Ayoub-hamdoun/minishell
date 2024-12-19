@@ -116,10 +116,15 @@ void print_envp(char **envp)
 	}
 }
 
-void print_env(t_command *cmd, t_env *env)
+int print_env(t_command *cmd, t_env *env)
 {
 	int i;
 	int fd;
+	if (cmd -> args[1])
+	{
+		printf("minishell: No such file or directory\n");
+		return (127);
+	}
 	fd = rederctes_out(cmd->rederects);
 	while (env)
 	{
@@ -143,4 +148,5 @@ void print_env(t_command *cmd, t_env *env)
 		}
 		env = env->next;
 	}
+	return (0);
 }

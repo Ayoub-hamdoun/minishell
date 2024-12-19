@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/17 15:37:29 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:07:35 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	handle_sig(int sig)
 	(void)sig;
 	g_exit_status = 127;
 	write(1, "\n", 1);
-	rl_replace_line("", 0);
+	// rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
@@ -49,7 +49,7 @@ int	main(int argc, char *argv[], char **env)
 		write(2, "not a tty!\n", 12);
 		return (0);
 	}
-	rl_catch_signals = 0;
+	// rl_catch_signals = 0;
 	if (!env[0])
 	{
 		printf("no env set\n");

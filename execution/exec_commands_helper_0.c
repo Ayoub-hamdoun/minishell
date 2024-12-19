@@ -15,13 +15,13 @@ int	exec_builtin(t_command *command,t_env *ev)
 	else if (!ft_strcmp(command -> args[0], "export"))
 		return (the_export(command, &ev));
 	else if (!ft_strcmp(command -> args[0], "unset"))
-		the_unset(command, &ev);
-	else if (!ft_strcmp(command -> args[0], "env")
-		|| !ft_strcmp(command -> args[0], "ENV"))
-		print_env(command, ev);
+		return (the_unset(command, &ev));
+	else if (!(ft_strcmp(command -> args[0], "env")
+		|| !ft_strcmp(command -> args[0], "ENV")))
+		return (print_env(command, ev));
 	else if (!ft_strcmp(command->args[0], "exit"))
 		ft_exit(command);
-	return (-5);
+	return (0);
 }
 
 void	red_dup(t_redir **r)

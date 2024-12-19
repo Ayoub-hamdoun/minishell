@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 17:18:41 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:29:58 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,7 +172,7 @@ char	*gettype(t_etype type);
 void	exit_funcs(void);
 void	print_envp(char **envp);
 void	print_e(t_env *ev);
-void	print_env(t_command *cmd, t_env *env);
+int	print_env(t_command *cmd, t_env *env);
 //end temp
 
 //builtins

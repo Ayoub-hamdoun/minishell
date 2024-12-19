@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_exit.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:32:00 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 17:15:10 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:20:12 by rallali          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	ft_exit(t_command *command)
 		write(1, "exit\n", 5);
 		exit(0);
 	}
-	if (!ft_isalpha(command->args[1][0]))
+	if (ft_isalpha(command->args[1][0]))
 		put_err("minishell: exit: numeric argument required\n", 0);
 	else
 	{
