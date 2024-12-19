@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 18:11:35 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:32:50 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,20 +67,6 @@ void	check_quots_type(char *quote, char q, t_etype *qtype)
 		*qtype = SINGLE;
 }
 
-t_etype	has_dollar(char *str)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$')
-			return (ENV);
-		i++;
-	}
-	return (WORD);
-}
-
 int	is_normal_word(char *trimmed, t_token **token_list, int pos)
 {
 	int		start;
@@ -103,7 +89,7 @@ int	is_normal_word(char *trimmed, t_token **token_list, int pos)
 		pos++;
 	}
 	str = ft_substr(trimmed, start, pos - start);
-	create_token(token_list, str, has_dollar(str), qt);
+	create_token(token_list, str, WORD, qt);
 	return (pos);
 }
 

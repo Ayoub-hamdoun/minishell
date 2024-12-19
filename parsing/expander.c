@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 18:12:09 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:32:22 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,15 @@ void	handle_quoted_token(t_token **tokens, t_env *ev)
 	char	*res;
 	char	*expanded;
 
-	if ((*tokens)->token_type == WORD && (*tokens)->q_type == DOUBLE)
+	if ((*tokens)->token_type == WORD || (*tokens)->token_type == ENV)
 	{
-		str = ft_strdup((*tokens)->str);
-		res = ft_strdup("");
-		expand_it(str, &res, &expanded, ev);
-		(*tokens)->str = ft_strdup(res);
+		if (((*tokens)->q_type == DOUBLE || (*tokens)->q_type == NONE))
+		{
+			str = ft_strdup((*tokens)->str);
+			res = ft_strdup("");
+			expand_it(str, &res, &expanded, ev);
+			(*tokens)->str = ft_strdup(res);
+		}
 	}
 }
 
@@ -82,9 +85,7 @@ void	expander(t_token **tokens, t_env *ev)
 		}
 		if (is_exp)
 		{
-			if ((*tokens)->token_type == ENV)
-				handle_env_token(tokens, ev);
-			else if (!ft_strcmp((*tokens)->str, "~"))
+			if (!ft_strcmp((*tokens)->str, "~"))
 			{
 				res = ft_strdup("HOME");
 				update_token(tokens, &res, ev);
