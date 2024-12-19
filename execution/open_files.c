@@ -25,21 +25,25 @@ int	check_file_in(char *file_name)
 	if (access(file_name, F_OK) == -1)
 	{
 		perror("Error accessing file");
+		exit_status(1);
 		return (-1);
 	}
 	if (access(file_name, R_OK) == -1)
 	{
 		printf("Error: permission denied '%s'.\n", file_name);
+		exit_status(1);
 		return (-1);
 	}
 	if (stat(file_name, &filestat) == -1)
 	{
 		perror("Error retrieving file info");
+		exit_status(1);
 		return (-1);
 	}
 	if (S_ISDIR(filestat.st_mode))
 	{
-		fprintf(stderr, "Error: '%s' is a directory.\n", file_name);
+		printf("Error: '%s' is a directory.\n", file_name);
+		exit_status(1);
 		return (-1);
 	}
 	return (0);
@@ -52,16 +56,19 @@ int	check_file_out(char *file_name)
 	if (access(file_name, R_OK) == -1)
 	{
 		printf("Error: permission denied '%s'.\n", file_name);
+		exit_status(1);
 		return (-1);
 	}
 	if (stat(file_name, &filestat) == -1)
 	{
 		perror("Error retrieving file info");
+		exit_status(1);
 		return (-1);
 	}
 	if (S_ISDIR(filestat.st_mode))
 	{
-		fprintf(stderr, "Error: '%s' is a directory.\n", file_name);
+		printf("Error: '%s' is a directory.\n", file_name);
+		exit_status(1);
 		return (-1);
 	}
 	return (0);
@@ -96,6 +103,7 @@ int	open_files(t_command **commands, t_env *ev)
 {
 	t_command	*tmp;
 	t_redir		*r;
+	int status = 0;
 
 	if (!*commands)
 		return (1);
@@ -106,7 +114,10 @@ int	open_files(t_command **commands, t_env *ev)
 		while (r)
 		{
 			if (ambigious_check(r, ev) == 1)
+			{
+				status = exit_status(0);
 				return (1);
+			}
 			if (open_it(&r, ev))
 				return (1);
 			r = r -> next;

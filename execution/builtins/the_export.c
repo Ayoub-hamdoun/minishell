@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/17 15:54:24 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:03:17 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,9 +95,9 @@ int check_without_equal(char *cmd)
     while (cmd[i])
     {
         if (!((cmd[i] >= 'A' && cmd[i] <= 'Z') || 
-              (cmd[i] >= 'a' && cmd[i] <= 'z') || 
-              (cmd[i] >= '0' && cmd[i] <= '9') || 
-              cmd[i] == '_'))
+            (cmd[i] >= 'a' && cmd[i] <= 'z') || 
+            (cmd[i] >= '0' && cmd[i] <= '9') || 
+            cmd[i] == '_'))
         {
             printf("without equal export: `%s': not a valid identifier\n", cmd);
             return (1);
@@ -120,7 +120,7 @@ int check_valid (char *cmd)
 			printf("export: usage: export [name[=value] ...] or export -p\n");
 			return (1);
 		}
-	if ((cmd [0] < 'A' || (cmd [0] > 'Z' && cmd [0] < 'a') || cmd [0] > 'z') && (cmd[0] != '_'))
+	if ((cmd [0] < 'A' || (cmd [0] > 'Z' && cmd [0] < 'a') || cmd [0] > 'z') && (cmd[0] != '_') && (cmd[0] != '$'))
 	{
 		printf("export: `%s': not a valid identifier\n", cmd);
 		return (1);
@@ -141,7 +141,7 @@ char *extract_value(char *cmd)
     while (cmd[i])
     {
         if (cmd[i] == '=')
-            return (strdup(cmd + i + 1));
+            return (ft_strdup(cmd + i + 1));
         i++;
     }
     return (NULL);
@@ -205,7 +205,7 @@ void add_variable(char *cmd, t_env **env)
             // if (current->value != NULL)
                 //free(current->value);
             if (value != NULL)
-                current->value = strdup(value);
+                current->value = ft_strdup(value);
             else
                 current->value = NULL;
             free(key);
@@ -221,7 +221,7 @@ void add_variable(char *cmd, t_env **env)
 
     new->key = key;
     if (value != NULL)
-        new->value = strdup(value);
+        new->value = ft_strdup(value);
     else
         new->value = NULL;
     new->next = NULL;
@@ -285,7 +285,7 @@ void join_var(char *cmd, t_env **env)
 	
 	while (current)
 	{
-		if (current->key && strcmp(current->key, key) == 0)
+		if (current->key && ft_strcmp(current->key, key) == 0)
 		{
 			tmp = current->value;
 			if (current->value == NULL)
@@ -306,7 +306,7 @@ int the_export(t_command *cmd, t_env **env)
 	if (!cmd->args[i] || ft_strlen (cmd -> args[i]) == 0)
 	{
 		declare_x(env);
-		return (1);
+		return (0);
 	}
 	while (cmd -> args[i])
 	{
@@ -335,6 +335,8 @@ int the_export(t_command *cmd, t_env **env)
 		i++;
 	}
 	if (flag == i)
+		return (1);
+	if (flag == 1)
 		return (1);
 	return (0);
 }

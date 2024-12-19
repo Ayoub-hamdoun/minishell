@@ -50,6 +50,7 @@ void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 {
 	char	*str;
 	int		hold;
+	int status = 0;
 
 	str = NULL;
 	hold = dup(STDIN_FILENO);
@@ -58,15 +59,21 @@ void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 		signal(SIGINT, handle_sig);
 		signal(SIGQUIT, SIG_IGN);
 		str = readline("herdoc> ");
-		add(str);
-		if (!str || ft_strcmp(str, r->filename) == 0)
-		{
-			// free (str);
-			close (0);
-			str = NULL;
-			close (pipe);
-			break ;
-		}
+		if (!str)
+        {
+            status = 1;
+            break;
+        }
+
+        add(str);
+
+        if (ft_strcmp(str, r->filename) == 0)
+        {
+            free(str);
+            close(0);
+            close(pipe);
+            break;
+        }
 		str = is_expand(str, exp_flag, ev);
 		write (pipe, str, ft_strlen(str));
 		write (pipe, "\n", 1);

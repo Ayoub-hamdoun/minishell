@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:40:39 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/16 20:34:58 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:19:17 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	expand_it(char *str, char **res, char **expanded, t_env *ev)
 		else if (str[i] == '$' && str[i + 1] == '?')
 		{
 			i += 2;
-			tmp_res = ft_itoa(g_exit_status);
+			tmp_res = ft_itoa(exit_status(-1));
 			*res = ft_strjoin(*res, tmp_res);
 			//free(tmp_res);
 		}

@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/17 15:41:49 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:18:41 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,11 +129,12 @@ char	*is_expand(char *str, int exp_flag, t_env *ev);
 void	check_on_herdoc(t_redir *r, t_env *ev);
 void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev);
 void	exec(t_command *commands, t_env *ev);
-void	exec_builtin(t_command *command, t_env *ev);
+int		exec_builtin(t_command *command,t_env *ev);
 void	pipe_in(int prev_fd);
 void	pipe_out(int pipe_fd[2]);
 void	close_red(t_redir *r);
 void	red_dup(t_redir **r);
+int		exit_status(int status);
 
 // end exec funcs
 

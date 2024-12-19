@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:58:07 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/17 15:12:10 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:15:50 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	the_echo(t_command *cmd)
 	if (!cmd->args[1])
 	{
 		write(fd, "\n", 1);
-		return (1);
+		return (0);
 	}
 	count = 0;
 	i = 1;

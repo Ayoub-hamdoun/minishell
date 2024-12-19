@@ -84,36 +84,42 @@ char **convert_ev(t_env *ev)
 	return (env);
 }
 
-void    errors(char *str)
+int	errors(char *str)
 {
-struct stat    statbuf;
+	struct stat    statbuf;	
 
 	if (access(str, F_OK) == -1)
 	{
-		printf("minishell: %s: No such file or directory\n", str);
+		printf("minishell: %s: command not found\n", str);
+		exit_status(127);
 		exit(127);
 	}
-	if (access(str, X_OK) == -1)
+	else if (access(str, X_OK) == -1)
 	{
 		printf("minishell: %s: Permission denied\n", str);
+		exit_status(126);
 		exit(126);
 	}
 	if (stat(str, &statbuf) == -1)
 	{
 		printf("minishell: %s: No such file or directory\n", str);
+		exit_status(127);
 		exit(127);
 	}
-	if (S_ISDIR(statbuf.st_mode))
+	else if (S_ISDIR(statbuf.st_mode))
 	{
 		printf("minishell: %s: is a directory\n", str);
+		exit_status(126);
 		exit(126);
 	}
+return (0);
 }
 
 void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
 {
 	char	**env;
 	t_redir	*r;
+	int status = 0;
 
 	env = convert_ev(ev);
 	if (prev_fd != -1)
@@ -127,16 +133,17 @@ void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
 		r = r->next;
 	}
 	if (cmd->is_builtin)
-		exec_builtin(cmd, ev);
+	{
+		status = exec_builtin(cmd, ev);
+		exit_status(status);
+		exit(status);
+	}
 	else
 	{
-		execve(get_path(cmd, ev), cmd->args, env);
-		// errors(cmd->args[0], get_path(cmd, ev)); //to be fixed
-		errors(cmd->args[0]);
-		// perror("execve failed");
-		// printf("%s: command not found\n", cmd->args[0]);
+		if (execve(get_path(cmd, ev), cmd->args, env))
+			status = errors(cmd->args[0]);
+		exit(status);
 	}
-	exit(EXIT_FAILURE);
 }
 
 void pipe_manipulation(int *prev_fd, t_command *cmd, int pipe_fd[2])
@@ -170,12 +177,17 @@ void	multiple_commands(t_command *command, t_env *ev)
 	int		pipe_fd[2];
 	pid_t	last_pid;
 	pid_t	pid;
+	int status = 0;
 
 	prev_fd = -1;
 	last_pid = -1;
 
 	if (command->is_builtin && !command->next)
-		exec_builtin(command, ev);
+	{
+		status = exec_builtin(command, ev);
+		exit_status(status);
+		return;
+	}
 	else
 	{
 		while (command)
@@ -189,7 +201,10 @@ void	multiple_commands(t_command *command, t_env *ev)
 				ft_child_process(prev_fd, pipe_fd, command, ev);
 			}
 			else if (pid < 0)
+			{
+				status = exit_status(1);
 				break;
+			}
 			else
 			{
 				parent_signal();

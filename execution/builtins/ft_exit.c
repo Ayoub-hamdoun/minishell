@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/06 13:32:00 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/17 15:31:05 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:15:10 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,9 @@ void	put_err(char *str, int is_exit)
 
 void	ft_exit(t_command *command)
 {
-	int	exit_status;
+	// int	exit_status;
 	int	i;
+	int exitt;
 
 	i = 0;
 	if (!command)
@@ -31,7 +32,7 @@ void	ft_exit(t_command *command)
 		write(1, "exit\n", 5);
 		exit(0);
 	}
-	exit_status = 0;
+	exitt = 0;
 	if (i > 2)
 		put_err("minishell: exit: too many arguments\n", 0);
 	if (!command->args[1])
@@ -44,8 +45,8 @@ void	ft_exit(t_command *command)
 	else
 	{
 		write(1, "exit\n", 5);
-		exit_status = ft_atoi(command->args[1]);
-		exit(exit_status);
+		exitt = exit_status (ft_atoi(command->args[1]));
+		exit(exitt);
 	}
 }
 

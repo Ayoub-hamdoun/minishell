@@ -12,125 +12,89 @@
 
 #include "../../minishell.h"
 
-char	*get_need(t_env *env, char *key)
+char *get_need(t_env *env, char *key)
 {
-	if (!key)
-		return (NULL);
-	while (env)
-	{
-		if (strncmp (env->key, key, strlen (key)) == 0)
-			return (env -> value);
-		env = env -> next;
-	}
-	return (NULL);
+    if (!key)
+        return (NULL);
+    while (env)
+    {
+        if (strcmp(env->key, key) == 0)
+            return (env->value);
+        env = env->next;
+    }
+    return (NULL);
 }
 
-char	*with_commands(t_command *cmd, char *need, t_env *env)
+void update_env_var(t_env *env, char *key, char *value)
 {
-	if (cmd ->args[1])
-	{
-		if (cmd ->args[1][0] == '-')
-		{
-			need = get_need(env, "OLDPWD");
-			printf("hu %s\n", need);
-			if (need)
-			{
-				if (chdir(need) != 0)
-					perror("chdir");
-			}
-			else
-				printf("OLDPWD not set\n");
-		}
-		else if (chdir(cmd->args[1]) != 0)
-			chdir("HOME");
-	}
-	return (need);
+    t_env *tmp = env;
+
+    while (tmp)
+    {
+        if (strcmp(tmp->key, key) == 0)
+        {
+            free(tmp->value);
+            if (value)
+                tmp->value = ft_strdup(value);
+            else
+                tmp->value = NULL;
+            return;
+        }
+        tmp = tmp->next;
+    }
 }
 
-void	update_oldpwd(char *path, t_env *env)
+
+int the_cd(t_command *cmd, t_env *env)
 {
-	t_env *tmp = env;
+    char *oldpwd = getcwd(NULL, 0);
+    char *target_dir = NULL;
+    char *newpwd = NULL;
 
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->key, "OLDPWD") == 0)
-		{
-			//free(tmp->value);
-			tmp->value = ft_strdup(path);
-			return;
-		}
-		tmp = tmp->next;
-	}
-}
+    if (!oldpwd)
+        oldpwd = ft_strdup(get_need(env, "PWD"));
 
-void	update_pwd(char *pwd, t_env *env)
-{
-	t_env *tmp = env;
+    if (!cmd->args[1] || strcmp(cmd->args[1], "~") == 0)
+    {
+        target_dir = get_need(env, "HOME");
+        if (!target_dir)
+        {
+            printf("cd: HOME not set\n");
+            free(oldpwd);
+            return (1);
+        }
+    }
+    else if (strcmp(cmd->args[1], "-") == 0)
+    {
+        target_dir = get_need(env, "OLDPWD");
+        if (!target_dir)
+        {
+            printf("cd: OLDPWD not set\n");
+            free(oldpwd);
+            return (1);
+        }
+        printf("%s\n", target_dir);
+    }
+    else
+        target_dir = cmd->args[1];
 
-	while (tmp)
-	{
-		if (strcmp(tmp->key, "PWD") == 0)
-		{
-			//free(tmp->value);
-			tmp->value = ft_strdup(pwd);
-			return;
-		}
-		tmp = tmp->next;
-	}
-}
+    if (chdir(target_dir) != 0)
+    {
+        perror("cd");
+        free(oldpwd);
+        return (1);
+    }
 
-int	the_cd(t_command *cmd, t_env *env)
-{
-	char	*need;
-	char	*oldpwd;
-	char	*newpwd;
-	int		chdir_result;
+    newpwd = getcwd(NULL, 0);
+    if (!newpwd)
+    {
+        newpwd = ft_strjoin(oldpwd, "/");
+        newpwd = ft_strjoin(newpwd, cmd->args[1]);
+    }
+    update_env_var(env, "OLDPWD", oldpwd);
+    update_env_var(env, "PWD", newpwd);
 
-	oldpwd = getcwd(NULL, 0);
-	free(oldpwd);
-	if (!oldpwd)
-		oldpwd = ft_strdup(get_need(env, "PWD"));
-
-	if (!cmd->args[1] || !ft_strcmp(cmd->args[1], "~"))
-	{
-		need = get_need(env, "HOME");
-		if (!need)
-		{
-			fprintf(stderr, "cd: HOME not set\n");
-			return (1);
-		}
-		chdir_result = chdir(need);
-	}
-	else if (!ft_strcmp(cmd->args[1], "-"))
-	{
-		need = get_need(env, "OLDPWD");
-		if (!need)
-		{
-			printf("cd: OLDPWD not set\n");
-			return (1);
-		}
-		chdir_result = chdir(need);
-		if (!chdir_result)
-			printf("%s\n", need);
-	}
-	else
-		chdir_result = chdir(cmd->args[1]);
-	newpwd = getcwd(NULL, 0);
-	free(newpwd);
-	if (chdir_result || !newpwd)
-	{
-		perror("here :cd");
-		if (!newpwd)
-		{
-			newpwd = ft_strjoin(ft_strdup(oldpwd), "/");
-			if (cmd->args[1])
-				newpwd = ft_strjoin(newpwd, cmd->args[1]);
-			else
-				newpwd = ft_strjoin(newpwd, "..");
-		}
-	}
-
-	update_oldpwd(oldpwd, env);
-	update_pwd(newpwd, env);
-	return (0);
+    free(oldpwd);
+    free(newpwd);
+    return (0);
 }

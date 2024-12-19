@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/16 21:01:05 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:20:11 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,20 @@ int	lexer(t_token *tokens)
 	while (tmp)
 	{
 		if (check_redirection(tmp))
+		{
+			exit_status(258);
 			return (1);
+		}
 		if (check_quotes(tmp))
+		{
+			exit_status(258);
 			return (1);
+		}
 		if (check_doubled_pipe(tmp))
-			return (1);
+		{
+			exit_status(258);
+			return (1);	
+		}
 		tmp = tmp->next;
 	}
 	return (0);
