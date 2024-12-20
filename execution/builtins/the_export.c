@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/20 21:10:18 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/20 21:16:41 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,12 @@ void declare_x(t_env **env)
 			{
 					// printf("%s=%s\n", env->key, env->value);
 					if (ft_strlen(tmp->key) != 0)
-					{
 						write(1,"Declare -x ", 11);
-						write(1,"\"", 1);
-					}
 					write(1,tmp->key, ft_strlen(tmp->key));
 					if (ft_strcmp(tmp->key, "\0") != 0 && ft_strcmp(tmp->value, "\0") != 0)
 						write(1, "=", 1);
+					if (ft_strlen(tmp->key) != 0)
+					write(1,"\"", 1);
 					write(1, tmp->value, ft_strlen(tmp->value));
 					if (ft_strlen(tmp->key) != 0)
 						write(1,"\"", 1);
