@@ -6,13 +6,13 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:13:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/16 20:35:57 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/20 00:07:45 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	handle_word(t_command **command, char *str, int *argcount)
+void	handle_word(t_command **command, char *str, int *argcount, int expdd)
 {
 	int		i;
 	char	**updated_args;
@@ -34,7 +34,7 @@ void	handle_word(t_command **command, char *str, int *argcount)
 		}
 		updated_args[(*argcount)] = ft_strdup(str);
 		updated_args[(*argcount) + 1] = NULL;
-		////free((*command)->args);
+		(*command)->flag = expdd;
 		(*command)->args = updated_args;
 		(*argcount)++;
 		(*command)->is_builtin = is_builtin((*command)->args[0]);

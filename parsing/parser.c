@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 20:27:33 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/20 19:55:51 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	extract_cmds(t_token *tokens, t_command **commands)
 		if (tokens->token_type == WORD || tokens->token_type == ENV)
 		{
 			check_command(&command, &commands);
-			handle_word(&command, tokens->str, &argcount);
+			handle_word(&command, tokens->str, &argcount, tokens->has_expaned);
 		}
 		else if (tokens->token_type == R_OUT || tokens->token_type == R_IN
 			|| tokens->token_type == HER || tokens->token_type == APP)
@@ -93,7 +93,7 @@ int	parser(char *user_inp, t_env *ev)
 		// clean_tokens(&token_list);
 	// }
 	expander(&token_list, ev);
-	printtokens(token_list);
+	// printtokens(token_list);
 	remove_quotes(&token_list);
 	extract_cmds(token_list, &commands);
 	check_last(commands);

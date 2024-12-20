@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:44:06 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/16 20:32:13 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/20 00:48:35 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	create_token(t_token **token, char *data, t_etype type, t_etype qt)
 	current->str = ft_strdup(data);
 	current->token_type = type;
 	current->q_type = qt;
+	current->has_expaned = 0;
 	current->next = NULL;
 	current->prev = NULL;
 	if (!(*token))

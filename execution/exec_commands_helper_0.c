@@ -1,12 +1,12 @@
 
 #include "../minishell.h"
 
-int	exec_builtin(t_command *command,t_env *ev)
+int	exec_builtin(t_command *command, t_env *ev)
 {
 	if (!command)
 		return (1);
 	if (!ft_strcmp(command->args[0], "echo"))
-		return(the_echo(command));
+		return (the_echo(command));
 	else if (!ft_strcmp(command -> args[0], "cd"))
 		return (the_cd(command, ev));
 	else if (!ft_strcmp(command -> args[0], "pwd")
@@ -17,10 +17,10 @@ int	exec_builtin(t_command *command,t_env *ev)
 	else if (!ft_strcmp(command -> args[0], "unset"))
 		return (the_unset(command, &ev));
 	else if (!(ft_strcmp(command -> args[0], "env")
-		|| !ft_strcmp(command -> args[0], "ENV")))
+			|| !ft_strcmp(command -> args[0], "ENV")))
 		return (print_env(command, ev));
 	else if (!ft_strcmp(command->args[0], "exit"))
-		ft_exit(command);
+		return (ft_exit(command));
 	return (0);
 }
 

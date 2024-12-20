@@ -6,14 +6,13 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:17:58 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/19 17:17:01 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/20 21:09:49 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-
-void remove_env_var(t_env **env, const char *key)
+void remove_env_var(t_env **env, char *key)
 {
     t_env *current = *env;
     t_env *prev = NULL;
@@ -21,7 +20,7 @@ void remove_env_var(t_env **env, const char *key)
 
     while (current)
     {
-        if (strcmp(current->key, key) == 0 && ft_strcmp(current->key, "_") != 0)
+        if (ft_strcmp(current->key, key) == 0 && ft_strcmp(current->key, "_") != 0)
         {
             temp = current;
             if (prev)
@@ -29,15 +28,15 @@ void remove_env_var(t_env **env, const char *key)
             else
                 *env = current->next;
             free(temp->key);
+            temp -> key = "\0";
             free(temp->value);
-            free(temp);
+            temp->value = "\0";
             return;
         }
         prev = current;
         current = current->next;
     }
 }
-
 int check_param(char *str)
 {
     int i;
@@ -58,8 +57,11 @@ int the_unset(t_command *cmd, t_env **env)
 {
     int i;
 
+    if (!cmd || !cmd->args || !env)
+        return (1);
     if (!cmd->args[1])
         return (0);
+
     i = 1;
     while (cmd->args[i])
     {

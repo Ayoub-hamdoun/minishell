@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:40:39 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 17:19:17 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/20 19:36:33 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int	has_quotes(char	*str)
 
 void	update_token(t_token **token, char **res, t_env *ev)
 {
-	//free((*token)->str);
 	(*token)->str = ft_strdup(ft_getenv(ev, *res));
-	//free(*res);
+	(*token)->has_expaned = 1;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 20:29:58 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/20 19:58:33 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct s_token
 	char			*str;
 	t_etype			token_type;
 	t_etype			q_type;
+	int				has_expaned;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
@@ -78,6 +79,7 @@ typedef struct s_command
 {
 	char				**args;
 	int					is_builtin;
+	int					flag;
 	struct s_redir		*rederects;
 	struct s_command	*next;
 }	t_command;
@@ -96,7 +98,7 @@ typedef struct s_grbdg {
 
 // parsing funcs
 int		parser(char *user_inp, t_env *ev);
-void	handle_word(t_command **command, char *str, int *argcount);
+void	handle_word(t_command **command, char *str, int *argcount, int expdd);
 void	handle_redirections(t_command *command, t_token **token_list);
 void	tokenizer(char *user_inp, t_token **tokenList);
 void	create_token(t_token **token, char *data, t_etype type, t_etype qt);
@@ -180,7 +182,7 @@ int		rederctes_out(t_redir *reder);
 int		check_equal(char *cmd);
 int		the_export(t_command *cmd, t_env **env);
 int		the_echo(t_command *cmd);
-void		ft_exit(t_command *command);
+int		ft_exit(t_command *command);
 int		the_cd(t_command *cmd, t_env *env);
 int		the_pwd(t_redir *reder, t_env *env);
 int		the_unset(t_command *cmd, t_env **env);

@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/19 20:03:17 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/20 21:10:18 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,28 @@ void declare_x(t_env **env)
 	tmp = *env;
 	while (tmp)
 	{
-		if ((tmp->key && tmp->value))
-			printf("declare -x %s=\"%s\"\n", tmp->key, tmp->value);
-		else if (tmp->key)
-			printf("declare -x %s\n", tmp->key);
+			if (tmp->key && tmp->value)
+			{
+					// printf("%s=%s\n", env->key, env->value);
+					if (ft_strlen(tmp->key) != 0)
+					{
+						write(1,"Declare -x ", 11);
+						write(1,"\"", 1);
+					}
+					write(1,tmp->key, ft_strlen(tmp->key));
+					if (ft_strcmp(tmp->key, "\0") != 0 && ft_strcmp(tmp->value, "\0") != 0)
+						write(1, "=", 1);
+					write(1, tmp->value, ft_strlen(tmp->value));
+					if (ft_strlen(tmp->key) != 0)
+						write(1,"\"", 1);
+					if (ft_strcmp(tmp->key, "\0") != 0 && ft_strcmp(tmp->value, "\0") != 0)
+						write(1, "\n", 1);
+			}
+			else if (tmp->key && tmp->value)
+				{
+						write(1, tmp->key, ft_strlen(tmp->key));
+						write(1, "\n", 1);
+				}
 		tmp = tmp->next;
 	}
 }
@@ -180,7 +198,7 @@ void change_value(char *cmd, t_env **env)
 
 	while (current)
 	{
-		if (current->key && strcmp(current->key, key) == 0)
+		if (current->key && ft_strcmp(current->key, key) == 0 && ft_strcmp(current->key, "_") != 0)
 		{
 			//free(current->value);
 			current->value = value;
@@ -247,8 +265,10 @@ int duplicate_sign(char *cmd)
 	
 	while (cmd[i])
 	{
-		if (cmd[i] == '+')
+		if (cmd[i] == '+' )
 			flag++;
+		if (cmd[i] == '=')
+			return (0);
 		i++;
 	}
 	if (flag > 1)
@@ -285,7 +305,7 @@ void join_var(char *cmd, t_env **env)
 	
 	while (current)
 	{
-		if (current->key && ft_strcmp(current->key, key) == 0)
+		if (current->key && ft_strcmp(current->key, key) == 0 && ft_strcmp(current->key, "_") != 0)
 		{
 			tmp = current->value;
 			if (current->value == NULL)

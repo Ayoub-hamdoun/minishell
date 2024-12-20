@@ -140,10 +140,22 @@ void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
 	}
 	else
 	{
+		if (cmd -> flag)
+		{
+			exit_status(0);
+			exit(0);
+		}
+		else if ((cmd -> flag == 0 && ft_strlen (cmd ->args[0]) == 0) || (!cmd -> args[0]))
+		{
+			printf("command not found\n");
+			exit_status(127);
+			exit(127);
+		}
 		if (execve(get_path(cmd, ev), cmd->args, env))
 			status = errors(cmd->args[0]);
 		exit(status);
 	}
+	// close_red(cmd->rederects);
 }
 
 void pipe_manipulation(int *prev_fd, t_command *cmd, int pipe_fd[2])
@@ -185,6 +197,7 @@ void	multiple_commands(t_command *command, t_env *ev)
 	if (command->is_builtin && !command->next)
 	{
 		status = exec_builtin(command, ev);
+		close_red(command->rederects);
 		exit_status(status);
 		return;
 	}
@@ -199,19 +212,23 @@ void	multiple_commands(t_command *command, t_env *ev)
 			{
 				child_signal();
 				ft_child_process(prev_fd, pipe_fd, command, ev);
+				close_red(command->rederects);
 			}
 			else if (pid < 0)
 			{
 				status = exit_status(1);
+				close_red(command->rederects);
+				close(pipe_fd[0]);
+				close(pipe_fd[1]);
 				break;
 			}
 			else
 			{
 				parent_signal();
+				close_red(command->rederects);
 				last_pid = pid;
 			}
 			pipe_manipulation(&prev_fd, command, pipe_fd);
-			close_red(command -> rederects);
 			command = command->next;
 		}
 	}

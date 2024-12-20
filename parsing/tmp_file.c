@@ -67,7 +67,7 @@ void printcommnads(t_command *lst)
 			i++;
 		}
 		i = 0;
-		printf ("\nis built in : %d", lst->is_builtin);
+		printf ("\nis built in : %d, has expanded %d", lst->is_builtin, lst->flag);
 		printredirections(lst->rederects);
 		printf("\n---------------------------------\n");
 		lst = lst->next;
@@ -98,8 +98,13 @@ void print_e(t_env *ev)
 	while (temp)
 	{
 		if (temp->key && temp->value)
-			printf("%s=%s\n", temp->key, temp->value);
-		else if (temp->key)
+		{
+			write(1, temp->key, ft_strlen(temp->key));
+			 if (temp -> key  && temp->value)
+				write(1, "=", 1);
+			write(1, temp->value, ft_strlen(temp->value));
+		}
+		else if (temp->key && !temp->value)
 			printf("%s\n", temp->key);
 		temp = temp->next;
 	}
@@ -118,7 +123,7 @@ void print_envp(char **envp)
 
 int print_env(t_command *cmd, t_env *env)
 {
-	int i;
+
 	int fd;
 	if (cmd -> args[1])
 	{
@@ -126,26 +131,24 @@ int print_env(t_command *cmd, t_env *env)
 		return (127);
 	}
 	fd = rederctes_out(cmd->rederects);
+
 	while (env)
 	{
-		i = 0;
-		while (cmd->args[i])
-		{
 			if (env->key && env->value)
 			{
 					// printf("%s=%s\n", env->key, env->value);
 					write(fd, env->key, ft_strlen(env->key));
-					write(fd, "=", 1);
+					if (ft_strcmp(env->key, "\0") != 0 && ft_strcmp(env->value, "\0") != 0)
+						write(fd, "=", 1);
 					write(fd, env->value, ft_strlen(env->value));
-					write(fd, "\n", 1);
+					if (ft_strcmp(env->key, "\0") != 0 && ft_strcmp(env->value, "\0") != 0)
+						write(fd, "\n", 1);
 			}
 			else if (env->key && env->value)
 				{
 						write(fd, env->key, ft_strlen(env->key));
 						write(fd, "\n", 1);
 				}
-			i++;
-		}
 		env = env->next;
 	}
 	return (0);
