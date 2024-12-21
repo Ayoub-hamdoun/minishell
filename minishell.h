@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:40:38 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/20 19:58:33 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 21:11:37 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <limits.h>
-#include <stddef.h>
+# include <stddef.h>
 
 extern int g_exit_status;
 
@@ -91,10 +91,11 @@ typedef struct s_vars
 	char	**args;
 }	t_vars;
 
-typedef struct s_grbdg {
-    void *ptr;
-    struct s_grbdg *next;
-} t_grbdg;
+typedef struct s_grbdg
+{
+	void			*ptr;
+	struct s_grbdg	*next;
+}	t_grbdg;
 
 // parsing funcs
 int		parser(char *user_inp, t_env *ev);
@@ -103,11 +104,16 @@ void	handle_redirections(t_command *command, t_token **token_list);
 void	tokenizer(char *user_inp, t_token **tokenList);
 void	create_token(t_token **token, char *data, t_etype type, t_etype qt);
 void	expander(t_token **tokens, t_env *ev);
+void	is_expandable(t_token **tokens, int *is_exp);
+char	*remove_chars(char *token);
+int		has_tilda(char *str);
+int		is_quote(char c);
 void	expand_it(char *str, char **res, char **expanded, t_env *ev);
 char	*ret_env(char *str, int *i, t_env *ev);
 int		has_quotes(char	*str);
 void	update_token(t_token **token, char **res, t_env *ev);
 int		lexer(t_token *tokens);
+int		check_redirection(t_token *token);
 int		check_doubled_pipe(t_token *token);
 int		check_first_p(t_token *token);
 void	check_last_out(t_command *token);
@@ -116,6 +122,8 @@ void	dup_env(t_env *env, char **ev);
 char	*ft_getenv(t_env *env, char *key);
 void	remove_quotes(t_token **tokens);
 void	handle_sig(int sig);
+void	handle_here_sig(int sig);
+void	handle_b_slash(int signal);
 int		is_builtin(char *cmd);
 void	wait_for_all_processes(pid_t	last_pid);
 // end of parsing func
@@ -123,7 +131,6 @@ void	wait_for_all_processes(pid_t	last_pid);
 // exec funcs
 int		open_files(t_command **commands, t_env *ev);
 int		has_space(char *str);
-int		is_directory(const char *path);
 int		file_checkers(char	*file_name, t_etype file_type);
 int		check_file_in(char *file_name);
 int		check_file_out(char *file_name);
@@ -141,14 +148,11 @@ int		exit_status(int status);
 // end exec funcs
 
 // cleaners
-// void	clean_tokens(t_token **tokens);
-// void	clean_cmds(t_command **cmds);
-// void	clean_red(t_redir **reds);
 int		sizeofarray(char **array);
 void 	free_all(void);
-void *ft_malloc(size_t size);
-int	sizeofarray(char **array);
-void add(void *ptr);
+void	*ft_malloc(size_t size);
+int		sizeofarray(char **array);
+void	add(void *ptr);
 
 // utils
 int		ft_strlen(char	*str);
@@ -174,19 +178,18 @@ char	*gettype(t_etype type);
 void	exit_funcs(void);
 void	print_envp(char **envp);
 void	print_e(t_env *ev);
-int	print_env(t_command *cmd, t_env *env);
+int		print_env(t_command *cmd, t_env *env);
 //end temp
 
 //builtins
 int		rederctes_out(t_redir *reder);
 int		check_equal(char *cmd);
-int		the_export(t_command *cmd, t_env **env);
+void the_export(t_command *cmd, t_env **env);
 int		the_echo(t_command *cmd);
 int		ft_exit(t_command *command);
 int		the_cd(t_command *cmd, t_env *env);
 int		the_pwd(t_redir *reder, t_env *env);
 int		the_unset(t_command *cmd, t_env **env);
-void	update_oldpwd(char *path, t_env *env);
 void	re_pwd(char *path, t_env *env);
 char	*extract_value(char *equal_pos);
 //end builtins

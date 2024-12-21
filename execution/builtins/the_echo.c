@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:58:07 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/21 00:20:04 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 18:11:05 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,10 +49,7 @@ int	the_echo(t_command *cmd)
 
 	fd = rederctes_out(cmd -> rederects);
 	if (!cmd->args[1])
-	{
-		write(fd, "\n", 1);
-		return (0);
-	}
+		return (write(fd, "\n", 1), 0);
 	count = 0;
 	i = 1;
 	while (cmd->args[i] && count_n(cmd->args[i]) == 0)

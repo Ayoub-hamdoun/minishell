@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/20 22:19:56 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 15:55:43 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,11 @@ int	main(int argc, char *argv[], char **env)
 
 	(void)argc;
 	(void)argv;
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	{
-		write(2, "not a tty!\n", 12);
-		return (0);
-	}
+	// if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	// {
+	// 	write(2, "not a tty!\n", 12);
+	// 	return (0);
+	// }
 	rl_catch_signals = 0;
 	if (!env[0])
 	{

@@ -6,15 +6,31 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:40:39 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/21 01:07:57 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 01:47:56 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	expand_it(char *str, char **res, char **expanded, t_env *ev)
+void	join_char(char **res, int *i, char c)
 {
 	char	tmp[2];
+
+	tmp[0] = c;
+	tmp[1] = '\0';
+	*res = ft_strjoin(*res, tmp);
+	(*i)++;
+}
+
+void	join_home(char **res, char **expanded, int *i, t_env *ev)
+{
+	*expanded = ft_strdup(ft_getenv(ev, "HOME"));
+	*res = ft_strjoin(*res, *expanded);
+	(*i)++;
+}
+
+void	expand_it(char *str, char **res, char **expanded, t_env *ev)
+{
 	int		i;
 	char	*tmp_res;
 
@@ -34,35 +50,10 @@ void	expand_it(char *str, char **res, char **expanded, t_env *ev)
 			*res = ft_strjoin(*res, tmp_res);
 		}
 		else if (str[i] == '~')
-		{
-			*expanded = ft_strdup(ft_getenv(ev, "HOME"));
-			*res = ft_strjoin(*res, *expanded);
-			i++;
-		}
+			join_home(res, expanded, &i, ev);
 		else
-		{
-			tmp[0] = str[i];
-			tmp[1] = '\0';
-			*res = ft_strjoin(*res, tmp);
-			i++;
-		}
+			join_char(res, &i, str[i]);
 	}
-}
-
-char	*ret_env(char *str, int *i, t_env *ev)
-{
-	int		start;
-	char	*env;
-	char	*res;
-
-	start = *i;
-	while (str[*i] && (ft_isalnum(str[*i]) || str[*i] == '_'))
-		(*i)++;
-	env = ft_substr(str, start, (*i) - start);
-	res = ft_getenv(ev, env);
-	if (res)
-		return (ft_strdup(res));
-	return (ft_strdup(""));
 }
 
 int	has_quotes(char	*str)

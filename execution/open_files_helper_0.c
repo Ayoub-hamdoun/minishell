@@ -1,22 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   open_files_helper_0.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/21 01:25:00 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/12/21 18:38:38 by ayhamdou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	handle_here_sig(int sig)
-{
-	if (sig == SIGINT)
-	{
-		close(0);
-		g_exit_status = SIGINT;
-	}
-	exit_status(-1);
-}
-
-void	handle_b_slash(int signal)
-{
-	(void)signal;
-	rl_on_new_line();
-	rl_redisplay();
-}
 
 void	check_on_herdoc(t_redir *r, t_env *ev)
 {
@@ -75,17 +69,18 @@ void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 		signal(SIGQUIT, SIG_IGN);
 		str = readline("herdoc> ");
 		if (!str)
-            break;
-        add(str);
-        if (ft_strcmp(str, r->filename) == 0)
-        {
-            free(str);
-            close(0);
-            close(pipe);
-            break;
-        }
+			break ;
+		add(str);
+		if (ft_strcmp(str, r->filename) == 0)
+		{
+			free(str);
+			close(0);
+			close(pipe);
+			break ;
+		}
 		str = is_expand(str, exp_flag, ev);
 		write (pipe, str, ft_strlen(str));
+		write(pipe,"\n",1);
 	}
 	dup2(hold, STDIN_FILENO);
 	close(hold);

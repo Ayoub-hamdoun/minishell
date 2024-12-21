@@ -5,9 +5,7 @@ void	wait_for_all_processes(pid_t	last_pid)
 {
 	int		status;
 	pid_t	pid;
-	// int		exit_status;
 
-	// exit_status = 0;
 	status = 0;
 	while (1)
 	{

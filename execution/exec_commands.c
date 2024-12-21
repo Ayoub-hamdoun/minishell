@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_commands.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/21 01:24:30 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/12/21 21:35:18 by ayhamdou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*get_path(t_command *command, t_env *env)
@@ -6,8 +18,6 @@ char	*get_path(t_command *command, t_env *env)
 	char	**paths;
 	int		i;
 
-	// if (access(command -> args[0], F_OK) == 0)
-	// 	return (command -> args[0]);
 	if (ft_strchr(command->args[0], '/'))
 	{
 		if (access(command->args[0], F_OK | X_OK) == 0)
@@ -35,27 +45,13 @@ char	*get_path(t_command *command, t_env *env)
 	return (NULL);
 }
 
-// int red(char *path)
-// {
-//     struct stat    statbuf;
-
-//     if ((stat(path, &statbuf) == 0)
-//         && ((path[0] == '.' && path[1] == '/') || path[0] == '/'))
-//     {
-//         if (S_ISDIR(statbuf.st_mode))
-//             return (1);
-//         else if (S_ISREG(statbuf.st_mode))
-//             return (2);
-//     }
-//     return (0);
-// }
-
 char **convert_ev(t_env *ev)
 {
-	char **env;
-	int count = 0;
-	t_env *temp = ev;
-	char *t;
+	char	**env;
+	int		count = 0;
+	t_env	*temp = ev;
+	char	*t;
+	int		i;
 
 	while (temp)
 	{
@@ -65,7 +61,7 @@ char **convert_ev(t_env *ev)
 	env = ft_malloc(sizeof(char *) * (count + 1));
 	if (!env)
 		return (NULL);
-	int i = 0;
+	i = 0;
 	while (ev)
 	{
 		if (ev->key && ev->value)
@@ -84,35 +80,49 @@ char **convert_ev(t_env *ev)
 	return (env);
 }
 
-int	errors(char *str)
+int	errors(char *str,t_command *cmd)
 {
-	struct stat    statbuf;	
+	struct stat	statbuf;	
 
-	if (access(str, F_OK) == -1)
+	if (cmd -> flag == 1)
+		{
+			exit_status(0);
+			exit(0);
+		}
+	// else if (cmd -> flag == 0 && ft_strlen(cmd -> args[0]))
+	// 	{
+	// 		ft_putstr_fd("minishell:command not found\n", 2);
+	// 		exit_status(127);
+	// 		exit(127);
+	// 	}
+	else if (cmd -> flag == 2 || cmd -> flag == 0)
 	{
-		printf("minishell: %s: command not found\n", str);
-		exit_status(127);
-		exit(127);
-	}
-	else if (access(str, X_OK) == -1)
+	// if (access(str, F_OK) == -1)
+	// {
+	// 		ft_putstr_fd("minishell:command not found\n", 2);
+	// 	exit_status(127);
+	// 	exit(127);
+	// }
+	if (access(str, X_OK) == -1)
 	{
-		printf("minishell: %s: Permission denied\n", str);
+		ft_putstr_fd("minishell:permission denied\n", 2);
 		exit_status(126);
 		exit(126);
 	}
 	if (stat(str, &statbuf) == -1)
 	{
-		printf("minishell: %s: No such file or directory\n", str);
+			ft_putstr_fd("minishell:No such file or directory\n", 2);
 		exit_status(127);
 		exit(127);
 	}
 	else if (S_ISDIR(statbuf.st_mode))
 	{
-		printf("minishell: %s: is a directory\n", str);
+		ft_putstr_fd("minishell:is a directory\n", 2);
 		exit_status(126);
 		exit(126);
 	}
-return (0);
+}
+	return (0);
 }
 
 void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
@@ -134,31 +144,20 @@ void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
 	}
 	else
 	{
-	r = cmd->rederects;
+		r = cmd->rederects;
 		while (r)
 		{
 			red_dup(&r);
 			r = r->next;
 		}
-		if (cmd -> flag )
-		{
-			exit_status(0);
-			exit(0);
-		}
-		else if (cmd -> flag == 0 && ft_strlen(cmd -> args[0]) == 0)
-		{
-			printf("command not found\n");
-			exit_status(127);
-			exit(127);
-		}
+		printf("%s",cmd -> args[0]);
 		if (execve(get_path(cmd, ev), cmd->args, env))
-			status = errors(cmd->args[0]);
+			status = errors(cmd->args[0], cmd);
 		exit(status);
 	}
-	// close_red(cmd->rederects);
 }
 
-void pipe_manipulation(int *prev_fd, t_command *cmd, int pipe_fd[2])
+void	pipe_manipulation(int *prev_fd, t_command *cmd, int pipe_fd[2])
 {
 	if (*prev_fd != -1)
 		close(*prev_fd);
@@ -193,7 +192,6 @@ void	multiple_commands(t_command *command, t_env *ev)
 
 	prev_fd = -1;
 	last_pid = -1;
-
 	if (command->is_builtin && !command->next)
 	{
 		status = exec_builtin(command, ev);
@@ -220,7 +218,7 @@ void	multiple_commands(t_command *command, t_env *ev)
 				close_red(command->rederects);
 				close(pipe_fd[0]);
 				close(pipe_fd[1]);
-				break;
+				break ;
 			}
 			else
 			{

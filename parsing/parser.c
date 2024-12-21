@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/21 01:10:06 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 19:52:33 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ int	parser(char *user_inp, t_env *ev)
 {
 	t_token		*token_list;
 	t_command	*commands;
-	int lex_flag;
+	int			lex_flag;
+
 	commands = NULL;
 	token_list = NULL;
 	lex_flag = 0;

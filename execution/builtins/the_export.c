@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 15:25:30 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/21 00:22:24 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 19:43:47 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,347 +15,220 @@
 //the variable can be appended even if no cmd already their done
 //even if there is an error you should set the error then continue on setting the other variables done
 // if the variable was without = and we want to append it segfault  done
-void declare_x(t_env **env)
+char	*extract_key(char *cmd, char *equal_pos)
 {
-	t_env	*tmp;
+	char	*plus_pos;
 
-	tmp = *env;
-	while (tmp)
+	plus_pos = strchr(cmd, '+');
+	if (plus_pos && plus_pos < equal_pos)
+		return (strndup(cmd, plus_pos - cmd));
+	if (equal_pos)
+		return (strndup(cmd, equal_pos - cmd));
+	return (strdup(cmd));
+}
+
+char	*extract_value(char *equal_pos)
+{
+	if (equal_pos)
+		return (strdup(equal_pos + 1));
+	return (NULL);
+}
+
+int	update_var(t_env **env, char *key, char *value, int append)
+{
+	char	*new_value;
+	t_env	*head;
+
+	head = *env;
+	while (*env)
 	{
-			if (tmp->key && tmp->value)
+		if (strcmp((*env)->key, key) == 0)
+		{
+			if (!value)
+				return (1);
+			if (append == 0)
 			{
-					// printf("%s=%s\n", env->key, env->value);
-					if (ft_strlen(tmp->key) != 0)
-						write(1,"Declare -x ", 11);
-					write(1,tmp->key, ft_strlen(tmp->key));
-					if (ft_strcmp(tmp->key, "\0") != 0 && ft_strcmp(tmp->value, "\0") != 0)
-						write(1, "=", 1);
-					if (ft_strlen(tmp->key) != 0)
-						write(1,"\"", 1);
-					write(1, tmp->value, ft_strlen(tmp->value));
-					if (ft_strlen(tmp->key) != 0)
-						write(1,"\"", 1);
-					if (ft_strcmp(tmp->key, "\0") != 0 && ft_strcmp(tmp->value, "\0") != 0)
-						write(1, "\n", 1);
-			}
-			else if (tmp->key && tmp->value)
+				if ((*env)->value)
 				{
-						write(1, tmp->key, ft_strlen(tmp->key));
-						write(1, "\n", 1);
+					new_value = malloc(strlen((*env)->value) + strlen(value) + 1);
+					if (!new_value)
+					{
+						perror("Failed to allocate memory for value append");
+						return (1);
+					}
+					strcpy(new_value, (*env)->value);
+					strcat(new_value, value);
+					free((*env)->value);
+					(*env)->value = new_value;
 				}
-		tmp = tmp->next;
-	}
-}
-int check_equal(char *cmd)
-{
-	int i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] == '=')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-int ft_integer(char *cmd)
-{
-	int i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if (cmd[i] < '0' || cmd[i] > '9')
-			return (0);
-		i++;
-	}
-	return (1);
-}
-int ft_is_alpha(char *cmd)
-{
-	int i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if ((cmd[i] < 'A' || (cmd[i] > 'Z' && cmd[i] < 'a') || cmd[i] > 'z') && (cmd[i] != '_'))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-int check_until_equal(char *cmd)
-{
-	int i;
-
-	i = 0;
-	while (cmd[i] != '=')
-	{
-	    if (!((cmd[i] >= 'A' && cmd[i] <= 'Z') || 
-              (cmd[i] >= 'a' && cmd[i] <= 'z') || 
-              (cmd[i] >= '0' && cmd[i] <= '9') || 
-            cmd[i] == '_' || cmd[i] == '+'))
-        {
-            printf(" utils equal export: `%s': not a valid identifier\n", cmd);
-            return (1);
-        }
-		i++;
-	}
-	return (0);
-}
-int check_without_equal(char *cmd)
-{
-    int i;
-
-    i = 0;
-    while (cmd[i])
-    {
-        if (!((cmd[i] >= 'A' && cmd[i] <= 'Z') || 
-            (cmd[i] >= 'a' && cmd[i] <= 'z') || 
-            (cmd[i] >= '0' && cmd[i] <= '9') || 
-            cmd[i] == '_'))
-        {
-            printf("without equal export: `%s': not a valid identifier\n", cmd);
-            return (1);
-        }
-        i++;
-    }
-    return (0);
-}
-
-
-int check_valid (char *cmd)
-{
-	// int i;
-	int flag;
-	
-	// i = 0;
-	if (cmd[0] == '-')
-		{
-			printf("export: -%s: invalid option\n", cmd);
-			printf("export: usage: export [name[=value] ...] or export -p\n");
-			return (1);
-		}
-	if ((cmd [0] < 'A' || (cmd [0] > 'Z' && cmd [0] < 'a') || cmd [0] > 'z') && (cmd[0] != '_') && (cmd[0] != '$'))
-	{
-		printf("export: `%s': not a valid identifier\n", cmd);
-		return (1);
-	}
-	if (check_equal(cmd) == 1)
-		flag = check_until_equal(cmd);
-	else
-		flag = check_without_equal(cmd);
-	if (flag == 1 )
-		return (1);
-	return (0);
-}
-
-char *extract_value(char *cmd)
-{
-    int i = 0;
-
-    while (cmd[i])
-    {
-        if (cmd[i] == '=')
-            return (ft_strdup(cmd + i + 1));
-        i++;
-    }
-    return (NULL);
-}
-char *extract_key(char *cmd)
-{
-    int i = 0;
-
-    while (cmd[i] && cmd[i] != '=' && cmd[i] != '+')
-        i++;
-
-	char *n = strndup(cmd, i);
-	add(n);
-    return (n);
-}
-
-
-int check_duplicate(char *cmd, t_env **env)
-{
-	t_env *current = *env;
-	char *key = extract_key(cmd);
-
-	while (current)
-	{
-		if (current->key && strcmp(current->key, key) == 0)
-			return (0);
-		current = current->next;
-	}
-	return (1);
-}
-void change_value(char *cmd, t_env **env)
-{
-	t_env *current = *env;
-	char *key = extract_key(cmd);
-	char *value = extract_value(cmd);
-
-	while (current)
-	{
-		if (current->key && ft_strcmp(current->key, key) == 0 && ft_strcmp(current->key, "_") != 0)
-		{
-			//free(current->value);
-			current->value = value;
-			return ;
-		}
-		current = current->next;
-	}
-}
-void add_variable(char *cmd, t_env **env)
-{
-    t_env *current = *env;
-    t_env *new;
-    char *key = extract_key(cmd);
-    char *value = extract_value(cmd);
-    if (key == NULL)
-        return;
-
-    while (current != NULL)
-    {
-        if (strcmp(current->key, key) == 0)
-        {
-            // if (current->value != NULL)
-                //free(current->value);
-            if (value != NULL)
-                current->value = ft_strdup(value);
-            else
-                current->value = NULL;
-            free(key);
-            return;
-        }
-        if (current->next == NULL)
-            break;
-        current = current->next;
-    }
-    new = ft_malloc(sizeof(t_env));
-    if (new == NULL)
-        return;
-
-    new->key = key;
-    if (value != NULL)
-        new->value = ft_strdup(value);
-    else
-        new->value = NULL;
-    new->next = NULL;
-    if (current == NULL)
-        *env = new;
-    else
-        current->next = new;
-}
-
-void add_var(char *cmd, t_env **env)
-{
-	if (check_duplicate(cmd, env) == 0)
-		change_value(cmd, env);
-	else if (check_duplicate(cmd, env) == 1)
-		add_variable(cmd, env);
-}
-
-int duplicate_sign(char *cmd)
-{
-	int i;
-	int flag = 0;
-	i = 0;
-	
-	while (cmd[i])
-	{
-		if (cmd[i] == '+' )
-			flag++;
-		if (cmd[i] == '=')
-			return (0);
-		i++;
-	}
-	if (flag > 1)
-		return (1);
-	else if (flag == 0)
-		return (2);
-	return (0);
-}
-int check_plus(char *cmd,int flag)
-{
-	int i;
-
-	i = 0;
-	while (cmd[i])
-	{
-		if ((duplicate_sign(cmd) == 1) && flag == 0)
-		{
-			printf("export: `%s': not a valid identifier\n", cmd);
-			return (1);
-		}
-		else if ((duplicate_sign(cmd) == 2))
-			return (2);
-		i++;
-	}
-	return (0);
-}
-
-void join_var(char *cmd, t_env **env)
-{
-	t_env *current = *env;
-	char *key = extract_key(cmd);
-	char *value = extract_value(cmd);
-	char *tmp;
-	
-	while (current)
-	{
-		if (current->key && ft_strcmp(current->key, key) == 0 && ft_strcmp(current->key, "_") != 0)
-		{
-			tmp = current->value;
-			if (current->value == NULL)
-				current->value = value;
+				else
+					(*env)->value = value;
+			}
 			else
-				current->value = ft_strjoin(current ->value, value);
-			return ;
+			{
+				free((*env)->value);
+				(*env)->value = ft_strdup(value);
+			}
+			free(key);
+			return (1);
 		}
-		current = current->next;
+		(*env) = (*env)->next;
 	}
+	*env = head;
+	return (0);
 }
-int the_export(t_command *cmd, t_env **env)
+
+// int update_var(t_env *env, char *key, char *value)
+// {
+//     while (env) 
+//     {
+//         if (strcmp(env->key, key) == 0) 
+//         {
+//             free(env->value);
+//             env->value = value;
+//             free(key);
+//             return 1;
+//         }
+//         env = env->next;
+//     }
+//     return 0;
+// }
+// int update_var(t_env *env, char *key, char *value)
+// {
+//     while (env) 
+//     {
+//         if (strcmp(env->key, key) == 0) 
+//         {
+//             free(env->value);
+//             env->value = value;
+//             free(key);
+//             return 1;
+//         }
+//         env = env->next;
+//     }
+//     return 0;
+// }
+
+int	check_append(char *cmd)
 {
 	int	i;
-	int flag;
-	i = 1;
 
-	if (!cmd->args[i] || ft_strlen (cmd -> args[i]) == 0)
+	i = 0;
+	while (cmd[i])
 	{
-		declare_x(env);
-		return (0);
+		if (cmd[i] == '+' && cmd[i + 1] == '=')
+			return (0);
+		i++;
 	}
-	while (cmd -> args[i])
+	return (1);
+}
+
+void	add_new_var(t_env **env, char *key, char *value)
+{
+	t_env	*new_var;
+	t_env	*last;
+
+	new_var = (t_env *) malloc(sizeof(t_env));
+	if (!new_var)
 	{
-		if (check_valid(cmd -> args[i]) == 1)
-			flag = 1;
-		else
+		perror("Failed to allocate memory");
+		free(key);
+		free(value);
+		return ;
+	}
+	new_var->key = key;
+	new_var->value = value;
+	new_var->next = NULL;
+	if (*env == NULL)
+		*env = new_var;
+	else
+	{
+		last = *env;
+		while (last->next)
+			last = last->next;
+		last->next = new_var;
+	}
+}
+
+void	add_var(char *cmd, t_env **env, int append)
+{
+	char	*equal_pos = NULL;
+	char	*key;
+	char	*value;
+
+	equal_pos = strchr(cmd, '=');
+	value = extract_value(equal_pos);
+	key = extract_key(cmd, equal_pos);
+	if (!update_var(env, key, value, append))
+		add_new_var(env, key, value);
+}
+
+int	check_equal(char *cmd)
+{
+	return (strchr(cmd, '=') == NULL);
+}
+
+void	declare_x(t_env *env)
+{
+	while (env)
+	{
+		if (env->key && env->value)
+			printf("declare_x %s=\"%s\"\n", env->key, env->value);
+		else if (env->key && env->value == NULL)
+			printf("declare_x %s\n", env->key);
+		else if (env->key)
+			printf("declare_x %s=\"\"\n", env->key);
+		env = env->next;
+	}
+}
+
+int	check_valid(char *cmd)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	if ((cmd[0] >= 'A' && cmd[0] <= 'Z')
+		|| (cmd[0] >= 'a' && cmd[0] <= 'z') || cmd[0] == '_')
+		j = 0;
+	else
+		return (1);
+	while (cmd[i] != '=' && cmd[i])
+	{
+		if (!((cmd[i] >= 'A' && cmd[i] <= 'Z')
+				|| (cmd[i] >= 'a' && cmd[i] <= 'z')
+				|| (cmd[i] >= '0' && cmd[i] <= '9')
+				|| cmd[i] == '_' || cmd[i] == '='))
 		{
-			if (check_equal(cmd -> args[i]) == 1)
-			{
-				if (check_plus(cmd -> args[i],0) == 0)
-				{
-					if (check_duplicate(cmd -> args[i], env) == 1)
-						add_variable(cmd -> args[i], env);
-					else
-						join_var(cmd -> args[i], env);
-				}
-				else if (check_plus(cmd -> args[i],1) == 2)
-					add_var(cmd->args[i], env);
-			}
+			if (cmd[i] == '+' && cmd[i + 1] == '=')
+				i++;  // Skip '=' after '+'
 			else
-			{
-			if (check_duplicate(cmd -> args[i], env) == 1)
-					add_variable(cmd -> args[i], env);
-			}
+				return (1);
 		}
 		i++;
 	}
-	if (flag == i)
-		return (1);
-	if (flag == 1)
-		return (1);
 	return (0);
+}
+
+void the_export(t_command *cmd, t_env **env)
+{
+	int	i;
+	int	append;
+
+	i = 1;
+	if (!cmd->args[i])
+	{
+		declare_x(*env);
+		return ;
+	}
+	while (cmd->args[i])
+	{
+		append = check_append(cmd->args[i]);
+		if (check_valid(cmd->args[i]) == 0)
+			add_var(cmd->args[i], env, append);
+		else
+			printf("export: `%s': not a valid identifier\n", cmd->args[i]);
+		i++;
+	}
 }

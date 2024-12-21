@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 08:46:04 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/20 23:19:20 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 19:50:54 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,9 @@ int	is_normal_word(char *trimmed, t_token **token_list, int pos)
 			check_quots_type(&quote, trimmed[pos], &qt);
 		else if (trimmed[pos] == quote)
 			quote = '\0';
-		else if (quote == '\0' && (trimmed[pos] == ' ' || trimmed[pos] == '|'
-				|| trimmed[pos] == '>' || trimmed[pos] == '<'))
+		else if (quote == '\0' && (trimmed[pos] == ' ' || trimmed[pos] == '\t'
+				|| trimmed[pos] == '|' || trimmed[pos] == '>'
+				|| trimmed[pos] == '<'))
 			break ;
 		pos++;
 	}

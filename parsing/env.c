@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 23:23:02 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/20 21:11:45 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 01:36:41 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	dup_env(t_env *env, char **ev)
 
 	i = 0;
 	if (!env || !*ev)
-
 		return ;
 	while (ev[i])
 	{

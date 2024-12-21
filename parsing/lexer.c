@@ -3,14 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rallali <rallali@student.42.fr>            +#+  +:+       +#+        */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/16 11:35:54 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 20:13:29 by rallali          ###   ########.fr       */
+/*   Updated: 2024/12/21 20:02:06 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+int	print_error(char *err, int ret)
+{
+	ft_putstr_fd(err, 2);
+	return (ret);
+}
+
+int	update_es(int ec, int ret)
+{
+	exit_status(ec);
+	return (ret);
+}
 
 int	check_quotes(t_token *token)
 {
@@ -34,36 +46,9 @@ int	check_quotes(t_token *token)
 			i++;
 		}
 		if (quote)
-		{
-			printf("minishell: syntax error: mismatched quotes\n");
-			return (1);
-		}
+			return (print_error("minishell: syntax error:\
+				mismatched quotes\n", 1));
 		current = current->next;
-	}
-	return (0);
-}
-
-int	check_redirection(t_token *token)
-{
-	if (!token)
-		return (1);
-	while (token)
-	{
-		if (token->token_type == R_IN || token->token_type == R_OUT
-			|| token->token_type == APP || token->token_type == HER)
-		{
-			if (!token->next)
-			{
-				printf("minishell: syntax error: mismatched redirection\n");
-				return (1);
-			}
-			else if (token->next->token_type != WORD && token -> next-> token_type != ENV)
-			{
-				printf("syntax error near unexpected token\n");
-				return (1);
-			}
-		}
-		token = token->next;
 	}
 	return (0);
 }
@@ -74,10 +59,7 @@ int	lexer(t_token *tokens)
 
 	tmp = tokens;
 	if (check_first_p(tmp))
-	{
-		exit_status(258);
-		return (1);
-	}
+		return (update_es(258, 1));
 	while (tmp)
 	{
 		if (check_redirection(tmp))
@@ -93,7 +75,7 @@ int	lexer(t_token *tokens)
 		if (check_doubled_pipe(tmp))
 		{
 			exit_status(258);
-			return (1);	
+			return (1);
 		}
 		tmp = tmp->next;
 	}

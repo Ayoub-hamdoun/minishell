@@ -13,7 +13,7 @@ int	exec_builtin(t_command *command, t_env *ev)
 		|| !ft_strcmp(command -> args[0], "PWD"))
 		return (the_pwd(command -> rederects, ev));
 	else if (!ft_strcmp(command -> args[0], "export"))
-		return (the_export(command, &ev));
+			the_export(command, &ev);
 	else if (!ft_strcmp(command -> args[0], "unset"))
 		return (the_unset(command, &ev));
 	else if (!(ft_strcmp(command -> args[0], "env")
