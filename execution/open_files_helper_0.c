@@ -1,6 +1,23 @@
 
 #include "../minishell.h"
 
+void	handle_here_sig(int sig)
+{
+	if (sig == SIGINT)
+	{
+		close(0);
+		g_exit_status = SIGINT;
+	}
+	exit_status(-1);
+}
+
+void	handle_b_slash(int signal)
+{
+	(void)signal;
+	rl_on_new_line();
+	rl_redisplay();
+}
+
 void	check_on_herdoc(t_redir *r, t_env *ev)
 {
 	int	ld[2];
@@ -26,7 +43,6 @@ char	*is_expand(char *str, int exp_flag, t_env *ev)
 		expanded = NULL;
 		res = ft_strdup("");
 		expand_it(str, &res, &expanded, ev);
-		// free(str);
 		return (res);
 	}
 	return (str);
@@ -50,23 +66,17 @@ void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
 {
 	char	*str;
 	int		hold;
-	int status = 0;
 
 	str = NULL;
 	hold = dup(STDIN_FILENO);
 	while (1)
 	{
-		signal(SIGINT, handle_sig);
+		signal(SIGINT, handle_here_sig);
 		signal(SIGQUIT, SIG_IGN);
 		str = readline("herdoc> ");
 		if (!str)
-        {
-            status = 1;
             break;
-        }
-
         add(str);
-
         if (ft_strcmp(str, r->filename) == 0)
         {
             free(str);
@@ -76,8 +86,8 @@ void	lherdoc(t_redir *r, int pipe, int exp_flag, t_env *ev)
         }
 		str = is_expand(str, exp_flag, ev);
 		write (pipe, str, ft_strlen(str));
-		write (pipe, "\n", 1);
-		// free(str);
 	}
 	dup2(hold, STDIN_FILENO);
+	close(hold);
+	close(pipe);
 }

@@ -3,20 +3,6 @@
 
 #include "../minishell.h"
 
-int	ambigious_check(t_redir *r, t_env *ev)
-{
-	t_redir	*tmp;
-
-	if (!r || !ev)
-		return (0);
-	tmp = r;
-	if (strcmp(tmp -> filename,"") == 0 )
-	{
-		printf("ambiguous redirect\n");
-		return (1);
-	}
-	return (0);
-}
 
 
 int	check_file_in(char *file_name)
@@ -79,20 +65,29 @@ int	open_it(t_redir **r, t_env *ev)
 	if ((*r)->type == R_IN)
 	{
 		if (file_checkers((*r)->filename, R_IN))
+		{
+			exit_status(1);
 			return (1);
+		}
 		(*r)->fd = open((*r)->filename, O_RDONLY);
 	}
 	else if ((*r)->type == R_OUT)
 	{
 		(*r)->fd = open((*r)->filename, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 		if (file_checkers((*r)->filename, R_OUT))
+		{
+			exit_status(1);
 			return (1);
+		}
 	}
 	else if ((*r)->type == APP)
 	{
 		(*r)->fd = open((*r)->filename, O_WRONLY | O_CREAT | O_APPEND, 0777);
 		if (file_checkers((*r)->filename, APP))
+		{
+			exit_status(1);
 			return (1);
+		}
 	}
 	else if ((*r)->type == HER)
 		check_on_herdoc((*r), ev);
@@ -113,11 +108,6 @@ int	open_files(t_command **commands, t_env *ev)
 		r = (*commands)->rederects;
 		while (r)
 		{
-			if (ambigious_check(r, ev) == 1)
-			{
-				status = exit_status(0);
-				return (1);
-			}
 			if (open_it(&r, ev))
 				return (1);
 			r = r -> next;

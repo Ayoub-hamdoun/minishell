@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 16:40:39 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/20 19:36:33 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 01:07:57 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,18 @@ void	expand_it(char *str, char **res, char **expanded, t_env *ev)
 			i++;
 			*expanded = ret_env(str, &i, ev);
 			*res = ft_strjoin(*res, *expanded);
-			//free(*expanded);
 		}
 		else if (str[i] == '$' && str[i + 1] == '?')
 		{
 			i += 2;
 			tmp_res = ft_itoa(exit_status(-1));
 			*res = ft_strjoin(*res, tmp_res);
-			//free(tmp_res);
+		}
+		else if (str[i] == '~')
+		{
+			*expanded = ft_strdup(ft_getenv(ev, "HOME"));
+			*res = ft_strjoin(*res, *expanded);
+			i++;
 		}
 		else
 		{

@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:41:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/20 19:55:51 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 01:10:06 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,6 @@ int	parser(char *user_inp, t_env *ev)
 	lex_flag = lexer(token_list);
 	if (lex_flag)
 		return (1);
-	// {
-		// clean_tokens(&token_list);
-	// }
 	expander(&token_list, ev);
 	// printtokens(token_list);
 	remove_quotes(&token_list);
@@ -101,7 +98,5 @@ int	parser(char *user_inp, t_env *ev)
 	// printcommnads(commands);
 	if (lex_flag == 0)
 		exec(commands, ev);
-	// clean_tokens(&token_list);
-	// clean_cmds(&commands);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/15 11:58:07 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/20 21:10:54 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 00:20:04 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,11 @@ int	rederctes_out(t_redir *reder)
 {
 	while (reder)
 	{
-		if (reder-> type == R_OUT)
+		if (reder-> type == R_OUT || reder -> type == APP)
+		{
 			if (reder -> flag_out)
 				return (reder -> fd);
+		}
 		reder = reder -> next;
 	}
 	return (1);

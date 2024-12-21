@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/21 19:48:21 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/20 19:36:21 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 00:03:39 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,20 @@ void	handle_env_token(t_token **tokens, t_env *ev)
 	}
 }
 
+int	has_tilda(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == '~')
+			return (1);
+		i++;
+	}
+	return (0);
+}
+
 void	handle_quoted_token(t_token **tokens, t_env *ev)
 {
 	char	*str;
@@ -60,41 +74,48 @@ void	handle_quoted_token(t_token **tokens, t_env *ev)
 
 	if ((*tokens)->token_type == WORD || (*tokens)->token_type == ENV)
 	{
-		if ((*tokens)->q_type == DOUBLE /*|| (*tokens)->q_type == NONE)*/)
+		if ((*tokens)->q_type != SINGLE)
 		{
-			str = ft_strdup((*tokens)->str);
-			res = ft_strdup("");
-			expand_it(str, &res, &expanded, ev);
-			if (!ft_strcmp((*tokens)->str, res))
-				(*tokens)->has_expaned = 0;
-			else
-				(*tokens)->has_expaned = 1;
-			(*tokens)->str = ft_strdup(res);
-		}
-		else
-		{
-			res = ft_strdup("");
-			expand_it((*tokens)->str, &res, &expanded, ev);
-			(*tokens)->has_expaned = 0;
-			i = 1;
-			splitted = ft_split(res, ' ');
-			if (!splitted || !sizeofarray(splitted))
-				(*tokens)->str = ft_strdup("");
-			else
+			if ((*tokens)->q_type == DOUBLE || has_tilda((*tokens)->str))
 			{
-				(*tokens)->str = ft_strdup(splitted[0]);
-				tmp = (*tokens);
-				while (splitted[i])
+				str = ft_strdup((*tokens)->str);
+				res = ft_strdup("");
+				expand_it(str, &res, &expanded, ev);
+				if (!ft_strcmp((*tokens)->str, res))
+					(*tokens)->has_expaned = 0;
+				else
+					(*tokens)->has_expaned = 1;
+				(*tokens)->str = ft_strdup(res);
+			}
+			else if ((*tokens)->token_type == ENV)
+			{
+				res = ft_strdup("");
+				expand_it((*tokens)->str, &res, &expanded, ev);
+				// (*tokens)->has_expaned = 0;
+				if (!ft_strcmp((*tokens)->str, res))
+					(*tokens)->has_expaned = 0;
+				else
+					(*tokens)->has_expaned = 1;
+				i = 1;
+				splitted = ft_split(res, ' ');
+				if (!splitted || !sizeofarray(splitted))
+					(*tokens)->str = ft_strdup("");
+				else
 				{
-					new = ft_malloc(sizeof(t_token));
-					new->str = ft_strdup(splitted[i]);
-					new->token_type = WORD;
-					new->q_type = NONE;
-					new->next = tmp->next;
-					new->prev = tmp;
-					tmp->next = new;
-					tmp = new;
-					i++;
+					(*tokens)->str = ft_strdup(splitted[0]);
+					tmp = (*tokens);
+					while (splitted[i])
+					{
+						new = ft_malloc(sizeof(t_token));
+						new->str = ft_strdup(splitted[i]);
+						new->token_type = WORD;
+						new->q_type = NONE;
+						new->next = tmp->next;
+						new->prev = tmp;
+						tmp->next = new;
+						tmp = new;
+						i++;
+					}
 				}
 			}
 		}
@@ -138,7 +159,7 @@ void	expander(t_token **tokens, t_env *ev)
 			else
 				is_exp = 1;
 		}
-		if (is_exp != 0)
+		if (is_exp)
 		{
 			if (!ft_strcmp((*tokens)->str, "~"))
 			{

@@ -126,12 +126,6 @@ void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
 		pipe_in(prev_fd);
 	if (cmd->next)
 		pipe_out(pipe_fd);
-	r = cmd->rederects;
-	while (r)
-	{
-		red_dup(&r);
-		r = r->next;
-	}
 	if (cmd->is_builtin)
 	{
 		status = exec_builtin(cmd, ev);
@@ -140,12 +134,18 @@ void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
 	}
 	else
 	{
-		if (cmd -> flag)
+	r = cmd->rederects;
+		while (r)
+		{
+			red_dup(&r);
+			r = r->next;
+		}
+		if (cmd -> flag )
 		{
 			exit_status(0);
 			exit(0);
 		}
-		else if ((cmd -> flag == 0 && ft_strlen (cmd ->args[0]) == 0) || (!cmd -> args[0]))
+		else if (cmd -> flag == 0 && ft_strlen(cmd -> args[0]) == 0)
 		{
 			printf("command not found\n");
 			exit_status(127);

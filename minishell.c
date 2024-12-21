@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/19 21:13:59 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/20 22:19:56 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,12 @@ int	g_exit_status;
 void	handle_sig(int sig)
 {
 	(void)sig;
-	g_exit_status = 127;
 	write(1, "\n", 1);
 	rl_replace_line("", 0);
 	rl_on_new_line();
 	rl_redisplay();
 }
 
-// void	fill_env(char **env)
-// {
-// 	*env = ft_ft_malloc(sizeof(char *) * 2);
-// 	env[0] = ft_strdup("PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:\
-// 							/usr/local/munki:/Library/Apple/usr/bin");
-// 	env[1] = NULL;
-// }
 void f()
 {
 	system("leaks minishell");
@@ -41,9 +33,6 @@ int	main(int argc, char *argv[], char **env)
 
 	(void)argc;
 	(void)argv;
-	// if (argc > 1)
-	// 	return (0);
-	// atexit(f);
 	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
 	{
 		write(2, "not a tty!\n", 12);
@@ -67,6 +56,11 @@ int	main(int argc, char *argv[], char **env)
 		if (!input)
 			ft_exit(NULL);
 		add_history(input);
+		if (g_exit_status == SIGINT)
+		{
+			g_exit_status = 0;
+			exit_status(1);
+		}
 		parser(input, ev);
 	}
 	free_all();
