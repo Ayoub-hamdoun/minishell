@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/21 01:24:30 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/21 21:35:18 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/21 21:40:25 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ char	*get_path(t_command *command, t_env *env)
 	char	*path;
 	char	**paths;
 	int		i;
-
+	if (access(command->args[0], F_OK) == 0)
+			return (command->args[0]);
 	if (ft_strchr(command->args[0], '/'))
 	{
 		if (access(command->args[0], F_OK | X_OK) == 0)
