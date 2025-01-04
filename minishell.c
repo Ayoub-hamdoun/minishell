@@ -6,11 +6,12 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 15:39:55 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/20 22:19:56 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/22 17:29:40 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 int	g_exit_status;
 
 void	handle_sig(int sig)
@@ -22,10 +23,33 @@ void	handle_sig(int sig)
 	rl_redisplay();
 }
 
-void f()
+void	check_tty(void)
 {
-	system("leaks minishell");
+	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
+	{
+		write(2, "not a tty!\n", 12);
+		exit (1);
+	}
 }
+
+void	check_env(char	**env)
+{
+	if (!env[0])
+	{
+		printf("no env set\n");
+		exit (1);
+	}
+}
+
+void	check_signal(void)
+{
+	if (g_exit_status == SIGINT)
+	{
+		g_exit_status = 0;
+		exit_status(1);
+	}
+}
+
 int	main(int argc, char *argv[], char **env)
 {
 	t_env	*ev;
@@ -33,17 +57,9 @@ int	main(int argc, char *argv[], char **env)
 
 	(void)argc;
 	(void)argv;
-	if (!isatty(STDIN_FILENO) || !isatty(STDOUT_FILENO))
-	{
-		write(2, "not a tty!\n", 12);
-		return (0);
-	}
+	check_tty();
 	rl_catch_signals = 0;
-	if (!env[0])
-	{
-		printf("no env set\n");
-		return (1);
-	}
+	check_env(env);
 	ev = ft_malloc (sizeof(t_env));
 	dup_env(ev, env);
 	while (1)
@@ -51,18 +67,13 @@ int	main(int argc, char *argv[], char **env)
 		signal(SIGINT, handle_sig);
 		signal(SIGQUIT, SIG_IGN);
 		add(malloc(1));
-		input = readline("GUMBALL$> ");
+		input = readline("minishell$> ");
 		add(input);
 		if (!input)
 			ft_exit(NULL);
 		add_history(input);
-		if (g_exit_status == SIGINT)
-		{
-			g_exit_status = 0;
-			exit_status(1);
-		}
+		check_signal();
 		parser(input, ev);
 	}
-	free_all();
-	return (0);
+	return (free_all(), 0);
 }

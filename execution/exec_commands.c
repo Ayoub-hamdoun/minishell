@@ -1,22 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_commands.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/21 01:24:30 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/12/22 04:10:37 by ayhamdou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-char	*get_path(t_command *command, t_env *env)
+char	*check_path(t_command *command, char **paths)
 {
-	char	*path;
-	char	**paths;
-	int		i;
+	int	i;
 
-	// if (access(command -> args[0], F_OK) == 0)
-	// 	return (command -> args[0]);
-	if (ft_strchr(command->args[0], '/'))
-	{
-		if (access(command->args[0], F_OK | X_OK) == 0)
-			return (command->args[0]);
-		else
-			return (NULL);
-	}
-	path = ft_getenv(env, "PATH");
-	paths = ft_split(path, ':');
 	i = 0;
 	while (paths[i])
 	{
@@ -35,28 +34,60 @@ char	*get_path(t_command *command, t_env *env)
 	return (NULL);
 }
 
-// int red(char *path)
-// {
-//     struct stat    statbuf;
-
-//     if ((stat(path, &statbuf) == 0)
-//         && ((path[0] == '.' && path[1] == '/') || path[0] == '/'))
-//     {
-//         if (S_ISDIR(statbuf.st_mode))
-//             return (1);
-//         else if (S_ISREG(statbuf.st_mode))
-//             return (2);
-//     }
-//     return (0);
-// }
-
-char **convert_ev(t_env *ev)
+char	*get_path(t_command *command, t_env *env)
 {
-	char **env;
-	int count = 0;
-	t_env *temp = ev;
-	char *t;
+	char	*path;
+	char	**paths;
+	char	*to_return;
 
+	if (access(command->args[0], F_OK) == 0)
+		return (command->args[0]);
+	if (ft_strchr(command->args[0], '/'))
+	{
+		if (access(command->args[0], F_OK | X_OK) == 0)
+			return (command->args[0]);
+		else
+			return (NULL);
+	}
+	path = ft_getenv(env, "PATH");
+	paths = ft_split(path, ':');
+	to_return = check_path(command, paths);
+	if (to_return != NULL)
+		return (to_return);
+	return (NULL);
+}
+
+char	*create_env_var(char *key, char *value)
+{
+	char	*env_var;
+	char	*t;
+
+	if (key && value)
+	{
+		t = ft_strjoin(ft_strdup(key), "=");
+		env_var = ft_strjoin(t, value);
+		free(t);
+	}
+	else if (key)
+	{
+		env_var = ft_strdup(key);
+	}
+	else
+	{
+		env_var = NULL;
+	}
+	return (env_var);
+}
+
+char	**convert_ev(t_env *ev)
+{
+	char	**env;
+	int		count;
+	t_env	*temp;
+	int		i;
+
+	count = 0;
+	temp = ev;
 	while (temp)
 	{
 		count++;
@@ -65,18 +96,10 @@ char **convert_ev(t_env *ev)
 	env = ft_malloc(sizeof(char *) * (count + 1));
 	if (!env)
 		return (NULL);
-	int i = 0;
+	i = 0;
 	while (ev)
 	{
-		if (ev->key && ev->value)
-		{
-			t = ft_strjoin(ft_strdup(ev->key), "=");
-			env[i] = ft_strjoin(t, ev->value);
-		}
-		else if (ev->key)
-			env[i] = ft_strdup(ev->key);
-		else
-			env[i] = NULL;
+		env[i] = create_env_var(ev->key, ev->value);
 		i++;
 		ev = ev->next;
 	}
@@ -84,162 +107,9 @@ char **convert_ev(t_env *ev)
 	return (env);
 }
 
-int	errors(char *str)
+void	command_not_found(void)
 {
-	struct stat    statbuf;	
-
-	if (access(str, F_OK) == -1)
-	{
-		printf("minishell: %s: command not found\n", str);
-		exit_status(127);
-		exit(127);
-	}
-	else if (access(str, X_OK) == -1)
-	{
-		printf("minishell: %s: Permission denied\n", str);
-		exit_status(126);
-		exit(126);
-	}
-	if (stat(str, &statbuf) == -1)
-	{
-		printf("minishell: %s: No such file or directory\n", str);
-		exit_status(127);
-		exit(127);
-	}
-	else if (S_ISDIR(statbuf.st_mode))
-	{
-		printf("minishell: %s: is a directory\n", str);
-		exit_status(126);
-		exit(126);
-	}
-return (0);
-}
-
-void	ft_child_process(int prev_fd, int pipe_fd[2], t_command *cmd, t_env *ev)
-{
-	char	**env;
-	t_redir	*r;
-	int status = 0;
-
-	env = convert_ev(ev);
-	if (prev_fd != -1)
-		pipe_in(prev_fd);
-	if (cmd->next)
-		pipe_out(pipe_fd);
-	if (cmd->is_builtin)
-	{
-		status = exec_builtin(cmd, ev);
-		exit_status(status);
-		exit(status);
-	}
-	else
-	{
-	r = cmd->rederects;
-		while (r)
-		{
-			red_dup(&r);
-			r = r->next;
-		}
-		if (cmd -> flag )
-		{
-			exit_status(0);
-			exit(0);
-		}
-		else if (cmd -> flag == 0 && ft_strlen(cmd -> args[0]) == 0)
-		{
-			printf("command not found\n");
-			exit_status(127);
-			exit(127);
-		}
-		if (execve(get_path(cmd, ev), cmd->args, env))
-			status = errors(cmd->args[0]);
-		exit(status);
-	}
-	// close_red(cmd->rederects);
-}
-
-void pipe_manipulation(int *prev_fd, t_command *cmd, int pipe_fd[2])
-{
-	if (*prev_fd != -1)
-		close(*prev_fd);
-	if (cmd->next)
-	{
-		close(pipe_fd[1]);
-		*prev_fd = pipe_fd[0];
-	}
-	else
-		*prev_fd = -1;
-}
-
-void child_signal(void)
-{
-	signal(SIGINT, handle_sig);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void parent_signal(void)
-{
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-}
-
-void	multiple_commands(t_command *command, t_env *ev)
-{
-	int		prev_fd;
-	int		pipe_fd[2];
-	pid_t	last_pid;
-	pid_t	pid;
-	int status = 0;
-
-	prev_fd = -1;
-	last_pid = -1;
-
-	if (command->is_builtin && !command->next)
-	{
-		status = exec_builtin(command, ev);
-		close_red(command->rederects);
-		exit_status(status);
-		return;
-	}
-	else
-	{
-		while (command)
-		{
-			if (command->next && pipe(pipe_fd) == -1)
-				put_err("pipe failed", 1);
-			pid = fork();
-			if (pid == 0)
-			{
-				child_signal();
-				ft_child_process(prev_fd, pipe_fd, command, ev);
-				close_red(command->rederects);
-			}
-			else if (pid < 0)
-			{
-				status = exit_status(1);
-				close_red(command->rederects);
-				close(pipe_fd[0]);
-				close(pipe_fd[1]);
-				break;
-			}
-			else
-			{
-				parent_signal();
-				close_red(command->rederects);
-				last_pid = pid;
-			}
-			pipe_manipulation(&prev_fd, command, pipe_fd);
-			command = command->next;
-		}
-	}
-	wait_for_all_processes(last_pid);
-}
-
-void	exec(t_command *commands, t_env *ev)
-{
-	if (!commands || !commands->args)
-		return ;
-	if (open_files(&commands, ev) == 1)
-		return ;
-	multiple_commands(commands, ev);
+	ft_putstr_fd("minishell: command not found\n", 2);
+	exit_status(127);
+	exit(127);
 }

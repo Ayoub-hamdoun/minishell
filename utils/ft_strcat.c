@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   the_pwd.c                                          :+:      :+:    :+:   */
+/*   ft_strcat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/16 12:38:21 by rallali           #+#    #+#             */
-/*   Updated: 2024/12/21 18:10:06 by ayhamdou         ###   ########.fr       */
+/*   Created: 2024/12/22 02:06:34 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/12/22 02:06:52 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../minishell.h"
-
-int	the_pwd(t_redir *reder, t_env *env)
+char	*ft_strcat(char *dest, char *src)
 {
-	char	*path;
-	int		fd;
+	int	i;
+	int	j;
 
-	(void)env;
-	path = getcwd(NULL, 0);
-	if (!path)
+	i = 0;
+	while (dest[i])
+		i++;
+	j = 0;
+	while (src[j])
 	{
-		printf("minishell: pwd: error retrieving current directory: getcwd: ");
-		printf("cannot access parent directories: No such file or directory\n");
-		return (1);
+		dest[i] = src[j];
+		i++;
+		j++;
 	}
-	fd = rederctes_out(reder);
-	write(fd, path, ft_strlen(path));
-	write(fd, "\n", 1);
-	add(path);
-	return (0);
+	dest[i] = '\0';
+	return (dest);
 }

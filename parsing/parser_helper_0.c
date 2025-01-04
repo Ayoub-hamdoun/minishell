@@ -6,7 +6,7 @@
 /*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 14:13:07 by ayhamdou          #+#    #+#             */
-/*   Updated: 2024/12/20 00:07:45 by ayhamdou         ###   ########.fr       */
+/*   Updated: 2024/12/22 04:26:26 by ayhamdou         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	handle_redirections(t_command *command, t_token **token_list)
 	}
 }
 
-int is_builtin(char *cmd)
+int	is_builtin(char *cmd)
 {
 	if (!ft_strcmp(cmd, "echo"))
 		return (1);

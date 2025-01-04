@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_commands_helper_0.c                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ayhamdou <ayhamdou@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/22 03:11:22 by ayhamdou          #+#    #+#             */
+/*   Updated: 2024/12/22 04:47:53 by ayhamdou         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../minishell.h"
 
@@ -13,7 +24,7 @@ int	exec_builtin(t_command *command, t_env *ev)
 		|| !ft_strcmp(command -> args[0], "PWD"))
 		return (the_pwd(command -> rederects, ev));
 	else if (!ft_strcmp(command -> args[0], "export"))
-		return (the_export(command, &ev));
+		return (the_export (command, &ev));
 	else if (!ft_strcmp(command -> args[0], "unset"))
 		return (the_unset(command, &ev));
 	else if (!(ft_strcmp(command -> args[0], "env")
