@@ -36,7 +36,5 @@ Minishell is a simplified Unix shell created as part of the 42 School curriculum
 2. Go to minishell dir
 3. run `make` to compile the project
 4. type `./minishell` to run the project
-
-## Installation
-
+---
 this project was developed by @RafiqAllali and i as part of the 1337 School curriculum
